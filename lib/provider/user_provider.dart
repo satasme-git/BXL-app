@@ -51,9 +51,9 @@ class UserProvider extends ChangeNotifier {
   final phone = TextEditingController();
   TextEditingController get phoneController => phone;
 
-  void takePhoto() async {
+  void takePhoto(ImageSource source) async {
     final pickedFile = await _picker.pickImage(
-      source: ImageSource.gallery,
+      source:source// ImageSource.gallery,
     );
 
     _imageFile = pickedFile;
@@ -109,57 +109,7 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> startRegister(
-    GlobalKey<FormState> _formKey,
-    BuildContext context,
-    String name,
-    String email,
-    String password,
-  ) async {
-    if (_formKey.currentState!.validate()) {
-      setLoading(true);
-      try {
-        UserCredential userCredential =
-            await _auth.createUserWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-        if (userCredential.user!.uid.isNotEmpty) {
-          await UserController()
-              .saveUserData(name, email, userCredential.user!.uid);
-        }
 
-        setLoading();
-      } on FirebaseAuthException catch (error) {
-        switch (error.code) {
-          case "invalid-email":
-            errorMessage = "Your email address appears to be malformed.";
-            break;
-          case "wrong-password":
-            errorMessage = "Your password is wrong.";
-            break;
-          case "user-not-found":
-            errorMessage = "User with this email doesn't exist.";
-            break;
-          case "user-disabled":
-            errorMessage = "User with this email has been disabled.";
-            break;
-          case "too-many-requests":
-            errorMessage = "Too many requests";
-            break;
-          case "operation-not-allowed":
-            errorMessage = "Signing in with Email and Password is not enabled.";
-            break;
-          default:
-            errorMessage = "An undefined Error happened.";
-        }
-        Fluttertoast.showToast(msg: errorMessage!);
-        print(error.code);
-      }
-    } else {
-      setLoading();
-    }
-  }
 
   //login function
   Future<void> startLogin(
@@ -209,9 +159,11 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> UpdateUser(BuildContext context, String uid) async {
-    _userModel = await _usercontroller.updateUser(
+  Future<void> UpdateUser(BuildContext context, GlobalKey<FormState> _formKey, String uid) async {
+
+    _userModel = await _usercontroller.updateUser(context,
         fname.text, lname.text, email.text, phone.text, uid);
+        // await _auth.r
     notifyListeners();
   }
 }

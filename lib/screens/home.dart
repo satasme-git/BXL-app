@@ -1,29 +1,17 @@
 import 'dart:io';
-import 'package:binary_app/model/user_model.dart';
-import 'package:binary_app/screens/Chat/chatHome.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
-
-import 'package:url_launcher/url_launcher.dart';
-import 'package:binary_app/screens/Chat/chatScreen.dart';
 import 'package:binary_app/screens/Content.dart';
 import 'package:binary_app/screens/Refer/refer.dart';
 import 'package:binary_app/screens/Video/Videolist.dart';
-import 'package:binary_app/screens/aboutus/aboutus.dart';
 import 'package:binary_app/screens/courselist.dart';
-import 'package:binary_app/screens/Video/video.dart';
-import 'package:binary_app/screens/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/material.dart';
-
 import '../provider/corse_provider.dart';
 import '../provider/user_provider.dart';
 import '../utils/util_functions.dart';
@@ -86,8 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 }),*/
           ),
           key: _globalKey,
-          endDrawer: CustomDrawer(),
-          endDrawerEnableOpenDragGesture: true,
+          drawer: CustomDrawer(),
+          // endDrawerEnableOpenDragGesture: true,
           body: SingleChildScrollView(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -188,15 +176,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
+                    children: [
                       CardTitle(
-                        title: "Corse",
+                        title: "Course",
+                        onTap: () {
+                          UtilFuntions.pageTransition(
+                              context, const courseList(), const HomeScreen());
+                        },
                       ),
                       CardTitle(
                         title: "Videos",
+                        onTap: () {
+                          UtilFuntions.pageTransition(context,
+                                const Videolist(), const HomeScreen());
+                        },
                       ),
                       CardTitle(
                         title: "Marketing",
+                        onTap: () {},
                       ),
                     ],
                   ),
@@ -1160,15 +1157,17 @@ class CardTitle extends StatelessWidget {
   const CardTitle({
     Key? key,
     required this.title,
+    required this.onTap,
   }) : super(key: key);
 
   final String title;
+  final Function() onTap;
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
       child: InkWell(
-        onTap: () {},
+        onTap: onTap,
         child: Container(
           width: 110,
           height: 45,

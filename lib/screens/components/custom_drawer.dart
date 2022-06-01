@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/util_functions.dart';
 import '../Chat/chatHome.dart';
+import '../Payment/Slippay.dart';
 import '../Payment/payment_screen.dart';
 import '../Refer/refer.dart';
 import '../aboutus/aboutus.dart';
@@ -85,7 +86,7 @@ class CustomDrawer extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  "Chamil pathirana",
+                                  value.getuserModel!.fname +" "+ value.getuserModel!.lname,
                                   style: GoogleFonts.poppins(
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold,
@@ -93,7 +94,7 @@ class CustomDrawer extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  "chamiljay88@gmail.com",
+                                  value.getuserModel!.email,
                                   style: GoogleFonts.poppins(
                                     fontSize: 8,
                                     color: Colors.white,
@@ -110,11 +111,9 @@ class CustomDrawer extends StatelessWidget {
                         text: "Profile",
                         iconleading: MaterialCommunityIcons.account_outline,
                         onTap: () async {
-                          Navigator.of(context).pop();
-                          await Future.delayed(
-                              Duration(milliseconds: 200)); // wait some time
+
                           UtilFuntions.pageTransition(context,
-                              const ProfileScreen(), const HomeScreen());
+                             const  ProfileScreen(), const CustomDrawer());
                           // UtilFunctions.navigateTo(context, const GettingStarted());
 
                           // MaterialPageRoute(builder: (context) => ProfileScreen());
@@ -130,11 +129,9 @@ class CustomDrawer extends StatelessWidget {
                         text: "Payment",
                         iconleading: MaterialCommunityIcons.wallet_outline,
                         onTap: () async {
-                          Navigator.of(context).pop();
-                          await Future.delayed(
-                              Duration(milliseconds: 200)); // wait some time
+        
                           UtilFuntions.pageTransition(context,
-                              const PaymentScreen(), const HomeScreen());
+                              const slipPay(), const CustomDrawer());
                         },
                       ),
 

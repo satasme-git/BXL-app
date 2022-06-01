@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-
 import '../../utils/util_functions.dart';
 import '../Payment/payment_screen.dart';
 import '../courselist.dart';
@@ -34,6 +33,14 @@ class _CourseDetailsState extends State<CourseDetails> {
 
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
+  YoutubePlayerController _controller = YoutubePlayerController(
+    initialVideoId: "",
+  );
+  @override
+  void initState() {
+    _controller.dispose();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +106,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                                   onPressed: () {
                                     UtilFuntions.navigateTo(
                                         context, const PaymentScreen());
+                                         _controller.pause();
                                   },
                                   child: Ink(
                                     width: size.width / 2,
@@ -164,15 +172,6 @@ class _CourseDetailsState extends State<CourseDetails> {
   }
 
   Widget list() {
-    YoutubePlayerController _controller = YoutubePlayerController(
-      initialVideoId: "",
-    );
-    @override
-    void initState() {
-      _controller.dispose();
-      super.initState();
-    }
-
     var size = MediaQuery.of(context).size;
     return StreamBuilder(
         stream: FirebaseFirestore.instance
@@ -483,6 +482,7 @@ class _CourseDetailsState extends State<CourseDetails> {
 
                           UtilFuntions.pageTransition(context, TestContent(),
                               CourseDetails(docid: "1"));
+                              _controller.pause();
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(15.0),

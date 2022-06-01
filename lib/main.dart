@@ -1,4 +1,6 @@
 import 'package:binary_app/provider/payment_provider.dart';
+import 'package:binary_app/provider/registraion_provider.dart';
+import 'package:binary_app/provider/slip_provider.dart';
 import 'package:binary_app/screens/home.dart';
 import 'package:binary_app/screens/login.dart';
 import 'package:binary_app/screens/signup.dart';
@@ -18,8 +20,8 @@ import 'screens/test_screen2.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-SharedPreferences prefs = await SharedPreferences.getInstance();
- var email=prefs.getString('email');
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var email = prefs.getString('email');
   await Firebase.initializeApp();
 
   runApp(
@@ -34,32 +36,32 @@ SharedPreferences prefs = await SharedPreferences.getInstance();
         ChangeNotifierProvider(
           create: (context) => UserProvider(),
         ),
-        
+        ChangeNotifierProvider(
+          create: (context) => RegistrationProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => SlipProvider(),
+        ),
       ],
-      child:  MyApp(email: email),
+      child: MyApp(email: email),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-    
-   MyApp({
-      this.email,
-     Key? key
-     }) : super(key: key);
+  MyApp({this.email, Key? key}) : super(key: key);
 
   // This widget is the root of your application.
-   String? email; 
+  String? email;
   @override
   Widget build(BuildContext context) {
-    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'BXL',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-       home: const SplashScreen(),
+      home: const SplashScreen(),
       // home: email == null ? splashScreen() : HsplashScreen(),
     );
   }

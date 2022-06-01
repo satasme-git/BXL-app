@@ -1,51 +1,49 @@
-import 'package:binary_app/model/user_model.dart';
 import 'package:binary_app/provider/registraion_provider.dart';
 import 'package:binary_app/provider/user_provider.dart';
-import 'package:binary_app/screens/home.dart';
 import 'package:binary_app/screens/login.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../utils/constatnt.dart';
 import '../utils/util_functions.dart';
 import 'components/custom_loader.dart';
 
-class Signup extends StatefulWidget {
-  const Signup({Key? key}) : super(key: key);
+class ForgotPassword extends StatefulWidget {
+  const ForgotPassword({Key? key}) : super(key: key);
 
   @override
-  _SignupState createState() => _SignupState();
+  _ForgotPasswordState createState() => _ForgotPasswordState();
 }
 
-class _SignupState extends State<Signup> {
+class _ForgotPasswordState extends State<ForgotPassword> {
   final _formKey = GlobalKey<FormState>();
 
   final _auth = FirebaseAuth.instance;
   String? errorMessage;
 
+@override
+  void dispose() {
+    
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(
-      //     "SignUp",
-      //     style: TextStyle(color: Colors.black),
-      //   ),
-      //   centerTitle: true,
-      //   backgroundColor: Colors.white,
-      //   elevation: 0,
-      // ),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        
+        centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back),
+          color: Colors.black,
+        ),
+      ),
       backgroundColor: Color(0xFFECF3F9),
       body: GestureDetector(
         onTap: () {
@@ -57,7 +55,7 @@ class _SignupState extends State<Signup> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 70, left: 0),
+                  padding: const EdgeInsets.only(top: 20, left: 0),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Column(
@@ -65,7 +63,7 @@ class _SignupState extends State<Signup> {
                       children: [
                         RichText(
                           text: TextSpan(
-                              text: "Welcome to",
+                              text: "Hey",
                               style: TextStyle(
                                 fontSize: 25,
                                 letterSpacing: 2,
@@ -73,7 +71,7 @@ class _SignupState extends State<Signup> {
                               ),
                               children: [
                                 TextSpan(
-                                  text: " Binary,",
+                                  text: " There,",
                                   style: TextStyle(
                                     fontSize: 25,
                                     fontWeight: FontWeight.bold,
@@ -83,10 +81,18 @@ class _SignupState extends State<Signup> {
                               ]),
                         ),
                         Text(
-                          "SignUp to Continue",
+                          "Recieve an email Reset \nyour password",
                           style: TextStyle(
                             letterSpacing: 1,
                             color: Colors.grey[800],
+                          ),
+                        ),
+                         Text(
+                          "( if not recieved please check spam)",
+                          style: TextStyle(
+                            letterSpacing: 1,
+                            fontSize: 11,
+                            color: Colors.grey[500],
                           ),
                         ),
                       ],
@@ -118,22 +124,8 @@ class _SignupState extends State<Signup> {
                               const SizedBox(
                                 height: 15,
                               ),
-                              customTextField(
-                                  MaterialCommunityIcons.account_outline,
-                                  "Username",
-                                  "Username",
-                                  false,
-                                  false,
-                                  value.usernameController, (value) {
-                                if (value!.isEmpty) {
-                                  return ("Please enter username");
-                                }
-
-                                // return null;
-                              }, false, false),
-                              SizedBox(
-                                height: 10,
-                              ),
+                              
+                            
                               customTextField(
                                   MaterialCommunityIcons.email_outline,
                                   "Email Address",
@@ -151,38 +143,10 @@ class _SignupState extends State<Signup> {
                                 }
                                 // return null;
                               }, false, false),
-                              customTextField(
-                                  MaterialCommunityIcons.key_outline,
-                                  "Password",
-                                  "Password",
-                                  false,
-                                  false,
-                                  value.passwordController, (value) {
-                                if (value!.isEmpty) {
-                                  return ("Please enter password");
-                                }
-
-                                // return null;
-                              }, true, true),
-                              customTextField(
-                                  MaterialCommunityIcons.key_outline,
-                                  "Confirm Password",
-                                  "Confirm Password",
-                                  false,
-                                  false,
-                                  value.confirmpasswordController, (value) {
-                                if (value!.isEmpty) {
-                                  return ("Please enter confirm password");
-                                }
-
-                                // return null;
-                              }, true, true),
-   
+                             
                               const SizedBox(
                                 height: 30,
                               ),
-                         
-
                               Material(
                                 elevation: 5,
                                 borderRadius: BorderRadius.circular(15),
@@ -205,10 +169,8 @@ class _SignupState extends State<Signup> {
                                           )
                                         : MaterialButton(
                                             onPressed: () {
-                                 
-                                              value.startRegister(
+                                              value.resetPassword(
                                                   _formKey, context);
-                                             
                                             },
                                             padding: EdgeInsets.fromLTRB(
                                                 20, 15, 20, 15),
@@ -216,7 +178,7 @@ class _SignupState extends State<Signup> {
                                                 .size
                                                 .width,
                                             child: const Text(
-                                              "Signup",
+                                              "Reset Password",
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 15,
@@ -227,37 +189,9 @@ class _SignupState extends State<Signup> {
                                   },
                                 ),
                               ),
-
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("Already have an account? "),
-                                  GestureDetector(
-                                    onTap: () {
-                                      UtilFuntions.pageTransition(context,
-                                          const LoginScreen(), const Signup());
-                                      // Navigator.push(
-                                      //     context,
-                                      //     MaterialPageRoute(
-                                      //         builder: (context) => LoginScreen()));
-                                    },
-                                    child: Center(
-                                      child: Text(
-                                        " Signin",
-                                        style: TextStyle(
-                                            color: Colors.blue[900],
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
+                              
                               SizedBox(
-                                height: 10,
+                                height: 30,
                               ),
                             ],
                           ),
@@ -275,9 +209,7 @@ class _SignupState extends State<Signup> {
   }
 
   void signUp(String email, String password) async {
-    if (_formKey.currentState!.validate()) {
-
-    }
+    if (_formKey.currentState!.validate()) {}
   }
 
   postDetailsToFirestore() async {
@@ -287,7 +219,6 @@ class _SignupState extends State<Signup> {
     String formatDate = DateFormat('yyyy-MM-dd kk:mm').format(now);
     timestamp = formatDate;
     print(timestamp);
- 
   }
 
   Padding customTextField(
@@ -317,7 +248,7 @@ class _SignupState extends State<Signup> {
             builder: (context, value, child) {
               return TextFormField(
                 // obscureText: obscure,
-                  obscureText: obscure==true?value.isObscure:false,
+                obscureText: obscure == true ? value.isObscure : false,
                 controller: controller,
                 keyboardType:
                     isEmail ? TextInputType.emailAddress : TextInputType.text,
@@ -330,7 +261,6 @@ class _SignupState extends State<Signup> {
                       ? IconButton(
                           onPressed: () {
                             value.changeObscure();
-                           
                           },
                           icon: Icon(value.isObscure
                               ? Icons.visibility_off

@@ -1,5 +1,6 @@
 import 'package:binary_app/provider/user_provider.dart';
 import 'package:binary_app/screens/home.dart';
+import 'package:binary_app/screens/reset_password.dart';
 import 'package:binary_app/screens/signup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -80,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 value.changeObscure();
               },
               icon: Icon(
-                  value.isObscure ? Icons.visibility : Icons.visibility_off),
+                  value.isObscure ? Icons.visibility_off : Icons.visibility),
             ),
             contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
             hintText: "Enter password here",
@@ -249,6 +250,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                     height: 8,
                                   ),
                                   passwordField,
+                                  SizedBox(height:10),
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: InkWell(
+                                      onTap: (){
+                                           UtilFuntions.pageTransition(context,
+                                        const ForgotPassword(), const LoginScreen());
+                                        
+                                      },
+                                      child: Text(
+                                        "Forgot Password?",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

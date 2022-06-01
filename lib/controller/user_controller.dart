@@ -1,14 +1,18 @@
 import 'dart:io';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:binary_app/provider/user_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 import '../model/user_model.dart';
 import 'package:path/path.dart';
 
+import '../screens/components/custom_dialog.dart';
 import '../screens/home.dart';
 import '../utils/util_functions.dart';
 
@@ -26,7 +30,6 @@ class UserController {
           UserModel.fromJson(snapshot.data() as Map<String, dynamic>);
       // Logger().d("@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + userModel.image);
 
-     
       return userModel;
     } catch (e) {
       Logger().e(e);
@@ -91,25 +94,35 @@ class UserController {
     }
   }
 
-  Future<UserModel?> updateUser(
-      String fname, String lnane, String email, String phone, String uid) async{
-   await  users
-        .doc(uid)
-        .update({
-          'fname': fname,
-          'lname': lnane,
-          'email': email,
-          'phone': phone,
-         
-        })
-        .then((value) async{ 
-          DocumentSnapshot snapshot = await users.doc(uid).get();
-  
+  Future<UserModel?> updateUser(BuildContext context, String fname,
+      String lnane, String email, String phone, String uid) async {
+    Provider.of<UserProvider>(context, listen: false).setLoading(true);
+    await users.doc(uid).update({
+      'fname': fname,
+      'lname': lnane,
+      'email': email,
+      'phone': phone,
+    }).then((value) async {
+      DocumentSnapshot snapshot = await users.doc(uid).get();
+
       Logger().d(snapshot.data());
       _userModel = UserModel.fromJson(snapshot.data() as Map<String, dynamic>);
-          print("User updated");
-        })
-        .catchError((error) => print("Failed to add user: $error"));
-        return _userModel;
+      print("User updated");
+
+      DialogBox().dialogBox(
+        context,
+        DialogType.SUCCES,
+        'SUCCESS',
+        'Profile updated',
+      );
+      Provider.of<UserProvider>(context, listen: false).setLoading();
+    }).catchError((error) => print("Failed to add user: $error"));
+    Provider.of<UserProvider>(context, listen: false).setLoading();
+    return _userModel;
   }
+
+  //  void setLoading([bool val = false]) {
+  //   _isLoading = val;
+  //   notifyListeners();
+  // }
 }
