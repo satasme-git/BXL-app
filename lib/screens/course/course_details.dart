@@ -10,6 +10,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../utils/util_functions.dart';
 import '../Payment/payment_screen.dart';
+import '../components/custom_loader.dart';
 import '../courselist.dart';
 import '../test_content.dart';
 
@@ -54,9 +55,11 @@ class _CourseDetailsState extends State<CourseDetails> {
             width: size.width,
             child: Stack(
               children: [
-                Container(
-                  child: Text("asasaas"),
-                ),
+                // Center(
+                //   child: Container(
+                //     child:  CustomLoader(),
+                //   ),
+                // ),
                 list(),
                 Positioned(
                     bottom: 0,

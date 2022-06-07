@@ -61,10 +61,12 @@ dependencies:
   flutter_spinkit: ^5.1.0
   skeletons: ^0.0.3
   flutter_rating_bar: ^4.0.0
-  image_picker: ^0.8.5
+  image_picker: ^0.8.4
   firebase_storage: ^10.0.3
   awesome_dialog: ^2.1.1
   dotted_border: ^2.0.0+2
+  uuid: ^3.0.5
+  flutter_beautiful_popup: ^1.7.0
 
 
 dev_dependencies:

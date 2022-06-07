@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 import '../../utils/util_functions.dart';
 import 'package:skeletons/skeletons.dart';
 
+import '../components/custom_loader.dart';
+
 class slipPay extends StatefulWidget {
   const slipPay({Key? key}) : super(key: key);
 
@@ -17,9 +19,19 @@ class slipPay extends StatefulWidget {
 }
 
 class _slipPayState extends State<slipPay> {
-  var carMake, carMakeModel;
-  var setDefaultMake = true, setDefaultMakeModel = true;
+  String dropdownvalue = 'Item 1';
 
+  // List of items in our dropdown menu
+  var items = [
+    'Item 1',
+    'Item 2',
+    'Item 3',
+    'Item 4',
+    'Item 5',
+  ];
+  var setDefaultMake = true, setDefaultMakeModel = true;
+  var carMake, carMakeModel;
+  String? selectedLocation;
   @override
   void initState() {
     super.initState();
@@ -37,7 +49,7 @@ class _slipPayState extends State<slipPay> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Consumer2<SlipProvider, UserProvider>(
-              builder: (context, value, value2, child) {
+              builder: (context, value1, value2, child) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -99,7 +111,7 @@ class _slipPayState extends State<slipPay> {
 
                           if (setDefaultMake) {
                             carMake = snapshot.data!.docs[0].get('CourseName');
-                            debugPrint('setDefault make: $carMake');
+                            // debugPrint('setDefault make: $carMake');
                           }
                           return DecoratedBox(
                             decoration: BoxDecoration(
@@ -114,6 +126,7 @@ class _slipPayState extends State<slipPay> {
                                   const EdgeInsets.symmetric(horizontal: 15),
                               child: DropdownButton(
                                 isExpanded: true,
+                                isDense: false,
                                 value: carMake,
                                 items: snapshot.data!.docs.map((value) {
                                   String id = value.id;
@@ -127,7 +140,12 @@ class _slipPayState extends State<slipPay> {
                                   );
                                 }).toList(),
                                 onChanged: (values) {
-                                  value.setCurrentValue(values.toString());
+                                  value1.setCurrentValue(values.toString());
+                                  setState(() {
+                                    carMake = values.toString();
+                                    setDefaultMake = false;
+                                  });
+
                                   // debugPrint('selected onchange: $values');
                                 },
                               ),
@@ -153,16 +171,16 @@ class _slipPayState extends State<slipPay> {
                           child: Align(
                               alignment: Alignment.topCenter,
                               heightFactor: 1,
-                              child: value.getImg.path != ""
+                              child: value1.getImg.path != ""
                                   ? IconButton(
                                       icon: Image.file(
-                                        value.getImg,
+                                        value1.getImg,
                                         width: double.infinity,
                                         height: 180,
                                         fit: BoxFit.fill,
                                       ),
                                       onPressed: () {
-                                        value.selectImage();
+                                        value1.selectImage();
                                       },
                                       iconSize: 180,
                                     )
@@ -171,7 +189,7 @@ class _slipPayState extends State<slipPay> {
                                         children: [
                                           IconButton(
                                             onPressed: () {
-                                              value.selectImage();
+                                              value1.selectImage();
                                             },
                                             icon: Image(
                                               image: AssetImage(
@@ -192,34 +210,46 @@ class _slipPayState extends State<slipPay> {
                     SizedBox(
                       height: 40,
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(0.0),
-                        elevation: 3,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      onPressed: () {
-                        value.startAddSlipData(
-                            context, value2.getuserModel!.uid);
-                      },
-                      child: Ink(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.blue,
-                          // gradient: const LinearGradient(
-                          //     colors: [Colors.red, Colors.orange]),
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.all(18),
-                          child:
-                              const Text('Submit', textAlign: TextAlign.center),
-                        ),
-                      ),
-                    ),
-                    if (value.geSelectedCourse != "")
+                    value1.isLoading
+                        ? Container(
+                            height: 48,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.blue.withOpacity(.3),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: const Center(
+                              child: CustomLoader(),
+                            ),
+                          )
+                        : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.all(0.0),
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                            onPressed: () {
+                              value1.startAddSlipData(
+                                  context, value2.getuserModel!);
+                            },
+                            child: Ink(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.blue,
+                                // gradient: const LinearGradient(
+                                //     colors: [Colors.red, Colors.orange]),
+                              ),
+                              child: Container(
+                                padding: const EdgeInsets.all(18),
+                                child: const Text('Submit',
+                                    textAlign: TextAlign.center),
+                              ),
+                            ),
+                          ),
+                    if (value1.geSelectedCourse != "")
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -244,8 +274,8 @@ class _slipPayState extends State<slipPay> {
     var size = MediaQuery.of(context).size;
     // final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
     final double itemWidth = size.width / 2;
-    return Consumer2<SlipProvider,UserProvider>(
-      builder: (context, value,value2, child) {
+    return Consumer2<SlipProvider, UserProvider>(
+      builder: (context, value, value2, child) {
         return StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection("coursepay_details")

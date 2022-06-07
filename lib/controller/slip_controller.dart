@@ -1,20 +1,29 @@
+import 'package:binary_app/model/course_model.dart';
+import 'package:binary_app/model/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'dart:io';
 import 'package:path/path.dart';
+import 'package:uuid/uuid.dart';
 
 class SlipController {
+  final uuid = Uuid();
+  String? cp_id;
+   late Coursemodel coursemodel;
+   CollectionReference course = FirebaseFirestore.instance.collection('course');
+
   CollectionReference res =
       FirebaseFirestore.instance.collection('coursepay_details');
   CollectionReference course_pay =
-      FirebaseFirestore.instance.collection('corse_pay');
+      FirebaseFirestore.instance.collection('course_pay');
   // FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
-  late QueryDocumentSnapshot<Object?> sp_id;
-  Future<void> saveSlipData(File img, String coursename, String uid) async {
+  String sp_id = "";
+  Future<void> saveSlipData(
+      File img, String coursename, UserModel userModel) async {
     UploadTask? task = uploadFile(img);
     final snapshot = await task!.whenComplete(() {});
     final downloadurl = await snapshot.ref.getDownloadURL();
@@ -24,42 +33,80 @@ class SlipController {
     //get the unique document id auto generated
     String docId = res.doc().id;
 
-    var collectionReference = FirebaseFirestore.instance
-        .collection('corse_pay')
-        .where('uid', isEqualTo: uid)
-        .where('courseName', isEqualTo: coursename);
 
-    QuerySnapshot corse_paysnapshot = await collectionReference.get();
-// print(">>>>>>>>>>>>>>>>>>>>PPPPP :"+sp_id.id.toString());
-    Logger()
-        .d(">>>>>>>>>>>>>>>>> : " + corse_paysnapshot.docs.length.toString());
-    if (corse_paysnapshot.docs.length == 0) {
-      String cpdocId = course_pay.doc().id;
+ QuerySnapshot snapshot_course = await course.where('CourseName', isEqualTo: coursename).get();
+
+      //querying all the docs in this snapshot
+      for (var item in snapshot_course.docs) {
+       
+        // mapping to a single model
+         coursemodel = Coursemodel.fromJson(item.data() as Map<String, dynamic>);
+        //ading to the model
+   
+      }
+
+
+
+
+    // var collectionReference = FirebaseFirestore.instance
+    //     .collection('corse_pay')
+    //     .where('uid', isEqualTo: userModel.uid)
+    //     .where('courseName', isEqualTo: coursename);
+
+        //  QuerySnapshot corse_paysnapshot = await course_pay
+        // .where('uid', isEqualTo: userModel.uid)
+        //  .where('CourseName', isEqualTo: coursename)
+        //  .get();
+
+    // QuerySnapshot corse_paysnapshot = await collectionReference.get();
+    cp_id = userModel.uid + "" + coursename;
+
+    final cpdocId = uuid.v5(Uuid.NAMESPACE_URL, cp_id);
+
+
+     DocumentSnapshot snapshot1 = await course_pay.doc(cpdocId).get();
+
+    //  Logger().d(">>>>>>>>>>>>>>>>>>>>>>>>>>>  mo data: "+snapshot1.exists.toString());
+
+    if (snapshot1.exists == false) {
+     
+    
       await course_pay.doc(cpdocId).set({
         'cpid': cpdocId,
         'courseName': coursename,
-        'uid': uid,
+        'courseFee': coursemodel.CourseFee,
+        'uid': userModel.uid,
+        'userName': userModel.fname + "" + userModel.lname,
+        'pay_amount':0,
         'create_at': day,
-        'status': 0,
+        'updated_at': day,
+        'status': 1,
+      }).then((value) async {
+        await res.doc(docId).set({
+          'cpdid': docId,
+          'cpid': cpdocId,
+          'courseName': coursename,
+          'img': downloadurl,
+          'uid': userModel.uid,
+          'userName': userModel.fname + "" + userModel.lname,
+          'create_at': day,
+          'status': 0,
+        });
       });
-    }
-
-    for (int i = 0; i < corse_paysnapshot.docs.length; i++) {
-      sp_id = corse_paysnapshot.docs[i];
-      sp_id.id;
-      print(">>>>>>>>>>>>>>>>>>>>PPPPP :" + sp_id.id.toString());
-    }
-
-
-    if (sp_id.id != "") {
-      await res.doc(docId).set({
-        'cpdid': docId,
-        'cpid': docId,
-        'courseName': coursename,
-        'img': downloadurl,
-        'uid': uid,
-        'create_at': day,
-        'status': 0,
+    } else {
+      await course_pay.doc(cpdocId).update({
+        'updated_at': day,
+      }).then((value) async {
+        await res.doc(docId).set({
+          'cpdid': docId,
+          'cpid': cpdocId,
+          'courseName': coursename,
+          'img': downloadurl,
+          'uid': userModel.uid,
+          'userName': userModel.fname + "" + userModel.lname,
+          'create_at': day,
+          'status': 0,
+        });
       });
     }
 

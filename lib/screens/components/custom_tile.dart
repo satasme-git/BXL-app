@@ -22,11 +22,22 @@ class CustomListTile extends StatelessWidget {
         splashColor: Colors.white24,
         onTap: onTap,
         child: ListTile(
+          visualDensity: VisualDensity(vertical: -3),
+          // style: ,
           dense: true,
-          leading: Icon(iconleading,color: Colors.white54,),
-          title: Text(text,style: TextStyle(color: Colors.white,)),
-          
-          trailing: Icon(MaterialCommunityIcons.chevron_right,color: Colors.white60,),
+          leading: Icon(
+            iconleading,
+            color: Colors.grey[500],
+          ),
+          title: Text(text,
+              style: TextStyle(
+                color: Colors.black87,
+              )),
+
+          trailing: Icon(
+            MaterialCommunityIcons.chevron_right,
+            color: Colors.grey[400],
+          ),
         ),
       ),
     );

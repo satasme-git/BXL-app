@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:binary_app/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
@@ -10,11 +11,13 @@ import '../screens/test_content.dart';
 
 class SlipProvider extends ChangeNotifier {
   final SlipController _slipController = SlipController();
-  String _selectedCourse = "";
+  String _selectedCourse = "AAA";
   final ImagePicker _picker = ImagePicker();
   File _image = File("");
   File get getImg => _image;
   bool _isLoading = false;
+  //get loading state
+  bool get isLoading => _isLoading;
   String get geSelectedCourse => _selectedCourse;
 
   //validate fields
@@ -47,12 +50,12 @@ class SlipProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> startAddSlipData(BuildContext context, String uid) async {
+  Future<void> startAddSlipData(BuildContext context, UserModel userModel) async {
     try {
       if (inputValidation()) {
         setLoading(true);
         
-        await _slipController.saveSlipData(_image, _selectedCourse, uid).then((value){
+        await _slipController.saveSlipData(_image, _selectedCourse, userModel).then((value){
           _image.delete();
           _selectedCourse="";
            notifyListeners();
@@ -94,6 +97,7 @@ class SlipProvider extends ChangeNotifier {
 
   void setCurrentValue(String value) {
     _selectedCourse = value;
+
     notifyListeners();
   }
 }

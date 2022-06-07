@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
+import '../model/cat_model.dart';
+import '../model/corse_pay_model.dart';
 import '../screens/test_content.dart';
 
 class CourseProvider extends ChangeNotifier {
   Map<String, dynamic> userSearchItems = {};
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    CollectionReference course_pay = FirebaseFirestore.instance.collection('course_pay');
 
   Map<String, dynamic> get getItems => userSearchItems;
 
@@ -18,6 +22,14 @@ class CourseProvider extends ChangeNotifier {
   List<DataList> get getDataList => data;
   String price = "";
   String get getPrice => price;
+
+  String _paid = "no";
+  String get getPaid => _paid;
+
+   List<CoursePaymodel> _list = [];
+
+
+  List<CoursePaymodel> get payedCourseList => _list;
 
   Future<void> setPrice(String val) async {
     price = val;
@@ -95,4 +107,88 @@ class CourseProvider extends ChangeNotifier {
       data2 = [];
     }
   }
+
+  final List<CategoryModel> _categoryList = [
+    CategoryModel(
+      id: "1",
+      svgName: 'Binary Expert Lanka - Basic Course',
+      categoryName: 'All',
+    ),
+    CategoryModel(
+      id: "2",
+      svgName: 'ion_pizza-outline',
+      categoryName: 'Pizza',
+    ),
+    CategoryModel(
+      id: "3",
+      svgName: 'bx_bx-drink',
+      categoryName: 'Beverages',
+    ),
+    CategoryModel(
+      id: "4",
+      svgName: 'fe_rice-cracker',
+      categoryName: 'Asian',
+    ),
+    CategoryModel(
+      id: "5",
+      svgName: 'food',
+      categoryName: 'All',
+    ),
+  ];
+
+  //get category list
+  List<CategoryModel> get catList => _categoryList;
+
+ 
+
+Future<void> getAllPaidCourses(String uid) async {
+   
+    try {
+      //query for fetch relevent products
+      QuerySnapshot snapshot = await course_pay
+      .where('uid', isEqualTo: uid)
+      .where('status', isEqualTo: 2)
+      .get();
+
+      //querying all the docs in this snapshot
+      for (var item in snapshot.docs) {
+        // mapping to a single model
+        CoursePaymodel model = CoursePaymodel.fromJson(item.data() as Map<String, dynamic>);
+        //ading to the model
+        _list.add(model);
+      }
+
+      //returning the list
+      // return list;
+
+       Logger().d(">>>>>>>>>>>>>>> : "+_list.length.toString()+" / "+uid);
+        //  notifyListeners();
+    } catch (e) {
+      Logger().e(e);
+      // return list;
+    }
+  }
+
+   void seachPayed(String val) {
+    // price = val;
+    String course_Name = val;
+
+    for (var i = 0; i < payedCourseList.length; i++) {
+        
+      String courseName = payedCourseList[i].courseName;
+      if (courseName == course_Name) {
+        Logger().d(">>>>>>>>>>>>>>> asdasdasd a: : "+courseName+"  ///  "+course_Name);
+        _paid = "Yes";
+      }
+    }
+
+    notifyListeners();
+  }
+   void setPayed() {
+    // price = val;
+     _paid = "no";
+
+    notifyListeners();
+  }
+  
 }

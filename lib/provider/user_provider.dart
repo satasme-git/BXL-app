@@ -11,12 +11,15 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../controller/user_controller.dart';
 import '../screens/login.dart';
 import '../utils/util_functions.dart';
 import 'dart:io';
+
+import 'corse_provider.dart';
 
 class UserProvider extends ChangeNotifier {
   // final _formKey = GlobalKey<FormState>();
@@ -100,6 +103,8 @@ class UserProvider extends ChangeNotifier {
 
   Future<void> fetchSingleUser(BuildContext context, String id) async {
     
+     Provider.of<CourseProvider>(context, listen: false).getAllPaidCourses(id);
+
     _userModel = await _usercontroller.getUserData(context, id);
     fname.text=_userModel!.fname;
     lname.text=_userModel!.lname;

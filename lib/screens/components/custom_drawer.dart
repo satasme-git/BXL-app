@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 import '../../utils/util_functions.dart';
 import '../Chat/chatHome.dart';
 import '../Payment/Slippay.dart';
@@ -26,22 +25,24 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.bottomLeft,
-              end: Alignment.topRight,
-              colors: [
-                Color(0xff283593),
-                Color(0xff2196f3),
-
-                // Color.fromRGBO(247, 148, 29, 1),
-                // Color.fromRGBO(254, 203, 48, 1),
-                // Colors.blue,
-                // Colors.purple,
-              ],
-            ),
+      child: Scaffold(
+        bottomNavigationBar: Container(
+          padding: EdgeInsets.symmetric(horizontal: 15),
+          height: 30,
+          child: Row(
+            children: [
+              Text(
+                "Powerd by satasme holdings (Pvt) Ltd, Sri lanka.",
+                style: GoogleFonts.poppins(
+                  color: Colors.grey[700],
+                  fontSize: 10
+                ),
+              ),
+              // Icon(icon)
+            ],
           ),
+        ),
+        body: Container(
           // color: Color.fromRGBO(50,75,205,1),
           child: Consumer<UserProvider>(
             builder: (context, value, child) {
@@ -49,8 +50,23 @@ class CustomDrawer extends StatelessWidget {
                 children: [
                   UserAccountsDrawerHeader(
                       accountEmail: Text(''),
+                      // decoration: BoxDecoration(
+                      //   color: Colors.transparent,
+                      // ),
                       decoration: BoxDecoration(
-                        color: Colors.transparent,
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomLeft,
+                          end: Alignment.topRight,
+                          colors: [
+                            Color(0xff283593),
+                            Color(0xff2196f3),
+
+                            // Color.fromRGBO(247, 148, 29, 1),
+                            // Color.fromRGBO(254, 203, 48, 1),
+                            // Colors.blue,
+                            // Colors.purple,
+                          ],
+                        ),
                       ),
                       accountName: Row(
                         children: <Widget>[
@@ -86,7 +102,9 @@ class CustomDrawer extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  value.getuserModel!.fname +" "+ value.getuserModel!.lname,
+                                  value.getuserModel!.fname +
+                                      " " +
+                                      value.getuserModel!.lname,
                                   style: GoogleFonts.poppins(
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold,
@@ -111,30 +129,29 @@ class CustomDrawer extends StatelessWidget {
                         text: "Profile",
                         iconleading: MaterialCommunityIcons.account_outline,
                         onTap: () async {
-
                           UtilFuntions.pageTransition(context,
-                             const  ProfileScreen(), const CustomDrawer());
+                              const ProfileScreen(), const CustomDrawer());
                           // UtilFunctions.navigateTo(context, const GettingStarted());
 
                           // MaterialPageRoute(builder: (context) => ProfileScreen());
                         },
                       ),
-
+                      Divider(), //
                       CustomListTile(
                         text: "Careers",
                         iconleading: MaterialCommunityIcons.routes,
                         onTap: () {},
                       ),
+                      Divider(), //
                       CustomListTile(
                         text: "Payment",
                         iconleading: MaterialCommunityIcons.wallet_outline,
                         onTap: () async {
-        
-                          UtilFuntions.pageTransition(context,
-                              const slipPay(), const CustomDrawer());
+                          UtilFuntions.pageTransition(
+                              context, const slipPay(), const CustomDrawer());
                         },
                       ),
-
+                      Divider(), //
                       CustomListTile(
                         text: "Chat",
                         iconleading:
@@ -147,6 +164,7 @@ class CustomDrawer extends StatelessWidget {
                               context, const chatHome(), const HomeScreen());
                         },
                       ),
+                      Divider(), //
                       CustomListTile(
                         text: "About Us",
                         iconleading:
@@ -159,7 +177,7 @@ class CustomDrawer extends StatelessWidget {
                               context, const aboutUs(), const HomeScreen());
                         },
                       ),
-
+                      Divider(), //
                       CustomListTile(
                         text: "Refer & Earn",
                         iconleading:
@@ -172,8 +190,11 @@ class CustomDrawer extends StatelessWidget {
                               context, const refer(), const HomeScreen());
                         },
                       ),
-                      Divider(), //here is a divider
 
+                      Divider(), //here is a divider
+                      SizedBox(
+                        height: 30,
+                      ),
                       CustomListTile(
                         text: "Logout",
                         iconleading: MaterialCommunityIcons.power,
@@ -187,11 +208,13 @@ class CustomDrawer extends StatelessWidget {
                         },
                       ),
                     ],
-                  )
+                  ),
                 ],
               );
             },
-          )),
+          ),
+        ),
+      ),
     );
   }
 }

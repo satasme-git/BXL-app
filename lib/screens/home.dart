@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_beautiful_popup/main.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,6 +16,8 @@ import 'package:flutter/material.dart';
 import '../provider/corse_provider.dart';
 import '../provider/user_provider.dart';
 import '../utils/util_functions.dart';
+import 'Payment/Slippay.dart';
+import 'Payment/payment_screen.dart';
 import 'components/custom_drawer.dart';
 import 'course/course_details.dart';
 
@@ -74,7 +77,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 }),*/
           ),
           key: _globalKey,
-          drawer: CustomDrawer(),
+          drawer:  SafeArea(
+            child: const CustomDrawer(),
+          ),
           // endDrawerEnableOpenDragGesture: true,
           body: SingleChildScrollView(
               child: Column(
@@ -159,13 +164,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     bottomRight: Radius.circular(40),
                     bottomLeft: Radius.circular(40),
                   ),
-                  /*  boxShadow: [
-                          BoxShadow(
-                            color: Color(0xAA6EB1E6),
-                            offset: Offset(9, 9),
-                            blurRadius: 6,
-                          ),
-                        ],*/
                 ),
                 alignment: Alignment.center,
               ),
@@ -187,8 +185,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       CardTitle(
                         title: "Videos",
                         onTap: () {
-                          UtilFuntions.pageTransition(context,
-                                const Videolist(), const HomeScreen());
+                          UtilFuntions.pageTransition(
+                              context, const Videolist(), const HomeScreen());
                         },
                       ),
                       CardTitle(
@@ -213,42 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                /*  SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        color: Colors.amber,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        color: Colors.amber,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        color: Colors.amber,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        color: Colors.amber,
-                      ),
-                    ),
-                  ])),*/
+
                 SizedBox(height: 245, child: course()),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -276,6 +239,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: GestureDetector(
                           onTap: () {
+                            //  value.seachPayed(docReference['CourseName']);
+                            // if (value.getPaid == "Yes") {
                             UtilFuntions.pageTransition(context,
                                 const courseList(), const HomeScreen());
                             // Navigator.push(
@@ -563,209 +528,304 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget course() {
-    return StreamBuilder(
-        stream: FirebaseFirestore.instance.collection("course").snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-                /*    child: SpinKitRing(
+    return Consumer2<CourseProvider, UserProvider>(
+      builder: (context, value, value2, child) {
+        return StreamBuilder(
+            stream: FirebaseFirestore.instance.collection("course").snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                    /*    child: SpinKitRing(
                   color: Colors.blue,
                 )*/
-                );
-            //  Center(child: LoadingFilling.square());
-          }
-          return ListView(
-              scrollDirection: Axis.horizontal,
-              children: snapshot.data!.docs.map((docReference) {
-                String id = docReference.id;
-                return SingleChildScrollView(
+                    );
+                //  Center(child: LoadingFilling.square());
+              }
+              return ListView(
                   scrollDirection: Axis.horizontal,
-                  physics: BouncingScrollPhysics(),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Container(
-                      // padding: EdgeInsets.only(left: 30),
-                      width: 260,
-                      // height: 120,
-                      // color: Colors.amber,
-                      child: Stack(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Provider.of<CourseProvider>(context,
-                                      listen: false)
-                                  .addItems(context);
-                              Provider.of<CourseProvider>(context,
-                                      listen: false)
-                                  .addSection(docReference.id);
+                  children: snapshot.data!.docs.map((docReference) {
+                    String id = docReference.id;
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: BouncingScrollPhysics(),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          // padding: EdgeInsets.only(left: 30),
+                          width: 260,
+                          // height: 120,
+                          // color: Colors.amber,
+                          child: Stack(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  value.seachPayed(docReference['CourseName']);
+                                  if (value.getPaid == "Yes") {
+                                    Provider.of<CourseProvider>(context,
+                                            listen: false)
+                                        .addItems(context);
+                                    Provider.of<CourseProvider>(context,
+                                            listen: false)
+                                        .addSection(docReference.id);
 
-                              Provider.of<CourseProvider>(context,
-                                      listen: false)
-                                  .setPrice(docReference['CourseFee']);
-                              UtilFuntions.pageTransition(
-                                context,
-                                CourseDetails(
-                                  docid: docReference.id,
-                                ),
-                                const HomeScreen(),
-                              );
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => CourseDetails(
-                              //               docid: docReference.id,
-                              //             )));
-                            },
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: Image.network(
-                                docReference['image'],
-                                width: 260,
-                                //   // height: height,
-                                fit: BoxFit.fill,
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                  if (loadingProgress == null) return child;
+                                    Provider.of<CourseProvider>(context,
+                                            listen: false)
+                                        .setPrice(docReference['CourseFee']);
+                                    UtilFuntions.pageTransition(
+                                      context,
+                                      CourseDetails(
+                                        docid: docReference.id,
+                                      ),
+                                      const HomeScreen(),
+                                    );
+                                    value.setPayed();
+                                  } else {
+                                    final popup = BeautifulPopup(
+                                      context: context,
+                                      template: TemplateBlueRocket,
+                                    );
+                                    popup.show(
+                                      title: 'Hello ' +
+                                          value2.getuserModel!.fname +
+                                          " !",
+                                      content: Container(
+                                        height: 300,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "You have to pay for this course",
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              "Online payment",
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            OutlineButton(
+                                              shape: StadiumBorder(),
+                                              highlightedBorderColor:
+                                                  Colors.red,
+                                              borderSide: BorderSide(
+                                                  width: 0.6,
+                                                  color: Colors.red),
+                                              onPressed: () {
+                                                UtilFuntions.pageTransition(
+                                                  context,
+                                                  const PaymentScreen(),
+                                                  const courseList(),
+                                                );
+                                              },
+                                              child: Text('Online pay'),
+                                            ),
+                                            Text(
+                                              "Bank payment",
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            OutlineButton(
+                                              shape: StadiumBorder(),
+                                              highlightedBorderColor:
+                                                  Colors.blue,
+                                              borderSide: BorderSide(
+                                                  width: 0.6,
+                                                  color: Colors.black),
+                                              onPressed: () {
+                                                UtilFuntions.pageTransition(
+                                                  context,
+                                                  const slipPay(),
+                                                  const courseList(),
+                                                );
+                                              },
+                                              child: Text('Bank pay'),
+                                            ),
 
-                                  return const SkeletonAvatar(
-                                    style: SkeletonAvatarStyle(
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                    ),
-                                  );
+                                            //  Text(">>>>>>>>>>"),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: [
+                                        popup.button(
+                                          label: 'Close',
+                                          onPressed: Navigator.of(context).pop,
+                                        ),
+                                      ],
+                                      // bool barrierDismissible = false,
+                                      // Widget close,
+                                    );
+                                  }
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) => CourseDetails(
+                                  //               docid: docReference.id,
+                                  //             )));
                                 },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: Image.network(
+                                    docReference['image'],
+                                    width: 260,
+                                    //   // height: height,
+                                    fit: BoxFit.fill,
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
 
-                                // docReference['image'],
-                                // loadingBuilder: (BuildContext context,
-                                //     Widget child,
-                                //     ImageChunkEvent? loadingProgress) {
-                                //   if (loadingProgress == null) return child;
-                                //   return Center(
-                                //     child: CircularProgressIndicator(
-                                //       value:
-                                //           loadingProgress.expectedTotalBytes !=
-                                //                   null
-                                //               ? loadingProgress
-                                //                       .cumulativeBytesLoaded /
-                                //                   loadingProgress
-                                //                       .expectedTotalBytes!
-                                //               : null,
-                                //     ),
-                                //   );
-                                // },
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Container(
-                              width: 79,
-                              height: 28,
-                              decoration: const BoxDecoration(
-                                color: Colors.lightGreen,
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15),
+                                      return const SkeletonAvatar(
+                                        style: SkeletonAvatarStyle(
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                        ),
+                                      );
+                                    },
+
+                                    // docReference['image'],
+                                    // loadingBuilder: (BuildContext context,
+                                    //     Widget child,
+                                    //     ImageChunkEvent? loadingProgress) {
+                                    //   if (loadingProgress == null) return child;
+                                    //   return Center(
+                                    //     child: CircularProgressIndicator(
+                                    //       value:
+                                    //           loadingProgress.expectedTotalBytes !=
+                                    //                   null
+                                    //               ? loadingProgress
+                                    //                       .cumulativeBytesLoaded /
+                                    //                   loadingProgress
+                                    //                       .expectedTotalBytes!
+                                    //               : null,
+                                    //     ),
+                                    //   );
+                                    // },
+                                  ),
                                 ),
                               ),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  docReference['duration'],
-                                  style: TextStyle(color: Colors.white),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Container(
+                                  width: 79,
+                                  height: 28,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.lightGreen,
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(15),
+                                      topRight: Radius.circular(15),
+                                    ),
+                                  ),
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      docReference['duration'],
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            child: Container(
-                              height: 115,
-                              width: 260,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.9),
-                                borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(15),
-                                  bottomRight: Radius.circular(15),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 2),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                              Positioned(
+                                bottom: 0,
+                                child: Container(
+                                  height: 115,
+                                  width: 260,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.9),
+                                    borderRadius: const BorderRadius.only(
+                                      bottomLeft: Radius.circular(15),
+                                      bottomRight: Radius.circular(15),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 2),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        SizedBox(
-                                          width: 236,
-                                          height: 35,
-                                          child: Text(
-                                            docReference['CourseName'],
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                            style: const TextStyle(
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            SizedBox(
+                                              width: 236,
+                                              height: 35,
+                                              child: Text(
+                                                docReference['CourseName'],
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
+                                                style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              docReference['instructor'],
+                                              style: const TextStyle(
+                                                fontSize: 10,
                                                 color: Colors.black,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Text(
-                                          docReference['instructor'],
-                                          style: const TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        RatingBar.builder(
-                                          initialRating: 3,
-                                          minRating: 1,
-                                          direction: Axis.horizontal,
-                                          allowHalfRating: true,
-                                          itemCount: 5,
-                                          itemSize: 15,
-                                          itemPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 0.0),
-                                          itemBuilder: (context, _) =>
-                                              const Icon(
-                                            Icons.star,
-                                            color: Colors.amber,
-                                          ),
-                                          onRatingUpdate: (rating) {
-                                            print(rating);
-                                          },
-                                        ),
-                                        Text(
-                                          "LKR  " + docReference['CourseFee'],
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 20,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold),
+                                              ),
+                                            ),
+                                            RatingBar.builder(
+                                              initialRating: 3,
+                                              minRating: 1,
+                                              direction: Axis.horizontal,
+                                              allowHalfRating: true,
+                                              itemCount: 5,
+                                              itemSize: 15,
+                                              itemPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 0.0),
+                                              itemBuilder: (context, _) =>
+                                                  const Icon(
+                                                Icons.star,
+                                                color: Colors.amber,
+                                              ),
+                                              onRatingUpdate: (rating) {
+                                                print(rating);
+                                              },
+                                            ),
+                                            Text(
+                                              "LKR  " +
+                                                  docReference['CourseFee'],
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 20,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              }).toList());
-        });
+                    );
+                  }).toList());
+            });
+      },
+    );
   }
 
   Widget Name() {
@@ -984,174 +1044,6 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 }
-
-// class CustomDrawer extends StatelessWidget {
-//   const CustomDrawer({
-//     Key? key,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Drawer(
-//         child: ListView(
-//       padding: EdgeInsets.all(10),
-//       children: [
-//         Column(
-//           children: [
-//             DrawerHeader(
-//               child: Column(
-//                 children: [
-//                   Padding(
-//                     padding: const EdgeInsets.all(12.0),
-//                     child: CircleAvatar(
-//                       backgroundImage: AssetImage(
-//                         "assets/image.png",
-//                       ),
-//                       radius: 30,
-//                     ),
-//                   ),
-//                   Text("Celvin",
-//                       style: TextStyle(
-//                           fontSize: 23, fontWeight: FontWeight.w600)),
-//                   Text("Edit Profile",
-//                       style: TextStyle(
-//                           fontSize: 12,
-//                           color: Colors.grey,
-//                           fontWeight: FontWeight.w600)),
-//                 ],
-//               ),
-//             ),
-//             ListTile(
-//               leading:
-//                   Icon(MaterialCommunityIcons.home_outline, size: 28),
-//               title: Text(
-//                 "Home",
-//                 style: GoogleFonts.poppins(
-//                   fontSize: 14,
-//                 ),
-//               ),
-//               onTap: () {
-//                 /*  Navigator.push(context,
-//                   MaterialPageRoute(builder: (context) => profile()));*/
-//               },
-//             ),
-//             ListTile(
-//               leading:
-//                   Icon(MaterialCommunityIcons.account_outline, size: 28),
-//               title: Text(
-//                 "Profile",
-//                 style: GoogleFonts.poppins(
-//                   fontSize: 14,
-//                 ),
-//               ),
-//               onTap: () {
-//                 /*  Navigator.push(context,
-//                   MaterialPageRoute(builder: (context) => profile()));*/
-//               },
-//             ),
-//             ListTile(
-//               leading: Icon(
-//                   MaterialCommunityIcons.briefcase_variant_outline,
-//                   size: 26),
-//               title: Text(
-//                 "Careers",
-//                 style: GoogleFonts.poppins(
-//                   fontSize: 14,
-//                 ),
-//               ),
-//               onTap: () {
-//                 /*  Navigator.push(context,
-//                   MaterialPageRoute(builder: (context) => profile()));*/
-//               },
-//             ),
-//             ListTile(
-//               leading: Icon(MaterialCommunityIcons.credit_card_outline,
-//                   size: 27),
-//               title: Text(
-//                 "Payment",
-//                 style: GoogleFonts.poppins(
-//                   fontSize: 14,
-//                 ),
-//               ),
-//               onTap: () {
-//                 Navigator.push(
-//                     context,
-//                     MaterialPageRoute(
-//                         builder: (context) => PaymentScreen()));
-//               },
-//             ),
-//             ListTile(
-//               leading:
-//                   Icon(MaterialCommunityIcons.message_outline, size: 26),
-//               title: Text(
-//                 "Chat",
-//                 style: GoogleFonts.poppins(
-//                   fontSize: 14,
-//                 ),
-//               ),
-//               onTap: () {
-//                 Navigator.push(context,
-//                     MaterialPageRoute(builder: (context) => chatHome()));
-//               },
-//             ),
-//             ListTile(
-//               leading: Icon(Icons.home, size: 30),
-//               title: Text(
-//                 "About Us",
-//                 style: GoogleFonts.poppins(
-//                   fontSize: 14,
-//                 ),
-//               ),
-//               onTap: () {
-//                 Navigator.push(context,
-//                     MaterialPageRoute(builder: (context) => aboutUs()));
-//               },
-//             ),
-//             ListTile(
-//               leading: Icon(Icons.sell, size: 30),
-//               title: Text(
-//                 "Refer & Earn",
-//                 style: GoogleFonts.poppins(
-//                   fontSize: 14,
-//                 ),
-//               ),
-//               onTap: () {
-//                 Navigator.push(context,
-//                     MaterialPageRoute(builder: (context) => refer()));
-//               },
-//             ),
-//             Center(
-//               child: Container(
-//                 decoration: BoxDecoration(
-//                     color: Colors.blue[900],
-//                     borderRadius: BorderRadius.circular(10)),
-//                 child: ListTile(
-//                   title: Text(
-//                     "Logout",
-//                     textAlign: TextAlign.center,
-//                     style: TextStyle(fontSize: 18, color: Colors.white),
-//                   ),
-//                   onTap: () async {
-//                     SharedPreferences prefs =
-//                         await SharedPreferences.getInstance();
-//                     prefs.remove('email');
-//                     prefs.remove('time');
-//                     FirebaseAuth.instance.signOut().then((_) {
-//                       Navigator.push(
-//                           context,
-//                           MaterialPageRoute(
-//                               builder: (context) => LoginScreen()));
-//                     });
-//                   },
-//                 ),
-//               ),
-//             ),
-//           ],
-//         )
-//       ],
-//     ));
-//   }
-// }
 
 class CardTitle extends StatelessWidget {
   const CardTitle({

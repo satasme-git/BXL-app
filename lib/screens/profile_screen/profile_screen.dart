@@ -97,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 color: Colors.black,
                               ),
                             ),
-                            Text(
+                             Text(
                               value.getuserModel!.fname,
                               style: GoogleFonts.poppins(
                                 fontSize: 12,
