@@ -1,13 +1,7 @@
 import 'package:binary_app/controller/user_controller.dart';
-import 'package:binary_app/screens/login.dart';
-import 'package:binary_app/screens/reset_password.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:logger/logger.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-import '../utils/util_functions.dart';
 
 class RegistrationProvider extends ChangeNotifier {
   final _formKey = GlobalKey<FormState>();

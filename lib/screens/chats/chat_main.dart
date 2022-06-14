@@ -1,6 +1,6 @@
 import 'package:binary_app/controller/chat_controller.dart';
 import 'package:binary_app/controller/user_controller.dart';
-import 'package:binary_app/model/user_model.dart';
+
 import 'package:binary_app/provider/user_provider.dart';
 import 'package:binary_app/screens/chats/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

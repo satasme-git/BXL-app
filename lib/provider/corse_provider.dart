@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-
-import '../model/cat_model.dart';
 import '../model/corse_pay_model.dart';
 import '../screens/test_content.dart';
 

@@ -5,6 +5,7 @@ class UserModel {
   late String lname;
   late String phone;
   late String image;
+  late String token;
   late String status;
 
   UserModel(
@@ -14,6 +15,7 @@ class UserModel {
     this.lname,
     this.phone,
     this.image,
+    this.token,
     this.status,
   );
 
@@ -25,6 +27,7 @@ class UserModel {
     lname = map['lname'];
     phone = map['phone'];
     image = map['image'];
+    token = map['token'];
     status = map['status'];
     // userNumber: map['userNumber'],
   }
@@ -38,6 +41,7 @@ class UserModel {
       'lname': lname,
       'phone': phone,
       'image': image,
+      'token': token,
       'status': status,
       // 'userNumber': userNumber
     };

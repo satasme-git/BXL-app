@@ -1,13 +1,11 @@
 import 'package:binary_app/provider/registraion_provider.dart';
 import 'package:binary_app/provider/user_provider.dart';
-import 'package:binary_app/screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../utils/constatnt.dart';
-import '../utils/util_functions.dart';
 import 'components/custom_loader.dart';
 
 class ForgotPassword extends StatefulWidget {

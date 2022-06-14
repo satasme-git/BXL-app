@@ -1,25 +1,15 @@
 import 'package:binary_app/provider/user_provider.dart';
-import 'package:binary_app/screens/Content.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_beautiful_popup/main.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../model/corse_pay_model.dart';
 import '../provider/corse_provider.dart';
 import '../utils/util_functions.dart';
 import 'Payment/Slippay.dart';
 import 'Payment/payment_screen.dart';
-import 'Refer/refer.dart';
-import 'aboutus/aboutus.dart';
-import 'components/custom_loader.dart';
 import 'course/course_details.dart';
-import 'login.dart';
 
 class courseList extends StatefulWidget {
   const courseList({Key? key}) : super(key: key);

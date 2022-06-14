@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:binary_app/model/user_model.dart';
+import '../model/objects.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 
 import '../controller/slip_controller.dart';
+import '../model/user_model.dart';
 import '../screens/components/custom_dialog.dart';
-import '../screens/test_content.dart';
 
 class SlipProvider extends ChangeNotifier {
   final SlipController _slipController = SlipController();

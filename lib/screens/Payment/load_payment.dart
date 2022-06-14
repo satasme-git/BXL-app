@@ -1,16 +1,11 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:binary_app/provider/payment_provider.dart';
-import 'package:binary_app/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-
 import '../../utils/util_functions.dart';
 import '../courselist.dart';
 

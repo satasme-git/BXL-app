@@ -3,15 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-
 import '../../utils/constatnt.dart';
 import '../../utils/util_functions.dart';
 import '../components/circle_avatar.dart';
 import '../components/custom_drawer.dart';
 import '../components/custom_loader.dart';
-import '../components/custom_textfield.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);

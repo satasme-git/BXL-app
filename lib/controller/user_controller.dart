@@ -9,31 +9,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
-import '../model/user_model.dart';
+// import '../model/objects.dart';
 import 'package:path/path.dart';
 
+import '../model/user_model.dart';
 import '../screens/components/custom_dialog.dart';
-import '../screens/home.dart';
-import '../utils/util_functions.dart';
 
 class UserController {
   // Create a collection refferance
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-  UserModel _userModel=new UserModel("", "", "", "", "", "", "");
+  CollectionReference conversations =
+      FirebaseFirestore.instance.collection('conversations');
+  UserModel _userModel = new UserModel("", "", "", "", "", "", "", "");
   //get user data
   Future<UserModel?> getUserData(BuildContext context, String id) async {
     Logger().i("######################## : " + id.toString());
-    try {
-      DocumentSnapshot snapshot = await users.doc(id).get();
-      Logger().i(snapshot.data());
-      UserModel userModel =
-          UserModel.fromJson(snapshot.data() as Map<String, dynamic>);
-      Logger().d("@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + snapshot.data().toString());
+    // try {
+    DocumentSnapshot snapshot = await users.doc(id).get();
+    Logger().i(snapshot.data());
+    UserModel userModel =
+        UserModel.fromJson(snapshot.data() as Map<String, dynamic>);
+    Logger().d("@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + snapshot.data().toString());
 
-      return userModel;
-    } catch (e) {
-      Logger().e(e);
-    }
+    return userModel;
+    // } catch (e) {
+    //   Logger().e(e);
+    // }
   }
 
   // Save user information
@@ -51,6 +52,7 @@ class UserController {
           'uid': uid,
           'phone': "",
           'image': "null",
+          'token': "",
           'status': "0",
         })
         .then((value) => print("User Added"))
@@ -121,8 +123,18 @@ class UserController {
     return _userModel;
   }
 
-  //  void setLoading([bool val = false]) {
-  //   _isLoading = val;
-  //   notifyListeners();
-  // }
+  Future<void> addUserToConv(BuildContext context, UserModel? userModel) async {
+    var docid = "l5rpAUCIXQiBHOHq7tJl";
+    await conversations
+        .doc(docid)
+        .update({
+          // "userArray": FieldValue.arrayUnion([userModel!.toJson]),
+          "users": FieldValue.arrayUnion([userModel!.uid]),
+          "userArray": FieldValue.arrayUnion([userModel.toJson()])
+        })
+
+     
+        .then((value) => print("conversation Added"))
+        .catchError((error) => print("Failed to add conversation: $error"));
+  }
 }

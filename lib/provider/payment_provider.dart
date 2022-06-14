@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:binary_app/model/payment_model.dart';
-import 'package:binary_app/model/user_model.dart';
+import '../model/objects.dart';
 import 'package:binary_app/provider/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
+import '../model/user_model.dart';
 import '../screens/Payment/load_payment.dart';
 
 

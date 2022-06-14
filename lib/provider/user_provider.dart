@@ -1,31 +1,30 @@
 import 'dart:convert';
 
-import 'package:binary_app/model/user_model.dart';
+import '../model/objects.dart';
 import 'package:binary_app/screens/home.dart';
 
 import 'package:binary_app/screens/startPage/startpage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../controller/user_controller.dart';
+import '../model/user_model.dart';
 import '../screens/login.dart';
 import '../utils/util_functions.dart';
 import 'dart:io';
-
-import 'corse_provider.dart';
 
 class UserProvider extends ChangeNotifier {
   // final _formKey = GlobalKey<FormState>();
   String? errorMessage;
   final _auth = FirebaseAuth.instance;
-   UserModel? _userModel;
+  UserModel? _userModel;
   //user controller object
   UserModel? get getuserModel => _userModel;
   final UserController _usercontroller = UserController();
@@ -55,9 +54,9 @@ class UserProvider extends ChangeNotifier {
   TextEditingController get phoneController => phone;
 
   void takePhoto(ImageSource source) async {
-    final pickedFile = await _picker.pickImage(
-      source:source// ImageSource.gallery,
-    );
+    final pickedFile =
+        await _picker.pickImage(source: source // ImageSource.gallery,
+            );
 
     _imageFile = pickedFile;
     if (pickedFile != null) {
@@ -87,8 +86,6 @@ class UserProvider extends ChangeNotifier {
   //initialize and check whther the user signed in or not
   void initializeUser(BuildContext context) {
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
-
-      
       if (user == null) {
         Logger().i('User is currently signed out!');
         UtilFuntions.navigateTo(context, const getStarted());
@@ -97,24 +94,36 @@ class UserProvider extends ChangeNotifier {
         await fetchSingleUser(context, user.uid).then((value) => {
               UtilFuntions.navigateTo(context, const HomeScreen()),
             });
+
+        // addUserToConversation(context, user.uid);
+        storedNotificationTken(context, user.uid);
       }
     });
   }
 
-  Future<void> fetchSingleUser(BuildContext context, String id) async {
-    
+  // Future<void> addUserToConversation(BuildContext context, String id) async {
+  //   await _usercontroller.addUserToConv(context, id);
+  //   notifyListeners();
+  // }
 
+  void storedNotificationTken(BuildContext context, String id) async {
+    String? token = await FirebaseMessaging.instance.getToken();
 
-    _userModel = await _usercontroller.getUserData(context, id);
-    fname.text=_userModel!.fname;
-    lname.text=_userModel!.lname;
-    email.text=_userModel!.email;
-    phone.text=_userModel!.phone;
-
-    notifyListeners();
+    FirebaseFirestore.instance.collection("users").doc(id).set({
+      'token': token,
+    }, SetOptions(merge: true));
   }
 
+  Future<void> fetchSingleUser(BuildContext context, String id) async {
+    _userModel = await _usercontroller.getUserData(context, id);
+    fname.text = _userModel!.fname;
+    lname.text = _userModel!.lname;
+    email.text = _userModel!.email;
+    phone.text = _userModel!.phone;
 
+  await _usercontroller.addUserToConv(context, _userModel);
+    notifyListeners();
+  }
 
   //login function
   Future<void> startLogin(
@@ -164,11 +173,11 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> UpdateUser(BuildContext context, GlobalKey<FormState> _formKey, String uid) async {
-
-    _userModel = await _usercontroller.updateUser(context,
-        fname.text, lname.text, email.text, phone.text, uid);
-        // await _auth.r
+  Future<void> UpdateUser(
+      BuildContext context, GlobalKey<FormState> _formKey, String uid) async {
+    _userModel = await _usercontroller.updateUser(
+        context, fname.text, lname.text, email.text, phone.text, uid);
+    // await _auth.r
     notifyListeners();
   }
 }

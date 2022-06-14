@@ -1,5 +1,4 @@
 import 'package:binary_app/model/course_model.dart';
-import 'package:binary_app/model/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +6,10 @@ import 'package:logger/logger.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:uuid/uuid.dart';
+
+import '../model/user_model.dart';
+
+// import '../model/objects.dart';
 
 class SlipController {
   final uuid = Uuid();
