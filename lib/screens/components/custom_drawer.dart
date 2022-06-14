@@ -5,15 +5,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/util_functions.dart';
 import '../Chat/chatHome.dart';
+import '../chats/chat_main.dart';
 import '../Payment/Slippay.dart';
 import '../Payment/payment_screen.dart';
 import '../Refer/refer.dart';
 import '../aboutus/aboutus.dart';
+import '../chats/conersation_list.dart';
+import '../chats/conversation_setting.dart';
 import '../login.dart';
 import 'custom_tile.dart';
 
@@ -33,10 +37,8 @@ class CustomDrawer extends StatelessWidget {
             children: [
               Text(
                 "Powerd by satasme holdings (Pvt) Ltd, Sri lanka.",
-                style: GoogleFonts.poppins(
-                  color: Colors.grey[700],
-                  fontSize: 10
-                ),
+                style:
+                    GoogleFonts.poppins(color: Colors.grey[700], fontSize: 10),
               ),
               // Icon(icon)
             ],
@@ -136,6 +138,7 @@ class CustomDrawer extends StatelessWidget {
                           // MaterialPageRoute(builder: (context) => ProfileScreen());
                         },
                       ),
+
                       Divider(), //
                       CustomListTile(
                         text: "Careers",
@@ -152,16 +155,19 @@ class CustomDrawer extends StatelessWidget {
                         },
                       ),
                       Divider(), //
-                      CustomListTile(
-                        text: "Chat",
-                        iconleading:
-                            MaterialCommunityIcons.message_text_outline,
-                        onTap: () async {
-                          Navigator.of(context).pop();
-                          await Future.delayed(
-                              Duration(milliseconds: 200)); // wait some time
-                          UtilFuntions.pageTransition(
-                              context, const chatHome(), const HomeScreen());
+                      Consumer<UserProvider>(
+                        builder: (context, value, child) {
+                          return CustomListTile(
+                            text: "Chat",
+                            iconleading:
+                                MaterialCommunityIcons.message_text_outline,
+                            onTap: () async {
+                              // Logger().wtf(">>>>>>>>>>>>>>>>>>>>>>>////////// : "+value.getuserModel!.uid);
+
+                              UtilFuntions.pageTransition(context,
+                                  const ConversationList(), const CustomDrawer());
+                            },
+                          );
                         },
                       ),
                       Divider(), //

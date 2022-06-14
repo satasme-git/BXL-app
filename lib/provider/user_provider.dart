@@ -25,7 +25,7 @@ class UserProvider extends ChangeNotifier {
   // final _formKey = GlobalKey<FormState>();
   String? errorMessage;
   final _auth = FirebaseAuth.instance;
-  UserModel? _userModel;
+   UserModel? _userModel;
   //user controller object
   UserModel? get getuserModel => _userModel;
   final UserController _usercontroller = UserController();
@@ -93,7 +93,7 @@ class UserProvider extends ChangeNotifier {
         Logger().i('User is currently signed out!');
         UtilFuntions.navigateTo(context, const getStarted());
       } else {
-        Logger().i('User is signed in!' + user.uid);
+        Logger().i('User is signed in!');
         await fetchSingleUser(context, user.uid).then((value) => {
               UtilFuntions.navigateTo(context, const HomeScreen()),
             });
@@ -103,7 +103,7 @@ class UserProvider extends ChangeNotifier {
 
   Future<void> fetchSingleUser(BuildContext context, String id) async {
     
-     Provider.of<CourseProvider>(context, listen: false).getAllPaidCourses(id);
+
 
     _userModel = await _usercontroller.getUserData(context, id);
     fname.text=_userModel!.fname;

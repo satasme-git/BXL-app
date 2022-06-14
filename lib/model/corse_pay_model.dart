@@ -2,7 +2,7 @@ import 'package:binary_app/model/cat_model.dart';
 
 class CoursePaymodel {
   late String cpid;
-  late int courseFee;
+  late String courseFee;
   late String courseName;
   late int pay_amount;
   late int status;

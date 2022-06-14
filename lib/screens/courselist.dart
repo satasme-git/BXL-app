@@ -10,12 +10,14 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/corse_pay_model.dart';
 import '../provider/corse_provider.dart';
 import '../utils/util_functions.dart';
 import 'Payment/Slippay.dart';
 import 'Payment/payment_screen.dart';
 import 'Refer/refer.dart';
 import 'aboutus/aboutus.dart';
+import 'components/custom_loader.dart';
 import 'course/course_details.dart';
 import 'login.dart';
 
@@ -34,9 +36,8 @@ class _courseListState extends State<courseList> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-  
+
     return Scaffold(
-      
       backgroundColor: Color(0xFFECF3F9),
       appBar: AppBar(
         backgroundColor: Color(0xFFECF3F9),
@@ -169,9 +170,7 @@ class _courseListState extends State<courseList> {
       //   ),
       // ),
       body: SafeArea(
-        
         left: false,
-        
         right: false,
         bottom: false,
         child: Container(
@@ -255,8 +254,46 @@ class _courseListState extends State<courseList> {
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
     final double itemWidth = size.width / 2;
+
     return Consumer2<CourseProvider, UserProvider>(
       builder: (context, value, value2, child) {
+        //                             //////////////////// add data to CoursePaymodel
+
+        //               Logger().d(">>>>>>>>>>>>>>>>>>>>>>>>  add data to CoursePaymodel"+value2.getuserModel!.uid);
+        //             StreamBuilder(
+        //               stream: FirebaseFirestore.instance
+        //                   .collection("course_pay")
+        //                   // .where('uid', isEqualTo: value2.getuserModel!.uid)
+        //                   // .where('status', isEqualTo: 2)
+        //                   .snapshots(),
+        //               builder: (BuildContext context,
+        //                   AsyncSnapshot<QuerySnapshot> snapshot) {
+        //                          Logger().d(">>>>>>>>>>>>>>>>>>>>>>>> eror couser mdel ");
+        //                 if (snapshot.hasError) {
+
+        //                   return Text('something went wrong');
+
+        //                 }
+
+        //                 if (snapshot.connectionState == ConnectionState.waiting) {
+        //                    Logger().d(">>>>>>>>>>>>>>>>>>>>>>>> no eror couser mdel ");
+        //                   return const CustomLoader();
+        //                 }
+        //                 for (var item in snapshot.data!.docs) {
+        //                    Logger().d(">>>>>>>>>>>>>>>>>>>>>>>> yes couser mdel ");
+        //                   //mapping to a single model
+        //                   CoursePaymodel model = CoursePaymodel.fromJson(
+        //                       item.data() as Map<String, dynamic>);
+
+        //                       Logger().d(">>>>>>>>>>>>>>>>>>>>>>>> fgfgfgfgfgf"+item.data().toString());
+        //                   //  ading to the model
+        //                   // _list.add(model);
+        //                 }
+        //                 return Text("adad");
+        //               },
+        //             );
+
+        // //////////////////// end of add data to CoursePaymodel
         return StreamBuilder(
             stream: FirebaseFirestore.instance.collection("course").snapshots(),
             builder:
@@ -285,12 +322,20 @@ class _courseListState extends State<courseList> {
                         childAspectRatio: (1 / 1.22),
                       ),
                       children: snapshot.data!.docs.map((docReference) {
+                      
+
                         String id = docReference.id;
 
                         return GestureDetector(
                           onTap: () {
-                            value.seachPayed(docReference['CourseName']);
+                            //   Provider.of<CourseProvider>(context, listen: false)
+                            // .getAllPaidCourses(value2.getuserModel!.uid);
+                            
+                      value.seachPayed(docReference['CourseName']);
+
                             if (value.getPaid == "Yes") {
+                                
+
                               Provider.of<CourseProvider>(context,
                                       listen: false)
                                   .addItems(context);

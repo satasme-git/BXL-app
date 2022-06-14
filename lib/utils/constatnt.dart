@@ -16,4 +16,6 @@ class Constants {
   static const Color googleColor = Color(0xFFDE4B39);
   static const Color checkCircle = Color.fromARGB(255, 145, 145, 145);
   static const Color labelText = Color.fromARGB(255, 53, 53, 53);
+
+
 }

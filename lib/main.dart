@@ -1,6 +1,8 @@
+import 'package:binary_app/provider/chat_provider.dart';
 import 'package:binary_app/provider/payment_provider.dart';
 import 'package:binary_app/provider/registraion_provider.dart';
 import 'package:binary_app/provider/slip_provider.dart';
+import 'package:binary_app/screens/chats/conersation_list.dart';
 import 'package:binary_app/screens/home.dart';
 import 'package:binary_app/screens/login.dart';
 import 'package:binary_app/screens/signup.dart';
@@ -42,6 +44,10 @@ Future<void> main() async {
         ChangeNotifierProvider(
           create: (context) => SlipProvider(),
         ),
+         ChangeNotifierProvider(
+          create: (context) => ChatProvider(),
+        ),
+        
       ],
       child: MyApp(email: email),
     ),

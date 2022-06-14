@@ -77,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 }),*/
           ),
           key: _globalKey,
-          drawer:  SafeArea(
+          drawer: SafeArea(
             child: const CustomDrawer(),
           ),
           // endDrawerEnableOpenDragGesture: true,
@@ -237,108 +237,119 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            //  value.seachPayed(docReference['CourseName']);
-                            // if (value.getPaid == "Yes") {
-                            UtilFuntions.pageTransition(context,
-                                const courseList(), const HomeScreen());
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => courseList(),
-                            //   ),
-                            // );
-                          },
-                          child: Container(
-                            width: size.width / 2.2,
-                            height: 140,
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                  colors: [
-                                    Colors.white,
-                                    Colors.white,
-                                    // Color(0xff0d47a1),
-                                    // Color(0xff2196f3),
-                                  ],
-                                  begin: FractionalOffset(1.0, 1.0),
-                                  end: FractionalOffset(1.0, 0.0),
-                                  stops: [0.0, 1.0],
-                                  tileMode: TileMode.clamp),
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(20),
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.08),
-                                  blurRadius: 15,
-                                  spreadRadius: 1,
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 20.0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.blue[300],
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: const Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Icon(
-                                              Icons.book_outlined,
-                                              color: Colors.white,
-                                              size: 30,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                        child: Consumer<UserProvider>(
+                          builder: (context, value, child) {
+                            return GestureDetector(
+                              onTap: () {
+                                Provider.of<CourseProvider>(context,
+                                        listen: false)
+                                    .getAllPaidCourses(value.getuserModel!.uid);
+
+                                //  value.seachPayed(docReference['CourseName']);
+                                // if (value.getPaid == "Yes") {
+                                UtilFuntions.pageTransition(context,
+                                    const courseList(), const HomeScreen());
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => courseList(),
+                                //   ),
+                                // );
+                              },
+                              child: Container(
+                                width: size.width / 2.2,
+                                height: 140,
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                      colors: [
+                                        Colors.white,
+                                        Colors.white,
+                                        // Color(0xff0d47a1),
+                                        // Color(0xff2196f3),
+                                      ],
+                                      begin: FractionalOffset(1.0, 1.0),
+                                      end: FractionalOffset(1.0, 0.0),
+                                      stops: [0.0, 1.0],
+                                      tileMode: TileMode.clamp),
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(20),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15, vertical: 10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          children: const [
-                                            Text(
-                                              "Courses",
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 17),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.08),
+                                      blurRadius: 15,
+                                      spreadRadius: 1,
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 20.0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.blue[300],
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: const Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Icon(
+                                                  Icons.book_outlined,
+                                                  color: Colors.white,
+                                                  size: 30,
+                                                ),
+                                              ),
                                             ),
-                                            Text(
-                                              "10+ Courses",
-                                              style: TextStyle(
-                                                  color: Color.fromARGB(
-                                                      255, 95, 95, 95),
-                                                  fontSize: 12),
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              children: const [
+                                                Text(
+                                                  "Courses",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 17),
+                                                ),
+                                                Text(
+                                                  "10+ Courses",
+                                                  style: TextStyle(
+                                                      color: Color.fromARGB(
+                                                          255, 95, 95, 95),
+                                                      fontSize: 12),
+                                                ),
+                                              ],
+                                            ),
+                                            Icon(
+                                              MaterialCommunityIcons
+                                                  .arrow_right_circle,
+                                              size: 30,
+                                              color: Colors.blue,
                                             ),
                                           ],
                                         ),
-                                        Icon(
-                                          MaterialCommunityIcons
-                                              .arrow_right_circle,
-                                          size: 30,
-                                          color: Colors.blue,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ]),
-                          ),
+                                      ),
+                                    ]),
+                              ),
+                            );
+                          },
                         ),
                       ),
                       Padding(

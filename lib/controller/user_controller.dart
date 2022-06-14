@@ -19,7 +19,7 @@ import '../utils/util_functions.dart';
 class UserController {
   // Create a collection refferance
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-  UserModel? _userModel;
+  UserModel _userModel=new UserModel("", "", "", "", "", "", "");
   //get user data
   Future<UserModel?> getUserData(BuildContext context, String id) async {
     Logger().i("######################## : " + id.toString());
@@ -28,7 +28,7 @@ class UserController {
       Logger().i(snapshot.data());
       UserModel userModel =
           UserModel.fromJson(snapshot.data() as Map<String, dynamic>);
-      // Logger().d("@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + userModel.image);
+      Logger().d("@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + snapshot.data().toString());
 
       return userModel;
     } catch (e) {
@@ -58,12 +58,12 @@ class UserController {
   }
 
   Future<UserModel> updateUserWithImage(File img, UserModel? userModel) async {
-    _userModel = userModel;
+    _userModel = userModel!;
     UploadTask? task = uploadFile(img);
     final snapshot = await task!.whenComplete(() {});
     final downloadUrl = await snapshot.ref.getDownloadURL();
 
-    Logger().d("####################### : " + userModel!.uid);
+    Logger().d("####################### : " + userModel.uid);
     await users.doc(userModel.uid).update({
       'email': userModel.email,
       'fname': userModel.fname,
