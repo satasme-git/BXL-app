@@ -18,6 +18,7 @@ import '../Refer/refer.dart';
 import '../aboutus/aboutus.dart';
 import '../chats/conersation_list.dart';
 import '../chats/conversation_setting.dart';
+import '../chats/notification_test.dart';
 import '../login.dart';
 import 'custom_tile.dart';
 
@@ -78,7 +79,7 @@ class CustomDrawer extends StatelessWidget {
                             decoration: BoxDecoration(shape: BoxShape.circle),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(55),
-                              child: value.getuserModel!.image == ""
+                              child: value.getuserModel!.image == "null"
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.circular(55),
                                       child: Image.asset(
@@ -143,7 +144,10 @@ class CustomDrawer extends StatelessWidget {
                       CustomListTile(
                         text: "Careers",
                         iconleading: MaterialCommunityIcons.routes,
-                        onTap: () {},
+                        onTap: () {
+                          UtilFuntions.pageTransition(context,
+                              const NotificationTest(), const CustomDrawer());
+                        },
                       ),
                       Divider(), //
                       CustomListTile(
@@ -164,8 +168,10 @@ class CustomDrawer extends StatelessWidget {
                             onTap: () async {
                               // Logger().wtf(">>>>>>>>>>>>>>>>>>>>>>>////////// : "+value.getuserModel!.uid);
 
-                              UtilFuntions.pageTransition(context,
-                                  const ConversationList(), const CustomDrawer());
+                              UtilFuntions.pageTransition(
+                                  context,
+                                  const ConversationList(),
+                                  const CustomDrawer());
                             },
                           );
                         },

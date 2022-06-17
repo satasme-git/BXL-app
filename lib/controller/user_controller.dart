@@ -124,17 +124,31 @@ class UserController {
   }
 
   Future<void> addUserToConv(BuildContext context, UserModel? userModel) async {
+    bool isContained = false;
     var docid = "l5rpAUCIXQiBHOHq7tJl";
-    await conversations
-        .doc(docid)
-        .update({
-          // "userArray": FieldValue.arrayUnion([userModel!.toJson]),
-          "users": FieldValue.arrayUnion([userModel!.uid]),
-          "userArray": FieldValue.arrayUnion([userModel.toJson()])
-        })
 
-     
-        .then((value) => print("conversation Added"))
-        .catchError((error) => print("Failed to add conversation: $error"));
+    var abc = await FirebaseFirestore.instance
+        .collection("conversations")
+        .where('id', isEqualTo: docid)
+        .where("users", arrayContains: userModel!.uid)
+        .get();
+
+    for (var item in abc.docs) {
+      isContained = true;
+    }
+
+    Logger().wtf("********************* : "+abc.docs.length.toString());
+    if (isContained == false) {
+      await conversations
+          .doc(docid)
+          .update({
+            // "userArray": FieldValue.arrayUnion([userModel!.toJson]),
+            "users": FieldValue.arrayUnion([userModel.uid]),
+            "userArray": FieldValue.arrayUnion([userModel.toJson()])
+          })
+          .then((value) {})
+          .then((value) => print("conversation Added"))
+          .catchError((error) => print("Failed to add conversation: $error"));
+    }
   }
 }

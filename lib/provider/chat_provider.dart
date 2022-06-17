@@ -1,12 +1,12 @@
 import 'dart:io';
 
-
 import 'package:binary_app/controller/chat_controller.dart';
 import 'package:binary_app/model/objects.dart';
 import 'package:binary_app/provider/user_provider.dart';
 import 'package:binary_app/screens/Chat/chatScreen.dart';
 import 'package:binary_app/screens/chats/chat_main.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +27,6 @@ class ChatProvider extends ChangeNotifier {
   final TextEditingController _caption = TextEditingController();
   TextEditingController get captionController => _caption;
 
-
   bool isRightDoorLock = true;
 
   XFile? _imageFile;
@@ -36,7 +35,7 @@ class ChatProvider extends ChangeNotifier {
   XFile? get getImageFile => _imageFile;
 
   File _image = File("");
-  
+
   void updateRightDoorLock(String val) {
     if (val != "") {
       isRightDoorLock = true;
@@ -72,21 +71,37 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> sendMessage(BuildContext context) async {
+    List<String> words = ["boru","hora","borukaraya","palhora","bitch","keriya","keri","fuck","Huththa","Pakaya","payya"];
+    var string = _message.text;
+
+    bool existed = false;
+    words.forEach((item) {
+      // string.toUpperCase().contains(item.toUpperCase());
+      if (string.toUpperCase().contains(item.toUpperCase())) {
+        existed = true;
+      }
+    });
+
     try {
       if (_message.text.isNotEmpty) {
-        UserModel userModel =
-            Provider.of<UserProvider>(context, listen: false).getuserModel!;
-        await _chatController.sendMessage(
-          _conversationModel.id,
-          userModel.fname ,
-          userModel.uid,
-          userModel.image,
-          _message.text,
-        );
-        isRightDoorLock = false;
+        if (existed) {
+          Fluttertoast.showToast(msg: "Can't chatting this type of words");
+        } else {
+          UserModel userModel =
+              Provider.of<UserProvider>(context, listen: false).getuserModel!;
+          await _chatController.sendMessage(
+            _conversationModel.id,
+            userModel.fname,
+            userModel.uid,
+            userModel.image,
+            _message.text,
+          );
+          isRightDoorLock = false;
+        }
+
         notifyListeners();
       } else {
-        Logger().e(">>>>>>>>>>>>>>>>>> : Error ");
+        Logger().e(" Error ");
       }
     } catch (e) {
       Logger().e(e);
@@ -94,14 +109,14 @@ class ChatProvider extends ChangeNotifier {
   }
 
   void takePhoto(ImageSource source) async {
-    final pickedFile = await _picker.pickImage(
-      source:source// ImageSource.gallery,
-    );
+    final pickedFile =
+        await _picker.pickImage(source: source // ImageSource.gallery,
+            );
 
     _imageFile = pickedFile;
     if (pickedFile != null) {
       _image = File(pickedFile.path);
-     
+
       notifyListeners();
     } else {
       Logger().e("no image selected");
@@ -111,21 +126,18 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> captionWithImage(BuildContext context) async {
- UserModel userModel =
-            Provider.of<UserProvider>(context, listen: false).getuserModel!;
-        // await _chatController.sendMessage(
-        //   _conversationModel.id,
-        //   userModel.fname ,
-        //   userModel.uid,
-        //   userModel.image,
-        //   _message.text,
-        // );
-        await _chatController.captionWithImage(_conversationModel.id,_image,_caption.text,userModel);
-   
+    UserModel userModel =
+        Provider.of<UserProvider>(context, listen: false).getuserModel!;
+    // await _chatController.sendMessage(
+    //   _conversationModel.id,
+    //   userModel.fname ,
+    //   userModel.uid,
+    //   userModel.image,
+    //   _message.text,
+    // );
+    await _chatController.captionWithImage(
+        _conversationModel.id, _image, _caption.text, userModel);
+
     notifyListeners();
   }
-
-  
-
-  
 }

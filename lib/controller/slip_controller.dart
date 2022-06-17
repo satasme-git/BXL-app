@@ -80,9 +80,11 @@ class SlipController {
         'courseFee': coursemodel.CourseFee,
         'uid': userModel.uid,
         'userName': userModel.fname + "" + userModel.lname,
+        'email': userModel.email,
         'pay_amount':0,
         'create_at': day,
         'updated_at': day,
+        'user': userModel.toJson(),
         'status': 1,
       }).then((value) async {
         await res.doc(docId).set({

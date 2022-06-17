@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:binary_app/model/objects.dart';
 import 'package:binary_app/provider/chat_provider.dart';
 import 'package:binary_app/provider/user_provider.dart';
@@ -82,10 +84,14 @@ class _ChatState extends State<Chat> {
                       itemCount: list.length,
                       physics: BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
+
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           child: Consumer<UserProvider>(
                             builder: (context, value, child) {
+                              String mystring = list[index].sendarName;
+                              String upperLeter=mystring[0].toUpperCase();
+
                               return Column(
                                 children: [
                                   list[index].senderid ==
@@ -175,14 +181,14 @@ class _ChatState extends State<Chat> {
                                                     height: 45,
                                                     width: 45,
                                                     decoration: BoxDecoration(
-                                                      color: Colors.orange,
+                                                      color: Color(Random().nextInt(0xffffffff)),
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               45),
                                                     ),
-                                                    child: const Center(
+                                                    child:  Center(
                                                       child: Text(
-                                                        "S",
+                                                        "${upperLeter}",
                                                         style: TextStyle(
                                                           color: Colors.white,
                                                           fontSize: 30,

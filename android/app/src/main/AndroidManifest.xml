@@ -36,7 +36,7 @@
             </intent-filter>
              <intent-filter>
                 <action android:name="FLUTTER_NOTIFICATION_CLICK"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
             <meta-data
                 android:name="com.google.android.gms.version"
