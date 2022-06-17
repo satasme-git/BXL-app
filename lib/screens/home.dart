@@ -29,6 +29,29 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+     Future<bool> initBackButton() async {
+    Logger().d('back button pressed');
+    return await showDialog(
+          context: context,
+          builder: (context) => ElasticIn(
+            child: AlertDialog(
+              title: const CustomText(text: 'Exit App'),
+              content: const CustomText(text: 'Do you really want to exit an App ?'),
+              actions: [
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const CustomText(text: 'No'),
+                ),
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const CustomText(text: 'Yes'),
+                ),
+              ],
+            ),
+          ),
+        ) ??
+        false;
+  }
   /* secureScreen() async {
     await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
   }*/
@@ -48,9 +71,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return WillPopScope(
-      onWillPop: () {
-        exit(0);
-      },
+         onWillPop:initBackButton,
+      // onWillPop: () {
+      //   exit(0);
+      // },
       child: Scaffold(
           backgroundColor: Color(0xFFECF3F9),
           //backgroundColor: Colors.lightBlue[50],
