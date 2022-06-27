@@ -7,7 +7,10 @@ import 'package:logger/logger.dart';
 
 import '../controller/slip_controller.dart';
 import '../model/user_model.dart';
+import '../screens/Payment/Slippay.dart';
+import '../screens/Payment/view_all_slips.dart';
 import '../screens/components/custom_dialog.dart';
+import '../utils/util_functions.dart';
 
 class SlipProvider extends ChangeNotifier {
   final SlipController _slipController = SlipController();
@@ -50,15 +53,25 @@ class SlipProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> startAddSlipData(BuildContext context, UserModel userModel) async {
+  Future<void> clearImagePicker() async {
+    _image = File("");
+    notifyListeners();
+  }
+
+  Future<void> startAddSlipData(
+      BuildContext context, UserModel userModel) async {
     try {
       if (inputValidation()) {
         setLoading(true);
-        
-        await _slipController.saveSlipData(_image, _selectedCourse, userModel).then((value){
+
+        await _slipController
+            .saveSlipData(_image, _selectedCourse, userModel)
+            .then((value) {
+          _image = File("");
+
           _image.delete();
-          _selectedCourse="";
-           notifyListeners();
+          // _selectedCourse = "";
+          notifyListeners();
         });
 
         setLoading();
@@ -66,26 +79,21 @@ class SlipProvider extends ChangeNotifier {
           context,
           DialogType.SUCCES,
           'Success.',
-          'Successfuly upload slip',
-          
+          'Successfully uploaded the slip.\n We will get back to you soon',
+          () {
+            UtilFuntions.pageTransition(
+                context, const ViewAllSlips(), const slipPay());
+          },
         );
       } else {
         setLoading();
-        DialogBox().dialogBox(
-          context,
-          DialogType.ERROR,
-          'Error.',
-          'Please select an image',
-        );
+        DialogBox().dialogBox(context, DialogType.ERROR, 'Error.',
+            'Please select an image', () {});
       }
     } catch (e) {
       setLoading();
-      // DialogBox().dialogBox(
-      //   context,
-      //   DialogType.ERROR,
-      //   'Incorrect information.',
-      //   'Please enter correct information',
-      // );
+      DialogBox().dialogBox(context, DialogType.ERROR, 'Somthing went wrong!',
+          'Please try again', () {});
     }
   }
 

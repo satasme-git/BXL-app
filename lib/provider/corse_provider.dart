@@ -1,10 +1,18 @@
+import 'package:binary_app/controller/course_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+
 import '../model/corse_pay_model.dart';
+import '../model/course_model.dart';
+import '../model/user_model.dart';
+import '../screens/Video/video.dart';
 import '../screens/test_content.dart';
+import '../utils/util_functions.dart';
 
 class CourseProvider extends ChangeNotifier {
+  final CourseController _coursecontroller = CourseController();
+  Coursemodel? _courseModel;
   Map<String, dynamic> userSearchItems = {};
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   CollectionReference course_pay =
@@ -25,9 +33,16 @@ class CourseProvider extends ChangeNotifier {
   String _paid = "no";
   String get getPaid => _paid;
 
-  List<CoursePaymodel> _list = [];
+  String _paid_for_course = "0";
+  String get getPaidFoCourse => _paid_for_course;
+
+  final List<CoursePaymodel> _list = [];
 
   List<CoursePaymodel> get payedCourseList => _list;
+
+  bool _isLoading = false;
+  //get loading state
+  bool get isLoading => _isLoading;
 
   Future<void> setPrice(String val) async {
     price = val;
@@ -40,21 +55,20 @@ class CourseProvider extends ChangeNotifier {
       (value) {
         userSearchItems = {};
         var i = 1;
-        value.docs.forEach(
-          (result) {
-            String id = i.toString();
-            userSearchItems[id] = {
-              "id": result.id.toString(),
-              "name": result.get('name'),
-              "section_id": result.get('section_id'),
-              "video_id": result.get('video_id'),
-              "vid": result.get('vid'),
-              "duration": result.get('duration')
-            };
-            notifyListeners();
-            i++;
-          },
-        );
+        for (var result in value.docs) {
+          String id = i.toString();
+          userSearchItems[id] = {
+            "id": result.id.toString(),
+            "name": result.get('name'),
+            "section_id": result.get('section_id'),
+            "video_id": result.get('video_id'),
+            "vid": result.get('vid'),
+            "duration": result.get('duration'),
+            "status": _paid_for_course != "1" ? result.get('status') : "0"
+          };
+          notifyListeners();
+          i++;
+        }
       },
     );
   }
@@ -68,19 +82,17 @@ class CourseProvider extends ChangeNotifier {
       (value) {
         section = {};
         var i = 1;
-        value.docs.forEach(
-          (result) {
-            String id = i.toString();
-            section[id] = {
-              "id": result.id.toString(),
-              "course_id": result.get('course_id'),
-              "section": result.get('section')
-            };
+        for (var result in value.docs) {
+          String id = i.toString();
+          section[id] = {
+            "id": result.id.toString(),
+            "course_id": result.get('course_id'),
+            "section": result.get('section')
+          };
 
-            notifyListeners();
-            i++;
-          },
-        );
+          notifyListeners();
+          i++;
+        }
       },
     );
   }
@@ -91,13 +103,14 @@ class CourseProvider extends ChangeNotifier {
     for (var item in getSection.values) {
       for (var item2 in getItems.values) {
         if (item['id'] == item2['section_id']) {
-          data2.add(
-              DataList(item2['name'], item2['video_id'], item2['duration']));
+          data2.add(DataList(item2['name'], item2['video_id'],
+              item2['duration'], item2['status']));
           // data2.add(DataList(item2['video_id']));
         }
       }
       data.add(DataList(
         item['section'].toString(),
+        "",
         "",
         "",
         data2,
@@ -128,22 +141,63 @@ class CourseProvider extends ChangeNotifier {
     }
   }
 
-  void seachPayed(String val) {
-    String course_Name = val;
-
+  Future<String> seachPayed(String val) async {
+    String courseName = val;
     for (var i = 0; i < payedCourseList.length; i++) {
       String courseName = payedCourseList[i].courseName;
-      if (courseName == course_Name) {
+      if (courseName == courseName) {
         _paid = "Yes";
+        notifyListeners();
       }
     }
+
+    return _paid;
+  }
+
+  Future<void> seachPayedCourse(String courseName, UserModel? userModel) async {
+    var paidForCourse = await FirebaseFirestore.instance
+        .collection("course_pay")
+        .where('uid', isEqualTo: userModel!.uid)
+        .where("courseName", isEqualTo: courseName)
+        .where("status", isEqualTo: 2)
+        .get();
+
+    _paid_for_course = paidForCourse.docs.length.toString();
 
     notifyListeners();
   }
 
-  void setPayed() {
-    _paid = "no";
+  Future<void> getcoursebyid(String courseId, String vid, UserModel? usermodel,
+      BuildContext context) async {
+    setLoading(true);
+    _courseModel = await _coursecontroller.getCourseById(courseId);
+    await seachPayedCourse(_courseModel!.CourseName, usermodel);
 
+    if (_paid_for_course == "1") {
+      setLoading();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => videoplay(Linkid: vid),
+        ),
+      );
+    } else {
+      setLoading();
+      UtilFuntions.paymetDialog(usermodel!.fname, context);
+    }
     notifyListeners();
+  }
+
+  //change loading state
+  void setLoading([bool val = false]) {
+    _isLoading = val;
+    notifyListeners();
+  }
+
+  Future getFuture() {
+    return Future(() async {
+      await Future.delayed(const Duration(seconds: 1));
+      return 'Hello, Future Progress Dialog!';
+    });
   }
 }

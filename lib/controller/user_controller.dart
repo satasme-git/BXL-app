@@ -116,6 +116,7 @@ class UserController {
         DialogType.SUCCES,
         'SUCCESS',
         'Profile updated',
+        (){}
       );
       Provider.of<UserProvider>(context, listen: false).setLoading();
     }).catchError((error) => print("Failed to add user: $error"));
@@ -150,5 +151,20 @@ class UserController {
           .then((value) => print("conversation Added"))
           .catchError((error) => print("Failed to add conversation: $error"));
     }
+  }
+
+  Future<int> getCourseCount() async {
+    int count = await FirebaseFirestore.instance
+        .collection('course')
+        .get()
+        .then((value) => value.size);
+    return count;
+  }
+   Future<int> getVideoCount() async {
+    int count = await FirebaseFirestore.instance
+        .collection('videoLecture')
+        .get()
+        .then((value) => value.size);
+    return count;
   }
 }

@@ -2,7 +2,6 @@ import 'package:binary_app/controller/chat_controller.dart';
 import 'package:binary_app/model/objects.dart';
 import 'package:binary_app/provider/chat_provider.dart';
 import 'package:binary_app/provider/user_provider.dart';
-import 'package:binary_app/screens/Chat/chatScreen.dart';
 import 'package:binary_app/screens/chats/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
 import '../../utils/util_functions.dart';
 
 class ConversationList extends StatefulWidget {
@@ -26,7 +26,7 @@ class _ConversationListState extends State<ConversationList> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color(0xFFECF3F9),
+      backgroundColor: const Color(0xFFECF3F9),
       appBar: AppBar(
         backgroundColor: HexColor("#283890"),
         elevation: 0,
@@ -40,29 +40,13 @@ class _ConversationListState extends State<ConversationList> {
             MaterialCommunityIcons.dots_vertical,
             size: 20,
           ),
-          // Image.network(
-          //   "https://placekitten.com/640/360",
-          //   height: 45,
-          //   width: 45,
-          //   loadingBuilder: (BuildContext context, Widget child,
-          //       ImageChunkEvent? loadingProgress) {
-          //     if (loadingProgress == null) return child;
-          //     return Center(
-          //       child: CircularProgressIndicator(
-          //         value: loadingProgress.expectedTotalBytes != null
-          //             ? loadingProgress.cumulativeBytesLoaded /
-          //                 loadingProgress.expectedTotalBytes!
-          //             : null,
-          //       ),
-          //     );
-          //   },
-          // ),
+      
           SizedBox(
             width: 20,
           ),
         ],
         leading: Container(
-          margin: EdgeInsets.all(10),
+          margin: const EdgeInsets.all(10),
           // height: 25,
           // width: 25,
           decoration: BoxDecoration(
@@ -71,7 +55,7 @@ class _ConversationListState extends State<ConversationList> {
           child: Builder(
             builder: (BuildContext context) {
               return IconButton(
-                padding: EdgeInsets.all(3),
+                padding: const EdgeInsets.all(3),
                 icon: const Icon(
                   MaterialCommunityIcons.chevron_left,
                   size: 30,
@@ -113,10 +97,10 @@ class _ConversationListState extends State<ConversationList> {
                 }
                 Logger().w(snapshot.data!.docs.length);
                 return ListView.separated(
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
                     return ConversationCard(
-                      model: list[index],
+                      model: list[index],index: index,
                     );
                   },
                   separatorBuilder: (context, index) => Container(
@@ -137,10 +121,12 @@ class _ConversationListState extends State<ConversationList> {
 class ConversationCard extends StatelessWidget {
   const ConversationCard({
     required this.model,
+    required this.index,
     Key? key,
   }) : super(key: key);
 
   final ConversationModel model;
+   final int index;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -148,7 +134,7 @@ class ConversationCard extends StatelessWidget {
       onTap: () {
         Provider.of<ChatProvider>(context, listen: false).setConv(model);
         UtilFuntions.pageTransition(
-            context, Chat(convId: model.id), const ConversationList());
+            context, Chat(convId: model.id,index:index), const ConversationList());
       },
       child: Container(
         padding: const EdgeInsets.symmetric(
@@ -173,7 +159,7 @@ class ConversationCard extends StatelessWidget {
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(45),
                             child: Hero(
-                              tag: "profgroup",
+                              tag: "profgroup$index",
                               child: Image.asset(
                                 "assets/avatar.jpg",
                                 height: 45,
@@ -185,7 +171,7 @@ class ConversationCard extends StatelessWidget {
                         : ClipRRect(
                             borderRadius: BorderRadius.circular(45),
                             child: Hero(
-                              tag: "profgroup",
+                              tag: "profgroup$index",
                               child: Image.network(
                                 model.image,
                                 height: 45,
@@ -213,7 +199,7 @@ class ConversationCard extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 3,
                           ),
                           Row(
@@ -228,7 +214,7 @@ class ConversationCard extends StatelessWidget {
                                       fontSize: 14, color: Colors.grey),
                                 ),
                               ),
-                              Container(
+                              SizedBox(
                                 width: 120,
                                 child: Text(
                                   model.lastMessage,
@@ -247,7 +233,7 @@ class ConversationCard extends StatelessWidget {
                 ),
                 Text(
                   timeago.format(DateTime.parse(model.lastMessageTime)),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12,
                     color: Colors.grey,
                   ),

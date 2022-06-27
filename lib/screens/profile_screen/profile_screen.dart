@@ -60,178 +60,179 @@ class _ProfileScreenState extends State<ProfileScreen> {
         },
         child: SingleChildScrollView(
           child: Container(
-              color: Colors.grey[100],
-              width: size.width,
-              height: size.height,
-              child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  child: Consumer<UserProvider>(
-                    builder: (context, value, child) {
-                      return Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 70,
-                            ),
-                            CircleImageAvatar(
-                              radius: 55,
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  builder: ((builder) =>
-                                      BottomSheet(size: size)),
-                                );
-                              },
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              value.getuserModel!.email,
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Colors.black,
-                              ),
-                            ),
-                             Text(
-                              value.getuserModel!.fname,
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            customTextField(
-                              MaterialCommunityIcons.account_outline,
-                              "First Name",
-                              "First Name",
-                              false,
-                              false,
-                              value.fnameController,
-                              (value) {
-                                if (value!.isEmpty) {
-                                  return ("Please enter first name");
-                                }
-
-                                // return null;
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            customTextField(
-                              MaterialCommunityIcons.account_outline,
-                              "Last Name",
-                              "Last name",
-                              false,
-                              true,
-                              value.lnameController,
-                              (value) {
-                                if (value!.isEmpty) {
-                                  return ("Please enter last email");
-                                }
-
-                                // return null;
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            customTextField(
-                              MaterialCommunityIcons.email_outline,
-                              "Email Address",
-                              "Email Address",
-                              false,
-                              true,
-                              value.emailController,
-                              (value) {
-                                if (value!.isEmpty) {
-                                  return ("Please enter your email");
-                                }
-                                if (!RegExp(
-                                        "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
-                                    .hasMatch(value)) {
-                                  return ("Please Enter a valid email");
-                                }
-                                // return null;
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            customTextField(
-                              MaterialCommunityIcons.phone_outline,
-                              "Phone Number",
-                              "Phone Number",
-                              true,
-                              false,
-                              value.phoneController,
-                              (value) {
-                                if (value!.isEmpty) {
-                                  return ("Please enter your email");
-                                }
-                                if (!RegExp('^(?:[+0]9)?[0-9]{10}')
-                                    .hasMatch(value)) {
-                                  return ("Please Enter a valid phone number");
-                                }
-                                // return null;
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            value.isLoading
-                                ? Container(
-                                    height: 52,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue.withOpacity(.3),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: const Center(
-                                      child: CustomLoader(),
-                                    ),
-                                  )
-                                : ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.all(0.0),
-                                      elevation: 3,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        value.UpdateUser(context, _formKey,
-                                            value.getuserModel!.uid);
-                                      }
-                                    },
-                                    child: Ink(
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.blue,
-                                        // gradient: const LinearGradient(
-                                        //     colors: [Colors.red, Colors.orange]),
-                                      ),
-                                      child: Container(
-                                        padding: const EdgeInsets.all(18),
-                                        child: const Text('update Now',
-                                            textAlign: TextAlign.center),
-                                      ),
-                                    ),
-                                  ),
-                          ],
+            color: Colors.grey[100],
+            width: size.width,
+            height: size.height,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: Consumer<UserProvider>(
+                builder: (context, value, child) {
+                  return Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 70,
                         ),
-                      );
-                    },
-                  ))),
+                        CircleImageAvatar(
+                          radius: 55,
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: ((builder) => BottomSheet(size: size)),
+                            );
+                          },
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          value.getuserModel!.email,
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          value.getuserModel!.fname,
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        customTextField(
+                          MaterialCommunityIcons.account_outline,
+                          "First Name",
+                          "First Name",
+                          false,
+                          false,
+                          value.fnameController,
+                          (value) {
+                            if (value!.isEmpty) {
+                              return ("Please enter first name");
+                            }
+
+                            // return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        customTextField(
+                          MaterialCommunityIcons.account_outline,
+                          "Last Name",
+                          "Last name",
+                          false,
+                          true,
+                          value.lnameController,
+                          (value) {
+                            if (value!.isEmpty) {
+                              return ("Please enter last email");
+                            }
+
+                            // return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        customTextField(
+                          MaterialCommunityIcons.email_outline,
+                          "Email Address",
+                          "Email Address",
+                          false,
+                          true,
+                          value.emailController,
+                          (value) {
+                            if (value!.isEmpty) {
+                              return ("Please enter your email");
+                            }
+                            if (!RegExp(
+                                    "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                                .hasMatch(value)) {
+                              return ("Please Enter a valid email");
+                            }
+                            // return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        customTextField(
+                          MaterialCommunityIcons.phone_outline,
+                          "Phone Number",
+                          "Phone Number",
+                          true,
+                          false,
+                          value.phoneController,
+                          (value) {
+                            if (value!.isEmpty) {
+                              return ("Please enter your email");
+                            }
+                            if (!RegExp('^(?:[+0]9)?[0-9]{10}')
+                                .hasMatch(value)) {
+                              return ("Please Enter a valid phone number");
+                            }
+                            // return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        value.isLoading
+                            ? Container(
+                                height: 52,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.withOpacity(.3),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: const Center(
+                                  child: CustomLoader(),
+                                ),
+                              )
+                            : ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.all(0.0),
+                                  elevation: 3,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    value.UpdateUser(context, _formKey,
+                                        value.getuserModel!.uid);
+                                  }
+                                },
+                                child: Ink(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.blue,
+                                    // gradient: const LinearGradient(
+                                    //     colors: [Colors.red, Colors.orange]),
+                                  ),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(18),
+                                    child: const Text('update Now',
+                                        textAlign: TextAlign.center),
+                                  ),
+                                ),
+                              ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -328,7 +329,7 @@ class BottomSheet extends StatelessWidget {
                 children: [
                   FlatButton.icon(
                     onPressed: () {
-                       value.takePhoto(ImageSource.camera);
+                      value.takePhoto(ImageSource.camera);
                     },
                     icon: Icon(Icons.camera),
                     label: Text("Camera"),

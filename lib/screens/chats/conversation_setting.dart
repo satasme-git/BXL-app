@@ -28,6 +28,7 @@ class _ConversationSettingsState extends State<ConversationSettings> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
         children: [
@@ -35,7 +36,7 @@ class _ConversationSettingsState extends State<ConversationSettings> {
             controller: _scrolController,
             slivers: [
               SliverAppBar(
-                backgroundColor:   HexColor("#283890"),
+                backgroundColor: HexColor("#283890"),
                 pinned: true,
                 leading: AnimatedOpacity(
                   opacity: top <= 130 ? 0.0 : 1.0,
@@ -55,13 +56,12 @@ class _ConversationSettingsState extends State<ConversationSettings> {
                       builder: (context, constraints) {
                         top = constraints.biggest.height;
                         return FlexibleSpaceBar(
-                         
                           centerTitle: true,
                           title: AnimatedOpacity(
                             opacity: top <= 130 ? 1.0 : 0.0,
                             duration: Duration(milliseconds: 300),
                             child: Row(
-                              children:  [
+                              children: [
                                 SizedBox(
                                   width: 12,
                                 ),
@@ -83,7 +83,7 @@ class _ConversationSettingsState extends State<ConversationSettings> {
                           background: Hero(
                             tag: "profgroup",
                             child: Image.network(
-                                value.conv.image,
+                              value.conv.image,
                               // "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                               fit: BoxFit.cover,
                             ),
@@ -94,24 +94,74 @@ class _ConversationSettingsState extends State<ConversationSettings> {
                   },
                 ),
               ),
-              SliverToBoxAdapter(
-                child: ListView.builder(
-                  primary: false,
-                  shrinkWrap: true,
-                  itemCount: 10,
-                  itemBuilder: (ctx, i) => Card(
-                    child: ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text("title"),
-                      subtitle: Text("subtitle"),
-                      trailing: Icon(
-                        Icons.edit,
-                        color: Colors.red,
-                      ),
+              SliverToBoxAdapter(child: Consumer<ChatProvider>(
+              
+                builder: (context, value, child) {
+                  return SizedBox(
+                    height: size.height,
+                    child: Column(
+                     
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(15),
+                          width: size.width,
+                          height: size.height/7,
+                          color: Colors.white,
+                          child: Column(
+                             crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("info"),
+                              SizedBox(height: 10,),
+                             value.conv.description!="" ?Text(value.conv.description):Text(""),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        ListView.builder(
+                          padding: EdgeInsets.all(0),
+                          primary: false,
+                          shrinkWrap: true,
+                          itemCount: value.conv.userArray.length,
+                          itemBuilder: (BuildContext context, index) => Card(
+                            child: ListTile(
+                              leading: value.conv.userArray[index].image ==
+                                      "null"
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(45),
+                                      child: Image.asset(
+                                        "assets/avatar.jpg",
+                                        height: 45,
+                                        width: 45,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    )
+                                  : ClipRRect(
+                                      borderRadius: BorderRadius.circular(45),
+                                      child: Image.network(
+                                        value.conv.userArray[index].image,
+                                        height: 45,
+                                        width: 45,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                              title: Text(value.conv.userArray[index].fname
+                                      .toString() +
+                                  " " +
+                                  value.conv.userArray[index].lname.toString()),
+                              subtitle: Text(
+                                  value.conv.userArray[index].email.toString()),
+                              trailing: Icon(
+                                Icons.edit,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-              ),
+                  );
+                },
+              )),
             ],
           ),
           _buildFab(),
@@ -121,7 +171,7 @@ class _ConversationSettingsState extends State<ConversationSettings> {
   }
 
   Widget _buildFab() {
-    final double defaultMargin = 260;
+    final double defaultMargin = 265;
     final double defaultStart = 220;
     final double defaultEnd = defaultStart / 2;
     double top = defaultMargin;
@@ -141,9 +191,19 @@ class _ConversationSettingsState extends State<ConversationSettings> {
       top: top,
       right: 16,
       child: Transform(
-          alignment: Alignment.center,
-          transform: Matrix4.identity()..scale(scale),
-          child: FloatingActionButton(onPressed: () {})),
+        alignment: Alignment.center,
+        transform: Matrix4.identity()..scale(scale),
+        child: SizedBox(
+          width: 40,
+          height: 40,
+          child: FloatingActionButton(
+            onPressed: () {},
+            child: const Icon(Icons.camera_alt_outlined),
+            backgroundColor: Colors.blue,
+            splashColor: Colors.yellow,
+          ),
+        ),
+      ),
     );
   }
 }

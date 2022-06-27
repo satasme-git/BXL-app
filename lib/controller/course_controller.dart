@@ -1,3 +1,4 @@
+import 'package:binary_app/model/course_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logger/logger.dart';
 
@@ -8,9 +9,10 @@ class CourseController {
   // FirebaseFirestore.instance.collection('users');
   // final _firestore = FirebaseFirestore.instance;
 
+  CollectionReference course = FirebaseFirestore.instance.collection('course');
+
   Future<List<DocumentSnapshot>> getProduceID() async {
-    var data = await FirebaseFirestore.instance
-        .collection('Section').get();
+    var data = await FirebaseFirestore.instance.collection('Section').get();
 
     // var data = await FirebaseFirestore.instance
     //     .collection('course').where('type', isEqualTo: '1')
@@ -20,5 +22,12 @@ class CourseController {
     var productId = data.docs;
     Logger().d(">>>>>>>>>>>>>>>>>>>>>>>>> : " + productId.toString());
     return productId;
+  }
+
+  Future<Coursemodel> getCourseById(docid) async {
+    DocumentSnapshot snapshot = await course.doc(docid).get();
+
+  Logger().d("(((((((((((((((>>>>>>>>>>>>>>>>>>>>>>>>>))))))))))))))) : " + docid);
+    return Coursemodel.fromJson(snapshot.data() as Map<String, dynamic>);
   }
 }

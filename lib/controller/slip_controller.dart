@@ -14,7 +14,7 @@ import '../model/user_model.dart';
 class SlipController {
   final uuid = Uuid();
   String? cp_id;
-   late Coursemodel coursemodel;
+    Coursemodel? coursemodel;
    CollectionReference course = FirebaseFirestore.instance.collection('course');
 
   CollectionReference res =
@@ -77,7 +77,7 @@ class SlipController {
       await course_pay.doc(cpdocId).set({
         'cpid': cpdocId,
         'courseName': coursename,
-        'courseFee': coursemodel.CourseFee,
+        'courseFee': coursemodel!.CourseFee,
         'uid': userModel.uid,
         'userName': userModel.fname + "" + userModel.lname,
         'email': userModel.email,
@@ -116,6 +116,7 @@ class SlipController {
     }
 
     Logger().i(downloadurl);
+  
   }
 
 //upload image to th firebase

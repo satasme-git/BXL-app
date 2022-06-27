@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:provider/provider.dart';
 
+import '../provider/user_provider.dart';
 import 'Video/video.dart';
 
 class TestContent extends StatefulWidget {
@@ -27,14 +28,14 @@ class _TestContentState extends State<TestContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar:_appBar(),
+        appBar: _appBar(),
         body: Consumer<CourseProvider>(
           builder: (context, value, child) {
             return MediaQuery.removePadding(
               context: context,
               removeTop: true,
               child: ListView.builder(
-                padding: EdgeInsets.all(0.0),
+                padding: const EdgeInsets.all(0.0),
                 primary: true,
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) =>
@@ -48,11 +49,12 @@ class _TestContentState extends State<TestContent> {
 }
 
 class DataList {
-  DataList(this.title, this.videoid, this.duration,
+  DataList(this.title, this.videoid, this.duration, this.status,
       [this.children = const <DataList>[]]);
   final String title;
   final String videoid;
   final String duration;
+  final String status;
   final List<DataList> children;
 }
 
@@ -72,25 +74,33 @@ class _DataPopUpState extends State<DataPopUp> {
       return ListTile(
         dense: true,
         contentPadding:
-            EdgeInsets.only(left: 40.0, right: 15.0, top: 0, bottom: 0.0),
-        visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+            const EdgeInsets.only(left: 40.0, right: 15.0, top: 0, bottom: 0.0),
+        visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
         selectedColor: Colors.red,
         leading: const Icon(
             MaterialCommunityIcons.checkbox_blank_circle_outline,
             size: 15,
             color: Colors.deepPurpleAccent),
         title: Transform.translate(
-          offset: Offset(-16, 0),
+          offset: const Offset(-16, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(
+                height: 5,
+              ),
               Text(
                 root.title,
-                style: TextStyle(height: 0.5),
+                style: const TextStyle(height: 0.5),
+                overflow: TextOverflow.ellipsis,
+                 maxLines: 1,
+              ),
+              const SizedBox(
+                height: 4,
               ),
               Row(
                 children: [
-                  Text(
+                  const Text(
                     "duration :",
                     style: TextStyle(
                       color: Colors.grey,
@@ -100,32 +110,48 @@ class _DataPopUpState extends State<DataPopUp> {
                   Text(
                     root.duration,
                     style: TextStyle(
-                      color: Colors.grey[600],
-                      fontWeight: FontWeight.bold
-                    ),
+                        color: Colors.grey[600], fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
             ],
           ),
         ),
-        trailing: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => videoplay(Linkid: root.videoid),
-              ),
+        trailing: Consumer<UserProvider>(
+          builder: (context, value, child) {
+            return InkWell(
+              onTap: () {
+                root.status == "0"
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => videoplay(Linkid: root.videoid),
+                        ),
+                      )
+                    : UtilFuntions.paymetDialog(
+                        value.getuserModel!.fname, context);
+
+                // UtilFuntions().paymetDialog(value,context);
+              },
+              child: root.status == "0"
+                  ? Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.grey[300]),
+                      child: const Icon(MaterialCommunityIcons.video_check,
+                          size: 15, color: Colors.deepPurpleAccent),
+                    )
+                  : Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.grey[300]),
+                      child: const Icon(MaterialCommunityIcons.video_3d_off,
+                          size: 15, color: Colors.grey),
+                    ),
             );
           },
-          child: Container(
-            padding: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: Colors.grey[300]),
-            child: const Icon(MaterialCommunityIcons.video_check,
-                size: 15, color: Colors.deepPurpleAccent),
-          ),
         ),
       );
     return MediaQuery.removePadding(
@@ -155,37 +181,37 @@ class _DataPopUpState extends State<DataPopUp> {
     return _buildTiles(widget.popup);
   }
 }
-  AppBar _appBar() {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0.0,
-      title: Text(
-        "Course Content",
-        style: TextStyle(color: Colors.black,fontSize: 16),
-        
+
+AppBar _appBar() {
+  return AppBar(
+    backgroundColor: Colors.transparent,
+    elevation: 0.0,
+    title: const Text(
+      "Course Content",
+      style: TextStyle(color: Colors.black, fontSize: 16),
+    ),
+    leading: Container(
+      margin: const EdgeInsets.all(10),
+      // height: 25,
+      // width: 25,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10), color: Colors.white),
+      child: Builder(
+        builder: (BuildContext context) {
+          return IconButton(
+            padding: const EdgeInsets.all(3),
+            icon: const Icon(
+              MaterialCommunityIcons.chevron_left,
+              size: 30,
+            ),
+            color: Colors.black,
+            onPressed: () {
+              UtilFuntions.goBack(context);
+            },
+            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+          );
+        },
       ),
-      leading: Container(
-        margin: EdgeInsets.all(10),
-        // height: 25,
-        // width: 25,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10), color: Colors.white),
-        child: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              padding: EdgeInsets.all(3),
-              icon: const Icon(
-                MaterialCommunityIcons.chevron_left,
-                size: 30,
-              ),
-              color: Colors.black,
-              onPressed: () {
-                UtilFuntions.goBack(context);
-              },
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-            );
-          },
-        ),
-      ),
-    );
-  }
+    ),
+  );
+}

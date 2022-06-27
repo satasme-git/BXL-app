@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+
 import '../../provider/user_provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -65,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
+            SizedBox(
               width: 160,
               child: Image.asset(
                 'assets/logo.png',

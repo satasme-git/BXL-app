@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -152,9 +153,37 @@ class _referState extends State<refer> {
                 ),
               ],
             )
+            ,
+             FlatButton(
+                child: Text('Share text and link'),
+                onPressed: share,
+              ),
+              // FlatButton(
+              //   child: Text('Share local file'),
+              //   onPressed: shareFile,
+              // ),
           ],
         ),
       ),
     );
   }
+  Future<void> share() async {
+    await FlutterShare.share(
+      title: 'Example share',
+      text: 'Example share text',
+      linkUrl: 'https://flutter.dev/',
+      chooserTitle: 'Example Chooser Title'
+    );
+  }
+
+  // Future<void> shareFile() async {
+  //   List<dynamic> docs = await DocumentsPicker.pickDocuments;
+  //   if (docs == null || docs.isEmpty) return null;
+
+  //   await FlutterShare.shareFile(
+  //     title: 'Example share',
+  //     text: 'Example share text',
+  //     filePath: docs[0] as String,
+  //   );
+  // }
 }

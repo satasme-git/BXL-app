@@ -21,6 +21,11 @@ import '../utils/util_functions.dart';
 import 'dart:io';
 
 class UserProvider extends ChangeNotifier {
+  int _videocount = 0;
+  int get getvideocount => _videocount;
+
+  int _coursecount = 0;
+  int get getcoursecount => _coursecount;
   // final _formKey = GlobalKey<FormState>();
   String? errorMessage;
   final _auth = FirebaseAuth.instance;
@@ -92,7 +97,9 @@ class UserProvider extends ChangeNotifier {
       } else {
         Logger().i('User is signed in!');
         await fetchSingleUser(context, user.uid).then((value) => {
-              UtilFuntions.navigateTo(context, const HomeScreen()),
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                  (Route<dynamic> route) => false),
             });
 
         // addUserToConversation(context, user.uid);
@@ -115,13 +122,18 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<void> fetchSingleUser(BuildContext context, String id) async {
+    _coursecount = await _usercontroller.getCourseCount();
+    _videocount = await _usercontroller.getVideoCount();
+
+
+Logger().d("___________________________________ : "+_videocount.toString()+" / "+_coursecount.toString());
     _userModel = await _usercontroller.getUserData(context, id);
     fname.text = _userModel!.fname;
     lname.text = _userModel!.lname;
     email.text = _userModel!.email;
     phone.text = _userModel!.phone;
 
-  await _usercontroller.addUserToConv(context, _userModel);
+    await _usercontroller.addUserToConv(context, _userModel);
     notifyListeners();
   }
 
@@ -178,6 +190,11 @@ class UserProvider extends ChangeNotifier {
     _userModel = await _usercontroller.updateUser(
         context, fname.text, lname.text, email.text, phone.text, uid);
     // await _auth.r
+    notifyListeners();
+  }
+  Future<void> clearImagePicker() async {
+    _image = File("");
+
     notifyListeners();
   }
 }

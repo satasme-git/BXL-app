@@ -4,34 +4,30 @@ import 'package:binary_app/model/objects.dart';
 import 'package:binary_app/provider/chat_provider.dart';
 import 'package:binary_app/provider/user_provider.dart';
 import 'package:binary_app/screens/Chat/chatScreen.dart';
-import 'package:binary_app/screens/Payment/payment_screen.dart';
-import 'package:binary_app/screens/aboutus/aboutus.dart';
 import 'package:binary_app/screens/chats/chat_image.dart';
-import 'package:binary_app/screens/course/course_details.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/bubble_type.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
-
 import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_1.dart';
 import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_5.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:link_text/link_text.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../../controller/chat_controller.dart';
 import '../../utils/util_functions.dart';
 import 'conversation_setting.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class Chat extends StatefulWidget {
-  const Chat({Key? key, required this.convId}) : super(key: key);
+  const Chat({Key? key, required this.convId,required this.index}) : super(key: key);
 
   final String convId;
+  final int index;
   @override
   State<Chat> createState() => _ChatState();
 }
@@ -49,7 +45,7 @@ class _ChatState extends State<Chat> {
           return Scaffold(
             backgroundColor: HexColor("#efe7e1"),
             appBar: PreferredSize(
-                child: AppBarSection(),
+                child:  AppBarSection(index:widget.index),
                 preferredSize: Size.fromHeight(size.height / 12)),
 
             body: Stack(
@@ -58,7 +54,7 @@ class _ChatState extends State<Chat> {
                   stream: ChatController().getMessage(widget.convId),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
-                      return Center(
+                      return const Center(
                         child: Text("no messages"),
                       );
                     }
@@ -80,9 +76,9 @@ class _ChatState extends State<Chat> {
                     Logger().w(snapshot.data!.docs.length);
                     return ListView.builder(
                       reverse: true,
-                      padding: EdgeInsets.only(bottom: 60),
+                      padding: const EdgeInsets.only(bottom: 60),
                       itemCount: list.length,
-                      physics: BouncingScrollPhysics(),
+                      physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
 
                         return Padding(
@@ -188,8 +184,8 @@ class _ChatState extends State<Chat> {
                                                     ),
                                                     child:  Center(
                                                       child: Text(
-                                                        "${upperLeter}",
-                                                        style: TextStyle(
+                                                        upperLeter,
+                                                        style: const TextStyle(
                                                           color: Colors.white,
                                                           fontSize: 30,
                                                         ),
@@ -211,11 +207,11 @@ class _ChatState extends State<Chat> {
                                               clipper: ChatBubbleClipper1(
                                                   type: BubbleType
                                                       .receiverBubble),
-                                              backGroundColor: Color.fromARGB(
+                                              backGroundColor: const Color.fromARGB(
                                                   255, 255, 255, 255),
-                                              margin: EdgeInsets.only(top: 15),
+                                              margin: const EdgeInsets.only(top: 15),
                                               child: Container(
-                                                margin: EdgeInsets.only(top: 0),
+                                                margin: const EdgeInsets.only(top: 0),
                                                 constraints: BoxConstraints(
                                                   maxWidth:
                                                       MediaQuery.of(context)
@@ -264,7 +260,7 @@ class _ChatState extends State<Chat> {
                                                             textAlign:
                                                                 TextAlign.left,
                                                             textStyle:
-                                                                TextStyle(
+                                                                const TextStyle(
                                                                     fontSize:
                                                                         15),
                                                             // You can optionally handle link tap event by yourself
@@ -296,7 +292,7 @@ class _ChatState extends State<Chat> {
                                                             textAlign:
                                                                 TextAlign.left,
                                                             textStyle:
-                                                                TextStyle(
+                                                                const TextStyle(
                                                                     fontSize:
                                                                         15),
                                                             // You can optionally handle link tap event by yourself
@@ -359,10 +355,10 @@ class _ChatState extends State<Chat> {
                                 value.messageController.clear();
                               },
                               child: AnimatedSwitcher(
-                                duration: Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 500),
                                 child: value.isRightDoorLock
-                                    ? Padding(
-                                        padding: const EdgeInsets.all(8.0),
+                                    ? const Padding(
+                                        padding: EdgeInsets.all(8.0),
                                         child: Icon(
                                           Ionicons.send,
                                           size: 22,
@@ -378,8 +374,8 @@ class _ChatState extends State<Chat> {
                                                 BottomSheet(size: size)),
                                           );
                                         },
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
+                                        child: const Padding(
+                                          padding: EdgeInsets.symmetric(
                                               vertical: 8, horizontal: 12),
                                           child: Icon(
                                             Ionicons.camera_outline,
@@ -435,14 +431,15 @@ class _ChatState extends State<Chat> {
 
 class AppBarSection extends StatelessWidget {
   const AppBarSection({
+    required this.index,
     Key? key,
   }) : super(key: key);
-
+final int index;
   @override
   Widget build(BuildContext context) {
     return Container(
       color: HexColor("#283890"),
-      padding: EdgeInsets.only(left: 0, right: 20, top: 30),
+      padding: const EdgeInsets.only(left: 0, right: 20, top: 30),
       child: Consumer2<ChatProvider, UserProvider>(
         builder: (context, value, value2, child) {
           return Row(
@@ -452,7 +449,7 @@ class AppBarSection extends StatelessWidget {
                 children: [
                   Container(
                     margin:
-                        EdgeInsets.only(left: 0, right: 0, bottom: 10, top: 10),
+                        const EdgeInsets.only(left: 0, right: 0, bottom: 10, top: 10),
                     // height: 25,
                     // width: 25,
                     decoration: BoxDecoration(
@@ -461,7 +458,7 @@ class AppBarSection extends StatelessWidget {
                     child: Builder(
                       builder: (BuildContext context) {
                         return IconButton(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               left: 0, right: 0, top: 3, bottom: 3),
                           icon: const Icon(
                             MaterialCommunityIcons.chevron_left,
@@ -486,7 +483,7 @@ class AppBarSection extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(45),
                       child: Hero(
-                        tag: "profgroup",
+                        tag: "profgroup$index",
                         child: Image.network(
                           value.conv.image,
                           height: 45,
@@ -496,7 +493,7 @@ class AppBarSection extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                   ),
                   Container(
@@ -507,7 +504,7 @@ class AppBarSection extends StatelessWidget {
                       children: [
                         Text(
                           value.conv.conversation_name,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: Colors.white),
@@ -523,7 +520,7 @@ class AppBarSection extends StatelessWidget {
                   ),
                 ],
               ),
-              Icon(
+              const Icon(
                 MaterialCommunityIcons.dots_vertical,
                 color: Colors.white,
                 size: 20,
@@ -547,11 +544,11 @@ class BottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Container(
+    return SizedBox(
       height: 278,
       width: size.width,
       child: Card(
-        margin: EdgeInsets.all(18),
+        margin: const EdgeInsets.all(18),
         child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             child: Consumer<ChatProvider>(
@@ -569,7 +566,7 @@ class BottomSheet extends StatelessWidget {
                             //  value.takePhoto(ImageSource.gallery);
                           },
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 40,
                         ),
                         iconcreation(
@@ -581,7 +578,7 @@ class BottomSheet extends StatelessWidget {
                             Navigator.pop(context);
                           },
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 40,
                         ),
                         iconcreation(
@@ -592,12 +589,12 @@ class BottomSheet extends StatelessWidget {
                             value.takePhoto(ImageSource.gallery);
                             Navigator.pop(context);
                             UtilFuntions.pageTransition(
-                                context, ChatImage(), const chatScreen());
+                                context, const ChatImage(), const chatScreen());
                           },
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     Row(
@@ -611,7 +608,7 @@ class BottomSheet extends StatelessWidget {
                             //  value.takePhoto(ImageSource.camera);
                           },
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 40,
                         ),
                         iconcreation(
@@ -622,7 +619,7 @@ class BottomSheet extends StatelessWidget {
                             //  value.takePhoto(ImageSource.camera);
                           },
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 40,
                         ),
                         iconcreation(
@@ -703,12 +700,12 @@ class BottomSheet extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Text(
               text,
-              style: TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 12),
             ),
           ],
         );

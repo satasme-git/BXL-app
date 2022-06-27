@@ -1,25 +1,19 @@
 import 'package:binary_app/provider/user_provider.dart';
 import 'package:binary_app/screens/home.dart';
-import 'package:binary_app/screens/profile_screen/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/util_functions.dart';
-import '../Chat/chatHome.dart';
-import '../chats/chat_main.dart';
 import '../Payment/Slippay.dart';
-import '../Payment/payment_screen.dart';
 import '../Refer/refer.dart';
 import '../aboutus/aboutus.dart';
 import '../chats/conersation_list.dart';
-import '../chats/conversation_setting.dart';
 import '../chats/notification_test.dart';
 import '../login.dart';
+import '../profile_screen/profile_screen_new.dart';
 import 'custom_tile.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -32,7 +26,7 @@ class CustomDrawer extends StatelessWidget {
     return Drawer(
       child: Scaffold(
         bottomNavigationBar: Container(
-          padding: EdgeInsets.symmetric(horizontal: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           height: 30,
           child: Row(
             children: [
@@ -52,17 +46,18 @@ class CustomDrawer extends StatelessWidget {
               return ListView(
                 children: [
                   UserAccountsDrawerHeader(
-                      accountEmail: Text(''),
+                      accountEmail: const Text(''),
                       // decoration: BoxDecoration(
                       //   color: Colors.transparent,
                       // ),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.bottomLeft,
                           end: Alignment.topRight,
                           colors: [
                             Color(0xff283593),
                             Color(0xff2196f3),
+                            
 
                             // Color.fromRGBO(247, 148, 29, 1),
                             // Color.fromRGBO(254, 203, 48, 1),
@@ -76,27 +71,36 @@ class CustomDrawer extends StatelessWidget {
                           Container(
                             width: 50,
                             height: 50,
-                            decoration: BoxDecoration(shape: BoxShape.circle),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(55),
-                              child: value.getuserModel!.image == "null"
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(55),
-                                      child: Image.asset(
-                                        "assets/avatar.jpg",
-                                      ),
-                                      //  Image.asset(value.getImageFile!.path),
-                                    )
-                                  : CircleAvatar(
-                                      radius: 25.0,
-                                      backgroundColor: Colors.white,
-                                      child: CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                          "${value.getuserModel!.image}",
+                            decoration: const BoxDecoration(shape: BoxShape.circle),
+                            child: InkWell(
+                              onTap: (){
+                                   UtilFuntions.pageTransition(context,
+                              const ProfileScreenNew(), const CustomDrawer());
+                              },
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(55),
+                                child: value.getuserModel!.image == "null"
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(55),
+                                        child: Image.asset(
+                                          "assets/avatar.jpg",
                                         ),
-                                        radius: 24,
-                                      ),
+                                        //  Image.asset(value.getImageFile!.path),
+                                      )
+                                    : Hero(
+                                      tag: "profile",
+                                      child: CircleAvatar(
+                                          radius: 25.0,
+                                          backgroundColor: Colors.white,
+                                          child: CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                              value.getuserModel!.image,
+                                            ),
+                                            radius: 24,
+                                          ),
+                                        ),
                                     ),
+                              ),
                             ),
                           ),
                           Padding(
@@ -133,14 +137,11 @@ class CustomDrawer extends StatelessWidget {
                         iconleading: MaterialCommunityIcons.account_outline,
                         onTap: () async {
                           UtilFuntions.pageTransition(context,
-                              const ProfileScreen(), const CustomDrawer());
-                          // UtilFunctions.navigateTo(context, const GettingStarted());
-
-                          // MaterialPageRoute(builder: (context) => ProfileScreen());
+                              const ProfileScreenNew(), const CustomDrawer());
                         },
                       ),
 
-                      Divider(), //
+                      const Divider(), //
                       CustomListTile(
                         text: "Careers",
                         iconleading: MaterialCommunityIcons.routes,
@@ -149,7 +150,7 @@ class CustomDrawer extends StatelessWidget {
                               const NotificationTest(), const CustomDrawer());
                         },
                       ),
-                      Divider(), //
+                      const Divider(), //
                       CustomListTile(
                         text: "Payment",
                         iconleading: MaterialCommunityIcons.wallet_outline,
@@ -158,7 +159,7 @@ class CustomDrawer extends StatelessWidget {
                               context, const slipPay(), const CustomDrawer());
                         },
                       ),
-                      Divider(), //
+                      const Divider(), //
                       Consumer<UserProvider>(
                         builder: (context, value, child) {
                           return CustomListTile(
@@ -166,8 +167,6 @@ class CustomDrawer extends StatelessWidget {
                             iconleading:
                                 MaterialCommunityIcons.message_text_outline,
                             onTap: () async {
-                              // Logger().wtf(">>>>>>>>>>>>>>>>>>>>>>>////////// : "+value.getuserModel!.uid);
-
                               UtilFuntions.pageTransition(
                                   context,
                                   const ConversationList(),
@@ -176,20 +175,16 @@ class CustomDrawer extends StatelessWidget {
                           );
                         },
                       ),
-                      Divider(), //
+                      const Divider(), //
                       CustomListTile(
                         text: "About Us",
-                        iconleading:
-                            MaterialCommunityIcons.alert_circle_outline,
-                        onTap: () async {
-                          Navigator.of(context).pop();
-                          await Future.delayed(
-                              Duration(milliseconds: 200)); // wait some time
+                        iconleading: MaterialCommunityIcons.routes,
+                        onTap: () {
                           UtilFuntions.pageTransition(
-                              context, const aboutUs(), const HomeScreen());
+                              context, const aboutUs(), const CustomDrawer());
                         },
                       ),
-                      Divider(), //
+                      const Divider(), //
                       CustomListTile(
                         text: "Refer & Earn",
                         iconleading:
@@ -197,25 +192,39 @@ class CustomDrawer extends StatelessWidget {
                         onTap: () async {
                           Navigator.of(context).pop();
                           await Future.delayed(
-                              Duration(milliseconds: 200)); // wait some time
+                              const Duration(milliseconds: 200)); // wait some time
                           UtilFuntions.pageTransition(
                               context, const refer(), const HomeScreen());
                         },
                       ),
+                      const Divider(), //
+                      CustomListTile(
+                        text: "Testing pupose",
+                        iconleading:
+                            MaterialCommunityIcons.account_arrow_right_outline,
+                        onTap: () async {
+                          Navigator.of(context).pop();
+                          await Future.delayed(
+                              const Duration(milliseconds: 200)); // wait some time
+                          UtilFuntions.pageTransition(
+                              context,  const ProfileScreenNew(), const CustomDrawer());
+                        },
+                      ),
 
-                      Divider(), //here is a divider
-                      SizedBox(
+                      const Divider(), //here is a divider
+                      const SizedBox(
                         height: 30,
                       ),
                       CustomListTile(
                         text: "Logout",
                         iconleading: MaterialCommunityIcons.power,
                         onTap: () {
+                              Provider.of<UserProvider>(context, listen: false).clearImagePicker();
                           FirebaseAuth.instance.signOut().then((_) {
-                            Navigator.push(
-                                context,
+                            Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
-                                    builder: (context) => LoginScreen()));
+                                    builder: (context) => const LoginScreen()),
+                                (Route<dynamic> route) => false);
                           });
                         },
                       ),

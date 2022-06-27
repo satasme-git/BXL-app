@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import '../../utils/util_functions.dart';
 import 'package:skeletons/skeletons.dart';
 
+import '../../utils/util_functions.dart';
 import '../components/custom_loader.dart';
 
 class slipPay extends StatefulWidget {
@@ -70,7 +70,7 @@ class _slipPayState extends State<slipPay> {
                                   ),
                                   children: [
                                     TextSpan(
-                                      text: " There,",
+                                      text: " ${value2.getuserModel!.fname},",
                                       style: TextStyle(
                                         fontSize: 25,
                                         fontWeight: FontWeight.bold,
@@ -90,14 +90,14 @@ class _slipPayState extends State<slipPay> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 40,
                     ),
-                    Text(
+                    const Text(
                       "Select course",
                       style: TextStyle(color: Colors.grey),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Center(
@@ -118,7 +118,7 @@ class _slipPayState extends State<slipPay> {
                                 borderRadius: BorderRadius.circular(5),
                                 border:
                                     Border.all(color: Colors.grey, width: 0.5),
-                                boxShadow: <BoxShadow>[
+                                boxShadow: const <BoxShadow>[
                                   //blur radius of shadow
                                 ]),
                             child: Padding(
@@ -154,60 +154,79 @@ class _slipPayState extends State<slipPay> {
                         },
                       ),
                     ),
-                    SizedBox(height: 20),
-                    Text(
+                    const SizedBox(height: 20),
+                    const Text(
                       "Select Image",
                       style: TextStyle(color: Colors.grey),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
-                    DottedBorder(
-                      dashPattern: [8, 4],
-                      strokeWidth: 0.5,
-                      child: ClipRect(
-                        child: Container(
-                          color: Colors.grey[100],
-                          child: Align(
-                              alignment: Alignment.topCenter,
-                              heightFactor: 1,
-                              child: value1.getImg.path != ""
-                                  ? IconButton(
-                                      icon: Image.file(
-                                        value1.getImg,
-                                        width: double.infinity,
-                                        height: 180,
-                                        fit: BoxFit.fill,
-                                      ),
-                                      onPressed: () {
-                                        value1.selectImage();
-                                      },
-                                      iconSize: 180,
-                                    )
-                                  : Center(
-                                      child: Column(
-                                        children: [
-                                          IconButton(
-                                            onPressed: () {
-                                              value1.selectImage();
-                                            },
-                                            icon: Image(
-                                              image: AssetImage(
-                                                "assets/upload1.png",
-                                              ),
-                                              fit: BoxFit.fill,
-                                              // width: 200,
-                                            ),
-                                            iconSize: 160,
+                    Stack(
+                      children: [
+                       
+                        DottedBorder(
+                          dashPattern: const [8, 4],
+                          strokeWidth: 0.5,
+                          child: ClipRect(
+                            child: Container(
+                              color: Colors.grey[100],
+                              child: Align(
+                                  alignment: Alignment.topCenter,
+                                  heightFactor: 1,
+                                  child: value1.getImg.path != ""
+                                      ? IconButton(
+                                          icon: Image.file(
+                                            value1.getImg,
+                                            width: double.infinity,
+                                            height: 180,
+                                            fit: BoxFit.fill,
                                           ),
-                                          // Text("Upload slip here")
-                                        ],
-                                      ),
-                                    )),
+                                          onPressed: () {
+                                            value1.selectImage();
+                                          },
+                                          iconSize: 180,
+                                        )
+                                      : Center(
+                                          child: Column(
+                                            children: [
+                                              IconButton(
+                                                onPressed: () {
+                                                  value1.selectImage();
+                                                },
+                                                icon: const Image(
+                                                  image: AssetImage(
+                                                    "assets/upload1.png",
+                                                  ),
+                                                  fit: BoxFit.fill,
+                                                  // width: 200,
+                                                ),
+                                                iconSize: 160,
+                                              ),
+                                              // Text("Upload slip here")
+                                            ],
+                                          ),
+                                        )),
+                            ),
+                          ),
                         ),
-                      ),
+                         Positioned(
+                          right: 5,
+                          child: InkWell(
+                            onTap: (){
+                               
+                              value1.clearImagePicker();
+                            },
+                            child: Container(
+                          
+                              child: const Icon(Icons.close),
+                            ),
+                          )
+                        
+                        ),
+                      ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 40,
                     ),
                     value1.isLoading
@@ -252,12 +271,12 @@ class _slipPayState extends State<slipPay> {
                     if (value1.geSelectedCourse != "")
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                        children: const [
                           SizedBox(
                             height: 30,
                           ),
-                          Text("Upload history"),
-                          list(),
+                          // Text("Upload history"),
+                          // list(),
                         ],
                       ),
                   ],
@@ -285,7 +304,7 @@ class _slipPayState extends State<slipPay> {
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData) {
-                return Center(
+                return const Center(
                     /*    child: SpinKitRing(
                   color: Colors.blue,
                 )*/
@@ -302,7 +321,7 @@ class _slipPayState extends State<slipPay> {
                       return ListTile(
                           title: Container(
                         width: size.width,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           border: Border(bottom: BorderSide(width: 0.2)),
                         ),
                         child: Padding(
@@ -319,8 +338,9 @@ class _slipPayState extends State<slipPay> {
                                       fit: BoxFit.fill,
                                       loadingBuilder:
                                           (context, child, loadingProgress) {
-                                        if (loadingProgress == null)
+                                        if (loadingProgress == null) {
                                           return child;
+                                        }
 
                                         return const SkeletonAvatar(
                                           style: SkeletonAvatarStyle(
@@ -331,13 +351,13 @@ class _slipPayState extends State<slipPay> {
                                       },
                                     )),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
+                                  const Text(
                                     "Date",
                                     style: TextStyle(
                                       fontSize: 12,
@@ -356,7 +376,7 @@ class _slipPayState extends State<slipPay> {
                                   ),
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 20,
                               ),
                             ],
@@ -377,12 +397,12 @@ AppBar _appBar() {
   return AppBar(
     backgroundColor: Colors.transparent,
     elevation: 0.0,
-    title: Text(
+    title: const Text(
       "Course payments",
       style: TextStyle(color: Colors.black54, fontSize: 15),
     ),
     leading: Container(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       // height: 25,
       // width: 25,
       decoration: BoxDecoration(
@@ -390,7 +410,7 @@ AppBar _appBar() {
       child: Builder(
         builder: (BuildContext context) {
           return IconButton(
-            padding: EdgeInsets.all(3),
+            padding: const EdgeInsets.all(3),
             icon: const Icon(
               MaterialCommunityIcons.chevron_left,
               size: 30,

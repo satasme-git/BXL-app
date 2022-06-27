@@ -1,17 +1,17 @@
-import 'package:binary_app/controller/course_controller.dart';
 import 'package:binary_app/provider/corse_provider.dart';
+import 'package:binary_app/provider/user_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_beautiful_popup/main.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../utils/util_functions.dart';
+import '../Payment/Slippay.dart';
 import '../Payment/payment_screen.dart';
-import '../components/custom_loader.dart';
-import '../courselist.dart';
 import '../test_content.dart';
 
 class CourseDetails extends StatefulWidget {
@@ -27,10 +27,10 @@ class CourseDetails extends StatefulWidget {
 }
 
 class _CourseDetailsState extends State<CourseDetails> {
-  GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
   var s = false;
   var val;
-  TextEditingController searchcont = new TextEditingController();
+  TextEditingController searchcont = TextEditingController();
 
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -40,31 +40,28 @@ class _CourseDetailsState extends State<CourseDetails> {
   @override
   void initState() {
     _controller.dispose();
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    FocusScope.of(context).requestFocus(FocusNode());
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: _appBar(),
       body: Column(
         children: [
-          Container(
+          SizedBox(
             height: size.height / 1.12,
             width: size.width,
             child: Stack(
               children: [
-                // Center(
-                //   child: Container(
-                //     child:  CustomLoader(),
-                //   ),
-                // ),
                 list(),
                 Positioned(
                     bottom: 0,
-                    child: Consumer<CourseProvider>(
-                      builder: (context, value, child) {
+                    child: Consumer2<CourseProvider, UserProvider>(
+                      builder: (context, value, value2, child) {
                         return Container(
                           height: 60,
                           width: size.width,
@@ -75,13 +72,13 @@ class _CourseDetailsState extends State<CourseDetails> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
+                                SizedBox(
                                   width: size.width / 3,
                                   child: RichText(
                                     text: TextSpan(children: [
                                       const TextSpan(
                                         text: "LKR ",
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color:
                                               Color.fromARGB(255, 87, 87, 87),
                                           fontSize: 22,
@@ -107,9 +104,11 @@ class _CourseDetailsState extends State<CourseDetails> {
                                     ),
                                   ),
                                   onPressed: () {
-                                    UtilFuntions.navigateTo(
-                                        context, const PaymentScreen());
-                                         _controller.pause();
+                                    paymetDialog(
+                                        value2.getuserModel!.fname, context);
+                                    // UtilFuntions.navigateTo(
+                                    //     context, const PaymentScreen());
+                                    //      _controller.pause();
                                   },
                                   child: Ink(
                                     width: size.width / 2,
@@ -144,12 +143,12 @@ class _CourseDetailsState extends State<CourseDetails> {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0.0,
-      title: Text(
+      title: const Text(
         "Course Details",
         style: TextStyle(color: Colors.black),
       ),
       leading: Container(
-        margin: EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
         // height: 25,
         // width: 25,
         decoration: BoxDecoration(
@@ -157,7 +156,7 @@ class _CourseDetailsState extends State<CourseDetails> {
         child: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              padding: EdgeInsets.all(3),
+              padding: const EdgeInsets.all(3),
               icon: const Icon(
                 MaterialCommunityIcons.chevron_left,
                 size: 30,
@@ -184,7 +183,7 @@ class _CourseDetailsState extends State<CourseDetails> {
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
-            return Center(
+            return const Center(
                 /*    child: SpinKitRing(
                   color: Colors.blue,
                 )*/
@@ -201,7 +200,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                   initialVideoId: docReference['IntroVideo'],
                   flags: const YoutubePlayerFlags(
                     mute: false,
-                    autoPlay: true,
+                    autoPlay: false,
                     disableDragSeek: false,
                     loop: false,
                     isLive: false,
@@ -271,11 +270,11 @@ class _CourseDetailsState extends State<CourseDetails> {
                                 ),
                                 Text(
                                   docReference['instructor'],
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
                                 Text(
@@ -285,7 +284,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                                 ),
                                 Text(
                                   docReference['language'],
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold),
                                 )
@@ -330,7 +329,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
                                 Text(
@@ -340,7 +339,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                                 ),
                                 Text(
                                   docReference['updated_at'],
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold),
                                 )
@@ -367,6 +366,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                         child: Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
+                              color: Colors.blue,
                               border: Border.all(color: Colors.lightBlue),
                               borderRadius: BorderRadius.circular(5)),
                           child: Padding(
@@ -376,16 +376,16 @@ class _CourseDetailsState extends State<CourseDetails> {
                                 "Course Fee " +
                                     docReference['CourseFee'] +
                                     " LKR",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 20,
-                                    color: Colors.blue[700],
+                                    color: Colors.white,
                                     fontWeight: FontWeight.w600),
                               ),
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25),
                         child: Column(
@@ -398,7 +398,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Padding(
@@ -414,7 +414,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                                         color: Colors.blueGrey,
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.all(10.0),
+                                        padding: EdgeInsets.all(10.0),
                                         child: Text(
                                             "to change some of the text in the HTML"),
                                       )
@@ -428,7 +428,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                                         color: Colors.blueGrey,
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.all(10.0),
+                                        padding: EdgeInsets.all(10.0),
                                         child: Text(
                                             "to change some of the text in the HTML"),
                                       )
@@ -442,7 +442,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                                         color: Colors.blueGrey,
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.all(10.0),
+                                        padding: EdgeInsets.all(10.0),
                                         child: Text(
                                             "to change some of the text in the HTML"),
                                       )
@@ -456,7 +456,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                                         color: Colors.blueGrey,
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.all(10.0),
+                                        padding: EdgeInsets.all(10.0),
                                         child: Text(
                                             "to change some of the text in the HTML"),
                                       )
@@ -483,9 +483,9 @@ class _CourseDetailsState extends State<CourseDetails> {
                           Provider.of<CourseProvider>(context, listen: false)
                               .loadSection();
 
-                          UtilFuntions.pageTransition(context, TestContent(),
-                              CourseDetails(docid: "1"));
-                              _controller.pause();
+                          UtilFuntions.pageTransition(context,
+                              const TestContent(), CourseDetails(docid: "1"));
+                          _controller.pause();
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(15.0),
@@ -515,5 +515,150 @@ class _CourseDetailsState extends State<CourseDetails> {
                     ]);
               }).toList());
         });
+  }
+
+  static Future<dynamic> paymetDialog(String fname, BuildContext context) {
+    final popup = BeautifulPopup(
+      context: context,
+      template: TemplateGreenRocket,
+    );
+    return popup.show(
+      title: 'Hello ' + fname + " !",
+      content: SizedBox(
+        // height: 450,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Text("You have to choose an option"),
+            const Text("to pay for this course"),
+            const SizedBox(
+              height: 40,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                PaymentType(
+                  color: const Color.fromARGB(255, 23, 202, 32),
+                  icon: Icons.credit_card_outlined,
+                  maintext: "Online",
+                  subtext: "pay",
+                  onTap: () {
+                    UtilFuntions.pageTransition(
+                      context,
+                      const PaymentScreen(),
+                      CourseDetails(docid: "1"),
+                    );
+                  },
+                ),
+                PaymentType(
+                  color: Colors.red,
+                  icon: MaterialCommunityIcons.cloud_check_outline,
+                  maintext: "Upload",
+                  subtext: "bank slip",
+                  onTap: () {
+                    UtilFuntions.pageTransition(
+                      context,
+                      const slipPay(),
+                      CourseDetails(docid: "1"),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        popup.button(
+          label: 'Close',
+          onPressed: Navigator.of(context).pop,
+        ),
+      ],
+      // bool barrierDismissible = false,
+      // Widget close,
+    );
+  }
+}
+
+class PaymentType extends StatelessWidget {
+  const PaymentType({
+    required this.color,
+    required this.icon,
+    required this.maintext,
+    required this.subtext,
+    required this.onTap,
+    Key? key,
+  }) : super(key: key);
+  final Color color;
+  final IconData icon;
+  final String maintext;
+  final String subtext;
+  final Function() onTap;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 135,
+        height: 60,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [
+              Colors.white,
+              Colors.white,
+            ],
+          ),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(15),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 15,
+              spreadRadius: 1,
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(7),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    icon,
+                    color: Colors.white,
+                    size: 25,
+                  ),
+                ),
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  maintext,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  subtext,
+                  style: const TextStyle(fontSize: 13, color: Colors.grey),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

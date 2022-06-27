@@ -74,6 +74,9 @@ dependencies:
   link_text: ^0.2.0
   firebase_messaging: ^11.4.1
   animate_do: ^2.0.0
+  flutter_share: ^2.0.0
+  connectivity_plus: ^2.3.5
+  future_progress_dialog: ^0.2.0
 
 
 dev_dependencies:

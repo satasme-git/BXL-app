@@ -19,6 +19,8 @@ ConversationModel _$ConversationModelFromJson(Map<String, dynamic> json) =>
       lastMessage: json['lastMessage'] as String,
       lastMessageTime: json['lastMessageTime'] as String,
       createdBy: json['createdBy'] as String,
+      description: json['description'] as String,
+      status: json['status'] as int,
     );
 
 Map<String, dynamic> _$ConversationModelToJson(ConversationModel instance) =>
@@ -32,6 +34,8 @@ Map<String, dynamic> _$ConversationModelToJson(ConversationModel instance) =>
       'lastMessage': instance.lastMessage,
       'lastMessageTime': instance.lastMessageTime,
       'createdBy': instance.createdBy,
+      'description': instance.description,
+      'status': instance.status,
     };
 
 MessageModel _$MessageModelFromJson(Map<String, dynamic> json) => MessageModel(

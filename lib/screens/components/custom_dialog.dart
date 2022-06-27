@@ -1,4 +1,3 @@
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -8,6 +7,7 @@ class DialogBox {
     DialogType dialogType,
     String title,
     String desc,
+    final Function() okPres,
   ) async {
     return AwesomeDialog(
       context: context,
@@ -15,7 +15,7 @@ class DialogBox {
       animType: AnimType.BOTTOMSLIDE,
       title: title,
       desc: desc,
-      btnOkOnPress: () {},
+      btnOkOnPress: okPres,
     ).show();
   }
 }

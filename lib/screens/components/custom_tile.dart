@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 
@@ -22,7 +20,7 @@ class CustomListTile extends StatelessWidget {
         splashColor: Colors.white24,
         onTap: onTap,
         child: ListTile(
-          visualDensity: VisualDensity(vertical: -3),
+          visualDensity: const VisualDensity(vertical: -4),
           // style: ,
           dense: true,
           leading: Icon(
@@ -30,7 +28,7 @@ class CustomListTile extends StatelessWidget {
             color: Colors.grey[500],
           ),
           title: Text(text,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.black87,
               )),
 

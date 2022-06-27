@@ -1,102 +1,89 @@
-import 'package:binary_app/provider/user_provider.dart';
+import 'package:binary_app/provider/corse_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_beautiful_popup/main.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../provider/corse_provider.dart';
-import '../utils/util_functions.dart';
-import 'course/course_details.dart';
-import 'course/search.dart';
+import '../../provider/user_provider.dart';
+import '../../utils/util_functions.dart';
+import '../Payment/Slippay.dart';
+import '../Payment/payment_screen.dart';
+import '../courselist.dart';
+import 'course_details.dart';
 
-class courseList extends StatefulWidget {
-  const courseList({Key? key}) : super(key: key);
+class CourseList extends StatefulWidget {
+  const CourseList({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  _courseListState createState() => _courseListState();
+  State<CourseList> createState() => _CourseListState();
 }
 
-class _courseListState extends State<courseList> {
+class _CourseListState extends State<CourseList> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
   var s = false;
   var val;
   TextEditingController searchcont = TextEditingController();
+
+  final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+  FirebaseAuth auth = FirebaseAuth.instance;
+  final YoutubePlayerController _controller = YoutubePlayerController(
+    initialVideoId: "",
+  );
+  @override
+  void initState() {
+    _controller.dispose();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
+    final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: const Color(0xFFECF3F9),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFECF3F9),
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          "All Courses",
-          style: TextStyle(color: Colors.black),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            MaterialCommunityIcons.chevron_left,
-            size: 30,
-          ),
-          color: Colors.black,
-        ),
+      appBar: _appBar(),
+      body: Column(
+        children: [
+          list(),
+        ],
       ),
-      key: _globalKey,
-      body: SafeArea(
-        left: false,
-        right: false,
-        bottom: false,
-        child: Container(
-          margin: const EdgeInsets.only(top: 15),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: SizedBox(
-                    height: 42,
-                    child: TextField(
-                      readOnly: true,
-                      cursorColor: Colors.black,
-                      maxLines: 1,
-                      style: const TextStyle(fontSize: 17),
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: InputDecoration(
-                        filled: true,
-                        prefixIcon: Icon(Icons.search,
-                            color: Theme.of(context).iconTheme.color),
-                        border: const OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30))),
-                        // fillColor: Theme.of(context).inputDecorationTheme.fillColor,
-                        fillColor: Colors.white,
-                        contentPadding: EdgeInsets.zero,
-                        hintText: 'Search....',
-                      ),
-                      onTap: () {
-                        UtilFuntions.pageTransition(
-                            context, const SeachPage(), const courseList());
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                list(),
-              ],
-            ),
-          ),
+    );
+  }
+
+  AppBar _appBar() {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0.0,
+      title: const Text(
+        "Course Details",
+        style: TextStyle(color: Colors.black),
+      ),
+      leading: Container(
+        margin: const EdgeInsets.all(10),
+        // height: 25,
+        // width: 25,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10), color: Colors.white),
+        child: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              padding: const EdgeInsets.all(3),
+              icon: const Icon(
+                MaterialCommunityIcons.chevron_left,
+                size: 30,
+              ),
+              color: Colors.black,
+              onPressed: () {
+                UtilFuntions.goBack(context);
+              },
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
         ),
       ),
     );
@@ -107,45 +94,8 @@ class _courseListState extends State<courseList> {
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
     final double itemWidth = size.width / 2;
 
-    return Consumer2<CourseProvider, UserProvider>(
+    var consumer2 = Consumer2<CourseProvider, UserProvider>(
       builder: (context, value, value2, child) {
-        //                             //////////////////// add data to CoursePaymodel
-
-        //               Logger().d(">>>>>>>>>>>>>>>>>>>>>>>>  add data to CoursePaymodel"+value2.getuserModel!.uid);
-        //             StreamBuilder(
-        //               stream: FirebaseFirestore.instance
-        //                   .collection("course_pay")
-        //                   // .where('uid', isEqualTo: value2.getuserModel!.uid)
-        //                   // .where('status', isEqualTo: 2)
-        //                   .snapshots(),
-        //               builder: (BuildContext context,
-        //                   AsyncSnapshot<QuerySnapshot> snapshot) {
-        //                          Logger().d(">>>>>>>>>>>>>>>>>>>>>>>> eror couser mdel ");
-        //                 if (snapshot.hasError) {
-
-        //                   return Text('something went wrong');
-
-        //                 }
-
-        //                 if (snapshot.connectionState == ConnectionState.waiting) {
-        //                    Logger().d(">>>>>>>>>>>>>>>>>>>>>>>> no eror couser mdel ");
-        //                   return const CustomLoader();
-        //                 }
-        //                 for (var item in snapshot.data!.docs) {
-        //                    Logger().d(">>>>>>>>>>>>>>>>>>>>>>>> yes couser mdel ");
-        //                   //mapping to a single model
-        //                   CoursePaymodel model = CoursePaymodel.fromJson(
-        //                       item.data() as Map<String, dynamic>);
-
-        //                       Logger().d(">>>>>>>>>>>>>>>>>>>>>>>> fgfgfgfgfgf"+item.data().toString());
-        //                   //  ading to the model
-        //                   // _list.add(model);
-        //                 }
-        //                 return Text("adad");
-        //               },
-        //             );
-
-        // //////////////////// end of add data to CoursePaymodel
         return StreamBuilder(
             stream: FirebaseFirestore.instance.collection("course").snapshots(),
             builder:
@@ -174,38 +124,24 @@ class _courseListState extends State<courseList> {
                         childAspectRatio: (1 / 1.22),
                       ),
                       children: snapshot.data!.docs.map((docReference) {
-                        var coursePrice = NumberFormat("###.00#", "en_US");
-                        String price = coursePrice
-                            .format(double.parse(docReference['CourseFee']));
                         String id = docReference.id;
 
                         return GestureDetector(
-                          onTap: () async {
+                          onTap: () {
                             //   Provider.of<CourseProvider>(context, listen: false)
                             // .getAllPaidCourses(value2.getuserModel!.uid);
 
-                            //  String isPaied1= await value.seachPayed(docReference['CourseName']);
+                            value.seachPayed(docReference['CourseName']);
 
                             // if (value.getPaid == "Yes") {
-
-                            // Logger().wtf("))))))))))))))))))))))))))) : "+isPaied1);
-
-                            isPaied(docReference.id, docReference['CourseFee'],
-                                docReference['CourseName'], value, value2);
-
+                              isPaied(docReference.id,
+                                  docReference['CourseFee'], value);
                             // } else {
                             //   paymetDialog(value2, context);
                             // }
-
-                            // UtilFuntions.pageTransition(
-                            //     context,
-                            //     CourseDetails(
-                            //       docid: docReference.id,
-                            //     ),
-                            //     const courseList());
                           },
                           child: SizedBox(
-                            // height: 250,
+                            height: 250,
                             child: Card(
                               elevation: 10,
                               shadowColor: Colors.grey.withOpacity(0.08),
@@ -214,7 +150,7 @@ class _courseListState extends State<courseList> {
                                   color: Colors.grey.withOpacity(0.2),
                                   width: 1,
                                 ),
-                                borderRadius: BorderRadius.circular(5),
+                                borderRadius: BorderRadius.circular(15),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -222,29 +158,36 @@ class _courseListState extends State<courseList> {
                                   Stack(
                                     children: <Widget>[
                                       //Center(child: CircularProgressIndicator()),
-                                      SizedBox(
-                                        // width: size.width / 2,
-                                        height:size.height/9,
+                                      Center(
                                         child: ClipRRect(
                                           borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(5),
-                                            topRight: Radius.circular(5),
-                                          ),
+                                              topLeft: Radius.circular(15),
+                                              topRight: Radius.circular(15)),
+                                          // child: Image.asset(
+                                          //   "assets/course.jpg",
+                                          //   fit: BoxFit.fill,
+                                          // ),
                                           child: Image.network(
                                             docReference['image'],
-
-                                            //   // height: height,
-                                            fit: BoxFit.fill,
-                                            loadingBuilder: (context, child,
-                                                loadingProgress) {
+                                            loadingBuilder:
+                                                (BuildContext context,
+                                                    Widget child,
+                                                    ImageChunkEvent?
+                                                        loadingProgress) {
                                               if (loadingProgress == null) {
                                                 return child;
                                               }
-
-                                              return const SkeletonAvatar(
-                                                style: SkeletonAvatarStyle(
-                                                  width: double.infinity,
-                                                  height: double.infinity,
+                                              return Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  value: loadingProgress
+                                                              .expectedTotalBytes !=
+                                                          null
+                                                      ? loadingProgress
+                                                              .cumulativeBytesLoaded /
+                                                          loadingProgress
+                                                              .expectedTotalBytes!
+                                                      : null,
                                                 ),
                                               );
                                             },
@@ -277,7 +220,7 @@ class _courseListState extends State<courseList> {
                                           ),
                                         ),
                                         const SizedBox(
-                                          height: 8,
+                                          height: 5,
                                         ),
                                         Text(
                                           docReference['instructor'],
@@ -292,7 +235,7 @@ class _courseListState extends State<courseList> {
                                           direction: Axis.horizontal,
                                           allowHalfRating: true,
                                           itemCount: 5,
-                                          itemSize: 12,
+                                          itemSize: 15,
                                           itemPadding:
                                               const EdgeInsets.symmetric(
                                                   horizontal: 0.0),
@@ -306,9 +249,9 @@ class _courseListState extends State<courseList> {
                                           },
                                         ),
                                         Text(
-                                          "LKR  " + price.toString(),
+                                          "LKR  " + docReference['CourseFee'],
                                           style: GoogleFonts.poppins(
-                                              fontSize: 18,
+                                              fontSize: 20,
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold),
                                         ),
@@ -326,15 +269,13 @@ class _courseListState extends State<courseList> {
             });
       },
     );
+    return consumer2;
   }
 
-  void isPaied(String id, String cousreFee, String cousreName,
-      CourseProvider value, UserProvider value2) async {
-    await value.seachPayedCourse(cousreName, value2.getuserModel);
-
-    value.addItems(context);
-    value.addSection(id);
-    value.setPrice(cousreFee);
+  void isPaied(String id, String cousreName, CourseProvider value) {
+    Provider.of<CourseProvider>(context, listen: false).addItems(context);
+    Provider.of<CourseProvider>(context, listen: false).addSection(id);
+    Provider.of<CourseProvider>(context, listen: false).setPrice(cousreName);
 
     UtilFuntions.pageTransition(
         context,
@@ -342,5 +283,82 @@ class _courseListState extends State<courseList> {
           docid: id,
         ),
         const courseList());
+
+
+  }
+
+  Future<dynamic> paymetDialog(UserProvider value2, BuildContext context) {
+    final popup = BeautifulPopup(
+      context: context,
+      template: TemplateBlueRocket,
+    );
+    return popup.show(
+      title: 'Hello ' + value2.getuserModel!.fname + " !",
+      content: SizedBox(
+        height: 300,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "You have to pay for this course",
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Online payment",
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            OutlineButton(
+              shape: const StadiumBorder(),
+              highlightedBorderColor: Colors.red,
+              borderSide: const BorderSide(width: 0.6, color: Colors.red),
+              onPressed: () {
+                UtilFuntions.pageTransition(
+                  context,
+                  const PaymentScreen(),
+                  const courseList(),
+                );
+              },
+              child: const Text('Online pay'),
+            ),
+            Text(
+              "Bank payment",
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            OutlineButton(
+              shape: const StadiumBorder(),
+              highlightedBorderColor: Colors.blue,
+              borderSide: const BorderSide(width: 0.6, color: Colors.black),
+              onPressed: () {
+                UtilFuntions.pageTransition(
+                  context,
+                  const slipPay(),
+                  const courseList(),
+                );
+              },
+              child: const Text('Bank pay'),
+            ),
+
+          ],
+        ),
+      ),
+      actions: [
+        popup.button(
+          label: 'Close',
+          onPressed: Navigator.of(context).pop,
+        ),
+      ],
+
+    );
   }
 }
