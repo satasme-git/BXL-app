@@ -57,7 +57,6 @@ class CustomDrawer extends StatelessWidget {
                           colors: [
                             Color(0xff283593),
                             Color(0xff2196f3),
-                            
 
                             // Color.fromRGBO(247, 148, 29, 1),
                             // Color.fromRGBO(254, 203, 48, 1),
@@ -71,11 +70,14 @@ class CustomDrawer extends StatelessWidget {
                           Container(
                             width: 50,
                             height: 50,
-                            decoration: const BoxDecoration(shape: BoxShape.circle),
+                            decoration:
+                                const BoxDecoration(shape: BoxShape.circle),
                             child: InkWell(
-                              onTap: (){
-                                   UtilFuntions.pageTransition(context,
-                              const ProfileScreenNew(), const CustomDrawer());
+                              onTap: () {
+                                UtilFuntions.pageTransition(
+                                    context,
+                                    const ProfileScreenNew(),
+                                    const CustomDrawer());
                               },
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(55),
@@ -88,8 +90,8 @@ class CustomDrawer extends StatelessWidget {
                                         //  Image.asset(value.getImageFile!.path),
                                       )
                                     : Hero(
-                                      tag: "profile",
-                                      child: CircleAvatar(
+                                        tag: "profile",
+                                        child: CircleAvatar(
                                           radius: 25.0,
                                           backgroundColor: Colors.white,
                                           child: CircleAvatar(
@@ -99,7 +101,7 @@ class CustomDrawer extends StatelessWidget {
                                             radius: 24,
                                           ),
                                         ),
-                                    ),
+                                      ),
                               ),
                             ),
                           ),
@@ -155,6 +157,7 @@ class CustomDrawer extends StatelessWidget {
                         text: "Payment",
                         iconleading: MaterialCommunityIcons.wallet_outline,
                         onTap: () async {
+                          // UtilFuntions.navigateTo(context, const slipPay());
                           UtilFuntions.pageTransition(
                               context, const slipPay(), const CustomDrawer());
                         },
@@ -191,8 +194,8 @@ class CustomDrawer extends StatelessWidget {
                             MaterialCommunityIcons.account_arrow_right_outline,
                         onTap: () async {
                           Navigator.of(context).pop();
-                          await Future.delayed(
-                              const Duration(milliseconds: 200)); // wait some time
+                          await Future.delayed(const Duration(
+                              milliseconds: 200)); // wait some time
                           UtilFuntions.pageTransition(
                               context, const refer(), const HomeScreen());
                         },
@@ -204,10 +207,10 @@ class CustomDrawer extends StatelessWidget {
                             MaterialCommunityIcons.account_arrow_right_outline,
                         onTap: () async {
                           Navigator.of(context).pop();
-                          await Future.delayed(
-                              const Duration(milliseconds: 200)); // wait some time
-                          UtilFuntions.pageTransition(
-                              context,  const ProfileScreenNew(), const CustomDrawer());
+                          await Future.delayed(const Duration(
+                              milliseconds: 200)); // wait some time
+                          UtilFuntions.pageTransition(context,
+                              const ProfileScreenNew(), const CustomDrawer());
                         },
                       ),
 
@@ -219,7 +222,8 @@ class CustomDrawer extends StatelessWidget {
                         text: "Logout",
                         iconleading: MaterialCommunityIcons.power,
                         onTap: () {
-                              Provider.of<UserProvider>(context, listen: false).clearImagePicker();
+                          Provider.of<UserProvider>(context, listen: false)
+                              .clearImagePicker();
                           FirebaseAuth.instance.signOut().then((_) {
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(

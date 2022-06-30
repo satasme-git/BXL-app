@@ -6,6 +6,7 @@ import 'package:page_transition/page_transition.dart';
 
 import '../screens/Payment/Slippay.dart';
 import '../screens/Payment/payment_screen.dart';
+import '../screens/Payment/slip_pay_video.dart';
 import '../screens/course/course_details.dart';
 
 class UtilFuntions {
@@ -101,6 +102,72 @@ class UtilFuntions {
                     UtilFuntions.pageTransition(
                       context,
                       const slipPay(),
+                      CourseDetails(docid: "1"),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        popup.button(
+          label: 'Close',
+          onPressed: Navigator.of(context).pop,
+        ),
+      ],
+      // bool barrierDismissible = false,
+      // Widget close,
+    );
+  }
+
+  static Future<dynamic> paymetvideoDialog(String fname, BuildContext context) {
+    final popup = BeautifulPopup(
+      context: context,
+      template: TemplateOrangeRocket2,
+    );
+    return popup.show(
+      title: 'Hello ' + fname + " !",
+      content: SizedBox(
+        height: 300,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "You have to pay for this course",
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+              ),
+            ),
+            const SizedBox(
+              height: 40,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                PaymentType(
+                  color: const Color.fromARGB(255, 23, 202, 32),
+                  icon: Icons.credit_card_outlined,
+                  maintext: "Online",
+                  subtext: "pay",
+                  onTap: () {
+                    UtilFuntions.pageTransition(
+                      context,
+                      const PaymentScreen(),
+                      CourseDetails(docid: "1"),
+                    );
+                  },
+                ),
+                PaymentType(
+                  color: Colors.red,
+                  icon: MaterialCommunityIcons.cloud_check_outline,
+                  maintext: "Upload",
+                  subtext: "bank slip",
+                  onTap: () {
+                    UtilFuntions.pageTransition(
+                      context,
+                      const SlipPayVideo(),
                       CourseDetails(docid: "1"),
                     );
                   },

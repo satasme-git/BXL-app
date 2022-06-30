@@ -5,6 +5,7 @@ import 'package:binary_app/provider/user_provider.dart';
 import 'package:binary_app/screens/chats/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:logger/logger.dart';
@@ -40,7 +41,6 @@ class _ConversationListState extends State<ConversationList> {
             MaterialCommunityIcons.dots_vertical,
             size: 20,
           ),
-      
           SizedBox(
             width: 20,
           ),
@@ -96,18 +96,30 @@ class _ConversationListState extends State<ConversationList> {
                   list.add(model);
                 }
                 Logger().w(snapshot.data!.docs.length);
-                return ListView.separated(
-                  physics: const BouncingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return ConversationCard(
-                      model: list[index],index: index,
-                    );
-                  },
-                  separatorBuilder: (context, index) => Container(
-                    height: 10,
-                    color: const Color.fromARGB(255, 245, 245, 245),
+                return AnimationLimiter(
+                  child: ListView.separated(
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return AnimationConfiguration.staggeredList(
+                        duration: const Duration(milliseconds: 375),
+                        position: index,
+                        child: SlideAnimation(
+                          verticalOffset: 50.0,
+                          child: SlideAnimation(
+                            child: ConversationCard(
+                              model: list[index],
+                              index: index,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) => Container(
+                      height: 10,
+                      color: const Color.fromARGB(255, 245, 245, 245),
+                    ),
+                    itemCount: list.length,
                   ),
-                  itemCount: list.length,
                 );
               },
             );
@@ -126,15 +138,15 @@ class ConversationCard extends StatelessWidget {
   }) : super(key: key);
 
   final ConversationModel model;
-   final int index;
+  final int index;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         Provider.of<ChatProvider>(context, listen: false).setConv(model);
-        UtilFuntions.pageTransition(
-            context, Chat(convId: model.id,index:index), const ConversationList());
+        UtilFuntions.pageTransition(context,
+            Chat(convId: model.id, index: index), const ConversationList());
       },
       child: Container(
         padding: const EdgeInsets.symmetric(

@@ -12,14 +12,14 @@ import 'package:skeletons/skeletons.dart';
 import '../../utils/util_functions.dart';
 import '../components/custom_loader.dart';
 
-class slipPay extends StatefulWidget {
-  const slipPay({Key? key}) : super(key: key);
+class SlipPayVideo extends StatefulWidget {
+  const SlipPayVideo({Key? key}) : super(key: key);
 
   @override
-  State<slipPay> createState() => _slipPayState();
+  State<SlipPayVideo> createState() => _SlipPayVideoState();
 }
 
-class _slipPayState extends State<slipPay> {
+class _SlipPayVideoState extends State<SlipPayVideo> {
   String dropdownvalue = 'Item 1';
 
   // List of items in our dropdown menu
@@ -99,68 +99,68 @@ class _slipPayState extends State<slipPay> {
                         const SizedBox(
                           height: 40,
                         ),
-                        const Text(
-                          "Select course",
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Center(
-                          child: StreamBuilder<QuerySnapshot>(
-                            stream: FirebaseFirestore.instance
-                                .collection('course')
-                                .snapshots(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (!snapshot.hasData) return Container();
+                        // const Text(
+                        //   "Select course",
+                        //   style: TextStyle(color: Colors.grey),
+                        // ),
+                        // const SizedBox(
+                        //   height: 10,
+                        // ),
+                        // Center(
+                        //   child: StreamBuilder<QuerySnapshot>(
+                        //     stream: FirebaseFirestore.instance
+                        //         .collection('course')
+                        //         .snapshots(),
+                        //     builder: (BuildContext context,
+                        //         AsyncSnapshot<QuerySnapshot> snapshot) {
+                        //       if (!snapshot.hasData) return Container();
 
-                              if (setDefaultMake) {
-                                carMake =
-                                    snapshot.data!.docs[0].get('CourseName');
-                                // debugPrint('setDefault make: $carMake');
-                              }
-                              return DecoratedBox(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(
-                                        color: Colors.grey, width: 0.5),
-                                    boxShadow: const <BoxShadow>[
-                                      //blur radius of shadow
-                                    ]),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15),
-                                  child: DropdownButton(
-                                    isExpanded: true,
-                                    isDense: false,
-                                    value: carMake,
-                                    items: snapshot.data!.docs.map((value) {
-                                      String id = value.id;
+                        //       if (setDefaultMake) {
+                        //         carMake =
+                        //             snapshot.data!.docs[0].get('CourseName');
+                        //         // debugPrint('setDefault make: $carMake');
+                        //       }
+                        //       return DecoratedBox(
+                        //         decoration: BoxDecoration(
+                        //             borderRadius: BorderRadius.circular(5),
+                        //             border: Border.all(
+                        //                 color: Colors.grey, width: 0.5),
+                        //             boxShadow: const <BoxShadow>[
+                        //               //blur radius of shadow
+                        //             ]),
+                        //         child: Padding(
+                        //           padding: const EdgeInsets.symmetric(
+                        //               horizontal: 15),
+                        //           child: DropdownButton(
+                        //             isExpanded: true,
+                        //             isDense: false,
+                        //             value: carMake,
+                        //             items: snapshot.data!.docs.map((value) {
+                        //               String id = value.id;
 
-                                      return DropdownMenuItem(
-                                        value: value.get('CourseName'),
-                                        child: Text(
-                                          '${value.get('CourseName')}',
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (values) {
-                                      value1.setCurrentValue(values.toString());
-                                      setState(() {
-                                        carMake = values.toString();
-                                        setDefaultMake = false;
-                                      });
+                        //               return DropdownMenuItem(
+                        //                 value: value.get('CourseName'),
+                        //                 child: Text(
+                        //                   '${value.get('CourseName')}',
+                        //                   overflow: TextOverflow.ellipsis,
+                        //                 ),
+                        //               );
+                        //             }).toList(),
+                        //             onChanged: (values) {
+                        //               value1.setCurrentValue(values.toString());
+                        //               setState(() {
+                        //                 carMake = values.toString();
+                        //                 setDefaultMake = false;
+                        //               });
 
-                                      // debugPrint('selected onchange: $values');
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                        //               // debugPrint('selected onchange: $values');
+                        //             },
+                        //           ),
+                        //         ),
+                        //       );
+                        //     },
+                        //   ),
+                        // ),
                         const SizedBox(height: 20),
                         const Text(
                           "Select Image",
@@ -292,109 +292,6 @@ class _slipPayState extends State<slipPay> {
       ),
     );
   }
-
-  Widget list() {
-    var size = MediaQuery.of(context).size;
-    // final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
-    final double itemWidth = size.width / 2;
-    return Consumer2<SlipProvider, UserProvider>(
-      builder: (context, value, value2, child) {
-        return StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection("coursepay_details")
-                .where('courseName', isEqualTo: value.geSelectedCourse)
-                .where('uid', isEqualTo: value2.getuserModel!.uid)
-                .snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                    /*    child: SpinKitRing(
-                  color: Colors.blue,
-                )*/
-                    );
-                //  Center(child: LoadingFilling.square());
-              }
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-                child: SizedBox(
-                  height: size.height / 3,
-                  child: ListView(
-                    children: snapshot.data!.docs.map((doc) {
-                      return ListTile(
-                          title: Container(
-                        width: size.width,
-                        decoration: const BoxDecoration(
-                          border: Border(bottom: BorderSide(width: 0.2)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: Row(
-                            children: [
-                              Container(
-                                child: Padding(
-                                    padding: const EdgeInsets.all(6.0),
-                                    child: Image.network(
-                                      doc['img'],
-                                      width: 80,
-                                      //   // height: height,
-                                      fit: BoxFit.fill,
-                                      loadingBuilder:
-                                          (context, child, loadingProgress) {
-                                        if (loadingProgress == null) {
-                                          return child;
-                                        }
-
-                                        return const SkeletonAvatar(
-                                          style: SkeletonAvatarStyle(
-                                            width: 80,
-                                            // height: double.infinity,
-                                          ),
-                                        );
-                                      },
-                                    )),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Date",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  Container(
-                                    // width: 50,
-                                    child: Text(
-                                      doc['create_at'],
-                                      // overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ));
-                    }).toList(),
-                  ),
-                ),
-              );
-            });
-      },
-    );
-  }
 }
 
 AppBar _appBar() {
@@ -402,7 +299,7 @@ AppBar _appBar() {
     backgroundColor: Colors.transparent,
     elevation: 0.0,
     title: const Text(
-      "Course payments",
+      "Video payments",
       style: TextStyle(color: Colors.black54, fontSize: 15),
     ),
     leading: Container(

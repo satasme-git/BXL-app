@@ -183,7 +183,7 @@ class CourseProvider extends ChangeNotifier {
       );
     } else {
       setLoading();
-      UtilFuntions.paymetDialog(usermodel!.fname, context);
+      UtilFuntions.paymetvideoDialog(usermodel!.fname, context);
     }
     notifyListeners();
   }

@@ -11,6 +11,7 @@ import 'package:flutter_chat_bubble/bubble_type.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_1.dart';
 import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_5.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,7 +25,8 @@ import '../../utils/util_functions.dart';
 import 'conversation_setting.dart';
 
 class Chat extends StatefulWidget {
-  const Chat({Key? key, required this.convId,required this.index}) : super(key: key);
+  const Chat({Key? key, required this.convId, required this.index})
+      : super(key: key);
 
   final String convId;
   final int index;
@@ -45,7 +47,7 @@ class _ChatState extends State<Chat> {
           return Scaffold(
             backgroundColor: HexColor("#efe7e1"),
             appBar: PreferredSize(
-                child:  AppBarSection(index:widget.index),
+                child: AppBarSection(index: widget.index),
                 preferredSize: Size.fromHeight(size.height / 12)),
 
             body: Stack(
@@ -74,242 +76,292 @@ class _ChatState extends State<Chat> {
                       list.add(model);
                     }
                     Logger().w(snapshot.data!.docs.length);
-                    return ListView.builder(
-                      reverse: true,
-                      padding: const EdgeInsets.only(bottom: 60),
-                      itemCount: list.length,
-                      physics: const BouncingScrollPhysics(),
-                      itemBuilder: (context, index) {
+                    return AnimationLimiter(
+                      child: ListView.builder(
+                        reverse: true,
+                        padding: const EdgeInsets.only(bottom: 60),
+                        itemCount: list.length,
+                        physics: const BouncingScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return AnimationConfiguration.staggeredList(
+                            position: index,
+                            duration: const Duration(milliseconds: 375),
+                            child: SlideAnimation(
+                              verticalOffset: 50.0,
+                              child: FadeInAnimation(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0),
+                                  child: Consumer<UserProvider>(
+                                    builder: (context, value, child) {
+                                      String mystring = list[index].sendarName;
+                                      String upperLeter =
+                                          mystring[0].toUpperCase();
 
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Consumer<UserProvider>(
-                            builder: (context, value, child) {
-                              String mystring = list[index].sendarName;
-                              String upperLeter=mystring[0].toUpperCase();
-
-                              return Column(
-                                children: [
-                                  list[index].senderid ==
-                                          value.getuserModel!.uid
-                                      ? Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            ChatBubble(
-                                              clipper: ChatBubbleClipper5(
-                                                  type: BubbleType.sendBubble),
-                                              alignment: Alignment.topRight,
-                                              margin: const EdgeInsets.only(
-                                                  top: 15),
-                                              backGroundColor:
-                                                  const Color.fromARGB(
-                                                      255, 227, 253, 216),
-                                              child: Container(
-                                                constraints: BoxConstraints(
-                                                  maxWidth:
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .width *
-                                                          0.7,
-                                                ),
-                                                child: list[index]
-                                                            .messageType !=
-                                                        "image"
-                                                    ? LinkText(
-                                                        list[index].message,
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        textStyle:
-                                                            const TextStyle(
-                                                                fontSize: 15),
-                                                      )
-                                                    : Column(
-                                                        children: [
-                                                          list[index].messageUrl ==
-                                                                  "null"
-                                                              ?const Center(
-                                                                  child:
-                                                                      Padding(
-                                                                        padding: EdgeInsets.symmetric(vertical: 30),
-                                                                        child: CircularProgressIndicator(),
-                                                                      ),
-                                                                )
-                                                              : Image.network(
-                                                                  list[index]
-                                                                      .messageUrl,
-                                                                  // height: 45,
-                                                                  width: 230,
-
-                                                                  fit: BoxFit
-                                                                      .fill,
-                                                                ),
-                                                          LinkText(
-                                                            list[index].message,
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            textStyle:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        15),
-                                                          ),
-                                                        ],
-                                                      ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(
-                                              timeago.format(DateTime.parse(
-                                                  list[index].messageTime)),
-                                              style: TextStyle(
-                                                color: Colors.grey[600],
-                                                fontSize: 11,
-                                              ),
-                                            )
-                                          ],
-                                        )
-                                      : Row(
-                                          children: [
-                                            list[index].image == "null"
-                                                ? Container(
-                                                    height: 45,
-                                                    width: 45,
-                                                    decoration: BoxDecoration(
-                                                      color: Color(Random().nextInt(0xffffffff)),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              45),
-                                                    ),
-                                                    child:  Center(
-                                                      child: Text(
-                                                        upperLeter,
-                                                        style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 30,
+                                      return Column(
+                                        children: [
+                                          list[index].senderid ==
+                                                  value.getuserModel!.uid
+                                              ? Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    ChatBubble(
+                                                      clipper:
+                                                          ChatBubbleClipper5(
+                                                              type: BubbleType
+                                                                  .sendBubble),
+                                                      alignment:
+                                                          Alignment.topRight,
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              top: 15),
+                                                      backGroundColor:
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              227,
+                                                              253,
+                                                              216),
+                                                      child: Container(
+                                                        constraints:
+                                                            BoxConstraints(
+                                                          maxWidth: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.7,
                                                         ),
-                                                      ),
-                                                    ),
-                                                  )
-                                                : ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            45),
-                                                    child: Image.network(
-                                                      list[index].image,
-                                                      height: 45,
-                                                      width: 45,
-                                                      fit: BoxFit.fill,
-                                                    ),
-                                                  ),
-                                            ChatBubble(
-                                              clipper: ChatBubbleClipper1(
-                                                  type: BubbleType
-                                                      .receiverBubble),
-                                              backGroundColor: const Color.fromARGB(
-                                                  255, 255, 255, 255),
-                                              margin: const EdgeInsets.only(top: 15),
-                                              child: Container(
-                                                margin: const EdgeInsets.only(top: 0),
-                                                constraints: BoxConstraints(
-                                                  maxWidth:
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .width *
-                                                          0.7,
-                                                ),
-                                                child: list[index]
-                                                            .messageType ==
-                                                        "image"
-                                                    ? Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            list[index]
-                                                                .sendarName,
-                                                            style:
-                                                                const TextStyle(
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      5,
-                                                                      121,
-                                                                      9),
-                                                              fontSize: 10,
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Image.network(
-                                                            list[index]
-                                                                .messageUrl,
-                                                            // height: 45,
-                                                            width: 230,
+                                                        child: list[index]
+                                                                    .messageType !=
+                                                                "image"
+                                                            ? LinkText(
+                                                                list[index]
+                                                                    .message,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                textStyle:
+                                                                    const TextStyle(
+                                                                        fontSize:
+                                                                            15),
+                                                              )
+                                                            : Column(
+                                                                children: [
+                                                                  list[index].messageUrl ==
+                                                                          "null"
+                                                                      ? const Center(
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                EdgeInsets.symmetric(vertical: 30),
+                                                                            child:
+                                                                                CircularProgressIndicator(),
+                                                                          ),
+                                                                        )
+                                                                      : Image
+                                                                          .network(
+                                                                          list[index]
+                                                                              .messageUrl,
+                                                                          // height: 45,
+                                                                          width:
+                                                                              230,
 
-                                                            fit: BoxFit.fill,
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 10,
-                                                          ),
-                                                          LinkText(
-                                                            list[index].message,
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            textStyle:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        15),
-                                                            // You can optionally handle link tap event by yourself
-                                                            // onLinkTap: (url) => ...
-                                                          ),
-                                                        ],
-                                                      )
-                                                    : Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            list[index]
-                                                                .sendarName,
-                                                            style:
-                                                                const TextStyle(
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      5,
-                                                                      121,
-                                                                      9),
-                                                              fontSize: 10,
+                                                                          fit: BoxFit
+                                                                              .fill,
+                                                                        ),
+                                                                  LinkText(
+                                                                    list[index]
+                                                                        .message,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .left,
+                                                                    textStyle: const TextStyle(
+                                                                        fontSize:
+                                                                            15),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Text(
+                                                      timeago.format(DateTime
+                                                          .parse(list[index]
+                                                              .messageTime)),
+                                                      style: TextStyle(
+                                                        color: Colors.grey[600],
+                                                        fontSize: 11,
+                                                      ),
+                                                    )
+                                                  ],
+                                                )
+                                              : Row(
+                                                  children: [
+                                                    list[index].image == "null"
+                                                        ? Container(
+                                                            height: 45,
+                                                            width: 45,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Color(Random()
+                                                                  .nextInt(
+                                                                      0xffffffff)),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          45),
+                                                            ),
+                                                            child: Center(
+                                                              child: Text(
+                                                                upperLeter,
+                                                                style:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 30,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          )
+                                                        : ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        45),
+                                                            child:
+                                                                Image.network(
+                                                              list[index].image,
+                                                              height: 45,
+                                                              width: 45,
+                                                              fit: BoxFit.fill,
                                                             ),
                                                           ),
-                                                          LinkText(
-                                                            list[index].message,
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            textStyle:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        15),
-                                                            // You can optionally handle link tap event by yourself
-                                                            // onLinkTap: (url) => ...
-                                                          ),
-                                                        ],
+                                                    ChatBubble(
+                                                      clipper: ChatBubbleClipper1(
+                                                          type: BubbleType
+                                                              .receiverBubble),
+                                                      backGroundColor:
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              255,
+                                                              255,
+                                                              255),
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              top: 15),
+                                                      child: Container(
+                                                        margin: const EdgeInsets
+                                                            .only(top: 0),
+                                                        constraints:
+                                                            BoxConstraints(
+                                                          maxWidth: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.7,
+                                                        ),
+                                                        child: list[index]
+                                                                    .messageType ==
+                                                                "image"
+                                                            ? Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    list[index]
+                                                                        .sendarName,
+                                                                    style:
+                                                                        const TextStyle(
+                                                                      color: Color
+                                                                          .fromARGB(
+                                                                              255,
+                                                                              5,
+                                                                              121,
+                                                                              9),
+                                                                      fontSize:
+                                                                          10,
+                                                                    ),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 5,
+                                                                  ),
+                                                                  Image.network(
+                                                                    list[index]
+                                                                        .messageUrl,
+                                                                    // height: 45,
+                                                                    width: 230,
+
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                  LinkText(
+                                                                    list[index]
+                                                                        .message,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .left,
+                                                                    textStyle: const TextStyle(
+                                                                        fontSize:
+                                                                            15),
+                                                                    // You can optionally handle link tap event by yourself
+                                                                    // onLinkTap: (url) => ...
+                                                                  ),
+                                                                ],
+                                                              )
+                                                            : Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    list[index]
+                                                                        .sendarName,
+                                                                    style:
+                                                                        const TextStyle(
+                                                                      color: Color
+                                                                          .fromARGB(
+                                                                              255,
+                                                                              5,
+                                                                              121,
+                                                                              9),
+                                                                      fontSize:
+                                                                          10,
+                                                                    ),
+                                                                  ),
+                                                                  LinkText(
+                                                                    list[index]
+                                                                        .message,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .left,
+                                                                    textStyle: const TextStyle(
+                                                                        fontSize:
+                                                                            15),
+                                                                    // You can optionally handle link tap event by yourself
+                                                                    // onLinkTap: (url) => ...
+                                                                  ),
+                                                                ],
+                                                              ),
                                                       ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                ],
-                              );
-                            },
-                          ),
-                        );
-                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     );
                   },
                 ),
@@ -434,7 +486,7 @@ class AppBarSection extends StatelessWidget {
     required this.index,
     Key? key,
   }) : super(key: key);
-final int index;
+  final int index;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -448,8 +500,8 @@ final int index;
               Row(
                 children: [
                   Container(
-                    margin:
-                        const EdgeInsets.only(left: 0, right: 0, bottom: 10, top: 10),
+                    margin: const EdgeInsets.only(
+                        left: 0, right: 0, bottom: 10, top: 10),
                     // height: 25,
                     // width: 25,
                     decoration: BoxDecoration(

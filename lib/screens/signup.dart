@@ -1,4 +1,4 @@
-
+import 'package:animate_do/animate_do.dart';
 import 'package:binary_app/provider/registraion_provider.dart';
 import 'package:binary_app/provider/user_provider.dart';
 import 'package:binary_app/screens/login.dart';
@@ -26,8 +26,6 @@ class _SignupState extends State<Signup> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       // appBar: AppBar(
       //   title: Text(
@@ -48,215 +46,216 @@ class _SignupState extends State<Signup> {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 70, left: 0),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                              text: "Welcome to",
-                              style: TextStyle(
-                                fontSize: 25,
-                                letterSpacing: 2,
-                                color: Colors.blue[800],
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: " Binary,",
-                                  style: TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue[900],
-                                  ),
-                                )
-                              ]),
-                        ),
-                        Text(
-                          "SignUp to Continue",
-                          style: TextStyle(
-                            letterSpacing: 1,
-                            color: Colors.grey[800],
+                FadeInRight(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 70, left: 0),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                                text: "Welcome to",
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  letterSpacing: 2,
+                                  color: Colors.blue[800],
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: " Binary,",
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue[900],
+                                    ),
+                                  )
+                                ]),
                           ),
-                        ),
-                      ],
+                          Text(
+                            "SignUp to Continue",
+                            style: TextStyle(
+                              letterSpacing: 1,
+                              color: Colors.grey[800],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(
                   height: 40,
                 ),
-                Consumer<RegistrationProvider>(
-                  builder: (context, value, child) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 15,
-                              spreadRadius: 1),
-                        ],
-                      ),
-                      child: Form(
-                        key: _formKey,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: <Widget>[
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              customTextField(
-                                  MaterialCommunityIcons.account_outline,
-                                  "Username",
-                                  "Username",
-                                  false,
-                                  false,
-                                  value.usernameController, (value) {
-                                if (value!.isEmpty) {
-                                  return ("Please enter username");
-                                }
-
-                                // return null;
-                              }, false, false),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              customTextField(
-                                  MaterialCommunityIcons.email_outline,
-                                  "Email Address",
-                                  "Email Address",
-                                  false,
-                                  true,
-                                  value.emailController, (value) {
-                                if (value!.isEmpty) {
-                                  return ("Please enter your email");
-                                }
-                                if (!RegExp(
-                                        "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
-                                    .hasMatch(value)) {
-                                  return ("Please Enter a valid email");
-                                }
-                                // return null;
-                              }, false, false),
-                              customTextField(
-                                  MaterialCommunityIcons.key_outline,
-                                  "Password",
-                                  "Password",
-                                  false,
-                                  false,
-                                  value.passwordController, (value) {
-                                if (value!.isEmpty) {
-                                  return ("Please enter password");
-                                }
-
-                                // return null;
-                              }, true, true),
-                              customTextField(
-                                  MaterialCommunityIcons.key_outline,
-                                  "Confirm Password",
-                                  "Confirm Password",
-                                  false,
-                                  false,
-                                  value.confirmpasswordController, (value) {
-                                if (value!.isEmpty) {
-                                  return ("Please enter confirm password");
-                                }
-
-                                // return null;
-                              }, true, true),
-   
-                              const SizedBox(
-                                height: 30,
-                              ),
-                         
-
-                              Material(
-                                elevation: 5,
-                                borderRadius: BorderRadius.circular(15),
-                                color: Color(0xff3949ab),
-                                child: Consumer<RegistrationProvider>(
-                                  builder: (context, value, child) {
-                                    return value.isLoading
-                                        ? Container(
-                                            height: 48,
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  Colors.blue.withOpacity(.3),
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                            child: const Center(
-                                              child: CustomLoader(),
-                                            ),
-                                          )
-                                        : MaterialButton(
-                                            onPressed: () {
-                                 
-                                              value.startRegister(
-                                                  _formKey, context);
-                                             
-                                            },
-                                            padding: EdgeInsets.fromLTRB(
-                                                20, 15, 20, 15),
-                                            minWidth: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: const Text(
-                                              "Signup",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w600),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          );
-                                  },
+                FadeInUp(
+                  child: Consumer<RegistrationProvider>(
+                    builder: (context, value, child) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 15,
+                                spreadRadius: 1),
+                          ],
+                        ),
+                        child: Form(
+                          key: _formKey,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: <Widget>[
+                                const SizedBox(
+                                  height: 15,
                                 ),
-                              ),
+                                customTextField(
+                                    MaterialCommunityIcons.account_outline,
+                                    "Username",
+                                    "Username",
+                                    false,
+                                    false,
+                                    value.usernameController, (value) {
+                                  if (value!.isEmpty) {
+                                    return ("Please enter username");
+                                  }
 
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("Already have an account? "),
-                                  GestureDetector(
-                                    onTap: () {
-                                      UtilFuntions.pageTransition(context,
-                                          const LoginScreen(), const Signup());
-                                      // Navigator.push(
-                                      //     context,
-                                      //     MaterialPageRoute(
-                                      //         builder: (context) => LoginScreen()));
+                                  // return null;
+                                }, false, false),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                customTextField(
+                                    MaterialCommunityIcons.email_outline,
+                                    "Email Address",
+                                    "Email Address",
+                                    false,
+                                    true,
+                                    value.emailController, (value) {
+                                  if (value!.isEmpty) {
+                                    return ("Please enter your email");
+                                  }
+                                  if (!RegExp(
+                                          "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                                      .hasMatch(value)) {
+                                    return ("Please Enter a valid email");
+                                  }
+                                  // return null;
+                                }, false, false),
+                                customTextField(
+                                    MaterialCommunityIcons.key_outline,
+                                    "Password",
+                                    "Password",
+                                    false,
+                                    false,
+                                    value.passwordController, (value) {
+                                  if (value!.isEmpty) {
+                                    return ("Please enter password");
+                                  }
+
+                                  // return null;
+                                }, true, true),
+                                customTextField(
+                                    MaterialCommunityIcons.key_outline,
+                                    "Confirm Password",
+                                    "Confirm Password",
+                                    false,
+                                    false,
+                                    value.confirmpasswordController, (value) {
+                                  if (value!.isEmpty) {
+                                    return ("Please enter confirm password");
+                                  }
+
+                                  // return null;
+                                }, true, true),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                Material(
+                                  elevation: 5,
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: Color(0xff3949ab),
+                                  child: Consumer<RegistrationProvider>(
+                                    builder: (context, value, child) {
+                                      return value.isLoading
+                                          ? Container(
+                                              height: 48,
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    Colors.blue.withOpacity(.3),
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                              ),
+                                              child: const Center(
+                                                child: CustomLoader(),
+                                              ),
+                                            )
+                                          : MaterialButton(
+                                              onPressed: () {
+                                                value.startRegister(
+                                                    _formKey, context);
+                                              },
+                                              padding: EdgeInsets.fromLTRB(
+                                                  20, 15, 20, 15),
+                                              minWidth: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: const Text(
+                                                "Signup",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            );
                                     },
-                                    child: Center(
-                                      child: Text(
-                                        " Signin",
-                                        style: TextStyle(
-                                            color: Colors.blue[900],
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("Already have an account? "),
+                                    GestureDetector(
+                                      onTap: () {
+                                        UtilFuntions.pageTransition(
+                                            context,
+                                            const LoginScreen(),
+                                            const Signup());
+                                        // Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //         builder: (context) => LoginScreen()));
+                                      },
+                                      child: Center(
+                                        child: Text(
+                                          " Signin",
+                                          style: TextStyle(
+                                              color: Colors.blue[900],
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600),
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                            ],
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
@@ -267,9 +266,7 @@ class _SignupState extends State<Signup> {
   }
 
   void signUp(String email, String password) async {
-    if (_formKey.currentState!.validate()) {
-
-    }
+    if (_formKey.currentState!.validate()) {}
   }
 
   postDetailsToFirestore() async {
@@ -279,7 +276,6 @@ class _SignupState extends State<Signup> {
     String formatDate = DateFormat('yyyy-MM-dd kk:mm').format(now);
     timestamp = formatDate;
     print(timestamp);
- 
   }
 
   Padding customTextField(
@@ -309,7 +305,7 @@ class _SignupState extends State<Signup> {
             builder: (context, value, child) {
               return TextFormField(
                 // obscureText: obscure,
-                  obscureText: obscure==true?value.isObscure:false,
+                obscureText: obscure == true ? value.isObscure : false,
                 controller: controller,
                 keyboardType:
                     isEmail ? TextInputType.emailAddress : TextInputType.text,
@@ -322,7 +318,6 @@ class _SignupState extends State<Signup> {
                       ? IconButton(
                           onPressed: () {
                             value.changeObscure();
-                           
                           },
                           icon: Icon(value.isObscure
                               ? Icons.visibility_off

@@ -2,6 +2,7 @@ import 'package:binary_app/provider/user_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -103,9 +104,11 @@ class _courseListState extends State<courseList> {
   }
 
   Widget list() {
+    int columnCount = 2;
+    int i = 0;
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
-    final double itemWidth = size.width / 2;
+    // final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
+    // final double itemWidth = size.width / 2;
 
     return Consumer2<CourseProvider, UserProvider>(
       builder: (context, value, value2, child) {
@@ -162,165 +165,181 @@ class _courseListState extends State<courseList> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: SizedBox(
-                  height: size.height,
-                  child: GridView(
-                      shrinkWrap: true,
-                      physics: const BouncingScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 4,
-                        mainAxisSpacing: 4,
+                  // height: size.height,
+                  child: AnimationLimiter(
+                    child: GridView.count(
                         childAspectRatio: (1 / 1.22),
-                      ),
-                      children: snapshot.data!.docs.map((docReference) {
-                        var coursePrice = NumberFormat("###.00#", "en_US");
-                        String price = coursePrice
-                            .format(double.parse(docReference['CourseFee']));
-                        String id = docReference.id;
+                        crossAxisCount: columnCount,
+                        mainAxisSpacing: 4,
+                        crossAxisSpacing: 4,
+                        shrinkWrap: true,
+                        physics: const BouncingScrollPhysics(),
+                        // gridDelegate:
+                        //     const SliverGridDelegateWithFixedCrossAxisCount(
+                        //   crossAxisCount: 2,
+                        //   crossAxisSpacing: 4,
+                        //   mainAxisSpacing: 4,
+                        //   childAspectRatio: (1 / 1.22),
+                        // ),
+                        children: snapshot.data!.docs.map((docReference) {
+                          i++;
+                          var coursePrice = NumberFormat("###.00#", "en_US");
+                          String price = coursePrice
+                              .format(double.parse(docReference['CourseFee']));
+                          String id = docReference.id;
 
-                        return GestureDetector(
-                          onTap: () async {
-                            //   Provider.of<CourseProvider>(context, listen: false)
-                            // .getAllPaidCourses(value2.getuserModel!.uid);
-
-                            //  String isPaied1= await value.seachPayed(docReference['CourseName']);
-
-                            // if (value.getPaid == "Yes") {
-
-                            // Logger().wtf("))))))))))))))))))))))))))) : "+isPaied1);
-
-                            isPaied(docReference.id, docReference['CourseFee'],
-                                docReference['CourseName'], value, value2);
-
-                            // } else {
-                            //   paymetDialog(value2, context);
-                            // }
-
-                            // UtilFuntions.pageTransition(
-                            //     context,
-                            //     CourseDetails(
-                            //       docid: docReference.id,
-                            //     ),
-                            //     const courseList());
-                          },
-                          child: SizedBox(
-                            // height: 250,
-                            child: Card(
-                              elevation: 10,
-                              shadowColor: Colors.grey.withOpacity(0.08),
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Stack(
-                                    children: <Widget>[
-                                      //Center(child: CircularProgressIndicator()),
-                                      SizedBox(
-                                        // width: size.width / 2,
-                                        height:size.height/9,
-                                        child: ClipRRect(
-                                          borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(5),
-                                            topRight: Radius.circular(5),
-                                          ),
-                                          child: Image.network(
-                                            docReference['image'],
-
-                                            //   // height: height,
-                                            fit: BoxFit.fill,
-                                            loadingBuilder: (context, child,
-                                                loadingProgress) {
-                                              if (loadingProgress == null) {
-                                                return child;
-                                              }
-
-                                              return const SkeletonAvatar(
-                                                style: SkeletonAvatarStyle(
-                                                  width: double.infinity,
-                                                  height: double.infinity,
-                                                ),
-                                              );
-                                            },
-                                          ),
+                          return AnimationConfiguration.staggeredGrid(
+                            position: i,
+                            columnCount: columnCount,
+                            duration: const Duration(milliseconds: 375),
+                            child: SlideAnimation(
+                              child: SlideAnimation(
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    isPaied(
+                                        docReference.id,
+                                        docReference['CourseFee'],
+                                        docReference['CourseName'],
+                                        value,
+                                        value2);
+                                  },
+                                  child: SizedBox(
+                                    // height: 250,
+                                    child: Card(
+                                      elevation: 10,
+                                      shadowColor:
+                                          Colors.grey.withOpacity(0.08),
+                                      shape: RoundedRectangleBorder(
+                                        side: BorderSide(
+                                          color: Colors.grey.withOpacity(0.2),
+                                          width: 1,
                                         ),
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 8, right: 10, bottom: 10, top: 5),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        SizedBox(
-                                          width: 236,
-                                          height: 35,
-                                          child: Text(
-                                            docReference['CourseName'],
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                            style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Stack(
+                                            children: <Widget>[
+                                              //Center(child: CircularProgressIndicator()),
+                                              SizedBox(
+                                                // width: size.width / 2,
+                                                height: size.height / 9,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      const BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(10),
+                                                    topRight:
+                                                        Radius.circular(5),
+                                                  ),
+                                                  child: Image.network(
+                                                    docReference['image'],
+
+                                                    //   // height: height,
+                                                    fit: BoxFit.fill,
+                                                    loadingBuilder: (context,
+                                                        child,
+                                                        loadingProgress) {
+                                                      if (loadingProgress ==
+                                                          null) {
+                                                        return child;
+                                                      }
+
+                                                      return const SkeletonAvatar(
+                                                        style:
+                                                            SkeletonAvatarStyle(
+                                                          width:
+                                                              double.infinity,
+                                                          height:
+                                                              double.infinity,
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        const SizedBox(
-                                          height: 8,
-                                        ),
-                                        Text(
-                                          docReference['instructor'],
-                                          style: const TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        RatingBar.builder(
-                                          initialRating: 3,
-                                          minRating: 1,
-                                          direction: Axis.horizontal,
-                                          allowHalfRating: true,
-                                          itemCount: 5,
-                                          itemSize: 12,
-                                          itemPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 0.0),
-                                          itemBuilder: (context, _) =>
-                                              const Icon(
-                                            Icons.star,
-                                            color: Colors.amber,
-                                          ),
-                                          onRatingUpdate: (rating) {
-                                            print(rating);
-                                          },
-                                        ),
-                                        Text(
-                                          "LKR  " + price.toString(),
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 18,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8,
+                                                right: 10,
+                                                bottom: 10,
+                                                top: 5),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                SizedBox(
+                                                  width: 236,
+                                                  height: 35,
+                                                  child: Text(
+                                                    docReference['CourseName'],
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 2,
+                                                    style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 8,
+                                                ),
+                                                Text(
+                                                  docReference['instructor'],
+                                                  style: const TextStyle(
+                                                    fontSize: 10,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                RatingBar.builder(
+                                                  initialRating: 3,
+                                                  minRating: 1,
+                                                  direction: Axis.horizontal,
+                                                  allowHalfRating: true,
+                                                  itemCount: 5,
+                                                  itemSize: 12,
+                                                  itemPadding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 0.0),
+                                                  itemBuilder: (context, _) =>
+                                                      const Icon(
+                                                    Icons.star,
+                                                    color: Colors.amber,
+                                                  ),
+                                                  onRatingUpdate: (rating) {
+                                                    print(rating);
+                                                  },
+                                                ),
+                                                Text(
+                                                  "LKR  " + price.toString(),
+                                                  style: GoogleFonts.poppins(
+                                                      fontSize: 18,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                  )
-                                ],
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      }).toList()),
+                          );
+                        }).toList()),
+                  ),
                 ),
               );
             });

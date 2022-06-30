@@ -95,22 +95,26 @@ class _aboutUsState extends State<aboutUs> {
                         )
                       ],
                     ),
-                 Consumer2<ChatProvider,UserProvider>(builder: (context, value,value2, child) {
-                   return InkWell(
-                      onTap: (){
-                        Logger().d(">>>>>>>>>>>>>>>>>>>>>>>>>> : sadasdassdasdas erwrdrwe");
-                        value.createConversation(context, value2.getuserModel!);
+                    Consumer2<ChatProvider, UserProvider>(
+                      builder: (context, value, value2, child) {
+                        return InkWell(
+                          onTap: () {
+                            Logger().d(
+                                ">>>>>>>>>>>>>>>>>>>>>>>>>> : sadasdassdasdas erwrdrwe");
+                            value.createConversation(
+                                context, value2.getuserModel!);
+                          },
+                          child: Text(
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed auctor lectus. Phasellus ut neque lacus. Etiam egestas eros elit, a dapibus nunc sodales a. Nulla rutrum finibus nulla, nec ornare risus lacinia et. Quisque vehicula urna libero, at vehicula lorem congue sed. Duis finibus eros in commodo rhoncus. In a ex rhoncus, lacinia sapien quis, convallis nisi. Integer nunc tellus, tristique quis pulvinar ut, imperdiet sit amet metus. Etiam ut ullamcorper libero.Sed sed auctor lectus. Phasellus ut neque lacus. Etiam egestas eros elit, a dapibus nunc sodales a. Nulla rutrum finibus nulla, nec ornare risus lacinia et. Quisque vehicula urna libero, at vehicula lorem congue sed. Duis finibus eros in commodo rhoncus. In a ex rhoncus, lacinia sapien quis, convallis nisi. Integer nunc tellus, tristique quis pulvinar ut, imperdiet sit amet metus. Etiam ut ullamcorper libero.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 17,
+                                fontWeight: FontWeight.normal),
+                          ),
+                        );
                       },
-                      child: Text(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed auctor lectus. Phasellus ut neque lacus. Etiam egestas eros elit, a dapibus nunc sodales a. Nulla rutrum finibus nulla, nec ornare risus lacinia et. Quisque vehicula urna libero, at vehicula lorem congue sed. Duis finibus eros in commodo rhoncus. In a ex rhoncus, lacinia sapien quis, convallis nisi. Integer nunc tellus, tristique quis pulvinar ut, imperdiet sit amet metus. Etiam ut ullamcorper libero.Sed sed auctor lectus. Phasellus ut neque lacus. Etiam egestas eros elit, a dapibus nunc sodales a. Nulla rutrum finibus nulla, nec ornare risus lacinia et. Quisque vehicula urna libero, at vehicula lorem congue sed. Duis finibus eros in commodo rhoncus. In a ex rhoncus, lacinia sapien quis, convallis nisi. Integer nunc tellus, tristique quis pulvinar ut, imperdiet sit amet metus. Etiam ut ullamcorper libero.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.normal),
-                      ),
-                    );
-                 },)   
+                    )
                   ],
                 ),
               ),

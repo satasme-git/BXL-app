@@ -60,3 +60,22 @@ Map<String, dynamic> _$MessageModelToJson(MessageModel instance) =>
       'messageType': instance.messageType,
       'messageTime': instance.messageTime,
     };
+
+VideoModel _$VideoModelFromJson(Map<String, dynamic> json) => VideoModel(
+      Fee: json['Fee'] as String,
+      VideoName: json['VideoName'] as String,
+      corseid: json['corse_id'] as String,
+      coursename: json['course_name'] as String,
+      image: json['image'] as String,
+      vid: json['vid'] as String,
+    );
+
+Map<String, dynamic> _$VideoModelToJson(VideoModel instance) =>
+    <String, dynamic>{
+      'Fee': instance.Fee,
+      'VideoName': instance.VideoName,
+      'corse_id': instance.corseid,
+      'course_name': instance.coursename,
+      'image': instance.image,
+      'vid': instance.vid,
+    };

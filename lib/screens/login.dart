@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:binary_app/provider/user_provider.dart';
 import 'package:binary_app/screens/home.dart';
 import 'package:binary_app/screens/reset_password.dart';
@@ -157,154 +158,159 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 70, left: 0),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                                text: "Welcome to",
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  letterSpacing: 2,
-                                  color: Colors.blue[800],
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: " Binary,",
-                                    style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue[900],
-                                    ),
-                                  )
-                                ]),
-                          ),
-                          Text(
-                            "Signin to Continue",
-                            style: TextStyle(
-                              letterSpacing: 1,
-                              color: Colors.grey[800],
+                  FadeInRight(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 70, left: 0),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                  text: "Welcome to",
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    letterSpacing: 2,
+                                    color: Colors.blue[800],
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: " Binary,",
+                                      style: TextStyle(
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blue[900],
+                                      ),
+                                    )
+                                  ]),
                             ),
-                          ),
-                        ],
+                            Text(
+                              "Signin to Continue",
+                              style: TextStyle(
+                                letterSpacing: 1,
+                                color: Colors.grey[800],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                   SizedBox(
                     height: 80,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 15,
-                            spreadRadius: 1,
-                          ),
-                        ]),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: <Widget>[
-                            SizedBox(
-                              height: 20,
+                  FadeInUp(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 15,
+                              spreadRadius: 1,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Email",
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  emailField,
-                                ],
+                          ]),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: <Widget>[
+                              SizedBox(
+                                height: 20,
                               ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Password",
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  passwordField,
-                                  SizedBox(height:10),
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: InkWell(
-                                      onTap: (){
-                                           UtilFuntions.pageTransition(context,
-                                        const ForgotPassword(), const LoginScreen());
-                                        
-                                      },
-                                      child: Text(
-                                        "Forgot Password?",
-                                        style: TextStyle(color: Colors.black),
+                              Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Email",
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    emailField,
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Password",
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    passwordField,
+                                    SizedBox(height: 10),
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: InkWell(
+                                        onTap: () {
+                                          UtilFuntions.pageTransition(
+                                              context,
+                                              const ForgotPassword(),
+                                              const LoginScreen());
+                                        },
+                                        child: Text(
+                                          "Forgot Password?",
+                                          style: TextStyle(color: Colors.black),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 5.0, right: 5.0),
+                                child: loginButton,
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("Don't have an account? "),
+                                  GestureDetector(
+                                    onTap: () {
+                                      UtilFuntions.pageTransition(context,
+                                          const Signup(), const LoginScreen());
+                                      // Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //         builder: (context) => Signup()));
+                                    },
+                                    child: Text(
+                                      " Signup",
+                                      style: TextStyle(
+                                          color: Colors.blue[900],
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  )
                                 ],
                               ),
-                            ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 5.0, right: 5.0),
-                              child: loginButton,
-                            ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text("Don't have an account? "),
-                                GestureDetector(
-                                  onTap: () {
-                                    UtilFuntions.pageTransition(context,
-                                        const Signup(), const LoginScreen());
-                                    // Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (context) => Signup()));
-                                  },
-                                  child: Text(
-                                    " Signup",
-                                    style: TextStyle(
-                                        color: Colors.blue[900],
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                          ],
+                              SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

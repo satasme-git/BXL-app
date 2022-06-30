@@ -11,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -94,12 +95,11 @@ class _HomeScreenState extends State<HomeScreen> {
     _connectivitySubscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) {
-         
       if (result == ConnectivityResult.none) {
         UtilFuntions.pageTransition(
             context, const ConnectionScreen(), const HomeScreen());
-      }else{
-         UtilFuntions.pageTransition(
+      } else {
+        UtilFuntions.pageTransition(
             context, const HomeScreen(), const ConnectionScreen());
       }
 
@@ -185,368 +185,389 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               alignment: Alignment.center,
             ),
-            if (s == false) ...{
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+
+            AnimationLimiter(
+              child: Column(
+                children: AnimationConfiguration.toStaggeredList(
+                  duration: const Duration(milliseconds: 375),
+                  childAnimationBuilder: (widget) => SlideAnimation(
+                    horizontalOffset: 50.0,
+                    child: FadeInAnimation(
+                      child: widget,
+                    ),
+                  ),
                   children: [
-                    CardTitle(
-                      title: "Course",
-                      onTap: () {
-                        UtilFuntions.pageTransition(
-                            context, const courseList(), const HomeScreen());
-                      },
-                    ),
-                    CardTitle(
-                      title: "Videos",
-                      onTap: () {
-                        UtilFuntions.pageTransition(
-                            context, const Videolist(), const HomeScreen());
-                      },
-                    ),
-                    CardTitle(
-                      title: "Marketing",
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Padding(
-                    padding: EdgeInsets.all(12.0),
-                    child: Text(
-                      "Populer Courses",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-
-              SizedBox(
-                height: 245,
-                child: course(),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Padding(
-                    padding: EdgeInsets.all(12.0),
-                    child: Text(
-                      "Programs",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Consumer<UserProvider>(
-                        builder: (context, value, child) {
-                          return GestureDetector(
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CardTitle(
+                            title: "Course",
                             onTap: () {
-                              // Provider.of<CourseProvider>(context,
-                              //         listen: false)
-                              //     .getAllPaidCourses(value.getuserModel!.uid);
-
                               UtilFuntions.pageTransition(context,
                                   const courseList(), const HomeScreen());
                             },
-                            child: Container(
-                              width: size.width / 2.2,
-                              height: 140,
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                    colors: [
-                                      Colors.white,
-                                      Colors.white,
-                                      // Color(0xff0d47a1),
-                                      // Color(0xff2196f3),
-                                    ],
-                                    begin: FractionalOffset(1.0, 1.0),
-                                    end: FractionalOffset(1.0, 0.0),
-                                    stops: [0.0, 1.0],
-                                    tileMode: TileMode.clamp),
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(20),
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.08),
-                                    blurRadius: 15,
-                                    spreadRadius: 1,
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 20.0),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: const Color.fromARGB(255, 23, 202, 32),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: const Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: Icon(
-                                                Icons.book_outlined,
-                                                color: Colors.white,
-                                                size: 30,
-                                              ),
-                                            ),
-                                          ),
+                          ),
+                          CardTitle(
+                            title: "Videos",
+                            onTap: () {
+                              UtilFuntions.pageTransition(context,
+                                  const Videolist(), const HomeScreen());
+                            },
+                          ),
+                          CardTitle(
+                            title: "Marketing",
+                            onTap: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.all(12.0),
+                          child: Text(
+                            "Populer Courses",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 245,
+                      child: course(),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.all(12.0),
+                          child: Text(
+                            "Programs",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Consumer<UserProvider>(
+                              builder: (context, value, child) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    // Provider.of<CourseProvider>(context,
+                                    //         listen: false)
+                                    //     .getAllPaidCourses(value.getuserModel!.uid);
+
+                                    UtilFuntions.pageTransition(context,
+                                        const courseList(), const HomeScreen());
+                                  },
+                                  child: Container(
+                                    width: size.width / 2.2,
+                                    height: 140,
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                          colors: [
+                                            Colors.white,
+                                            Colors.white,
+                                            // Color(0xff0d47a1),
+                                            // Color(0xff2196f3),
+                                          ],
+                                          begin: FractionalOffset(1.0, 1.0),
+                                          end: FractionalOffset(1.0, 0.0),
+                                          stops: [0.0, 1.0],
+                                          tileMode: TileMode.clamp),
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(20),
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.08),
+                                          blurRadius: 15,
+                                          spreadRadius: 1,
                                         ),
                                       ],
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 15, vertical: 10),
-                                      child: Row(
+                                    child: Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
-                                          Column(
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
                                             children: [
-                                              const Text(
-                                                "Courses",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 17),
-                                              ),
-                                              Text(
-                                                "${value.getcoursecount}+ Courses",
-                                                style: const TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 95, 95, 95),
-                                                    fontSize: 12),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 20.0),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: const Color.fromARGB(
+                                                        255, 23, 202, 32),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  child: const Padding(
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    child: Icon(
+                                                      Icons.book_outlined,
+                                                      color: Colors.white,
+                                                      size: 30,
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
                                             ],
                                           ),
-                                          const Icon(
-                                            MaterialCommunityIcons
-                                                .arrow_right_circle,
-                                            size: 30,
-                                            color: Colors.blue,
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15, vertical: 10),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  children: [
+                                                    const Text(
+                                                      "Courses",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 17),
+                                                    ),
+                                                    Text(
+                                                      "${value.getcoursecount}+ Courses",
+                                                      style: const TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255, 95, 95, 95),
+                                                          fontSize: 12),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const Icon(
+                                                  MaterialCommunityIcons
+                                                      .arrow_right_circle,
+                                                  size: 30,
+                                                  color: Colors.blue,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ]),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                UtilFuntions.pageTransition(context,
+                                    const Videolist(), const HomeScreen());
+
+                                // UtilFuntions.pageTransition(context,
+                                //         const Videolist(), const HomeScreen());
+                              },
+                              child: Container(
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 20.0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: const Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Icon(
+                                                  Icons.play_circle_outline,
+                                                  color: Colors.white,
+                                                  size: 30,
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              children: [
+                                                const Text(
+                                                  "Videos",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 17),
+                                                ),
+                                                Consumer<UserProvider>(
+                                                  builder:
+                                                      (context, value, child) {
+                                                    return Text(
+                                                      "${value.getvideocount}+ Videos",
+                                                      style: const TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255, 95, 95, 95),
+                                                          fontSize: 12),
+                                                    );
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            const Icon(
+                                              MaterialCommunityIcons
+                                                  .arrow_right_circle,
+                                              size: 30,
+                                              color: Colors.blue,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ]),
+                                width: size.width / 2.2,
+                                height: 140,
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.08),
+                                      blurRadius: 15,
+                                      spreadRadius: 1,
                                     ),
-                                  ]),
+                                  ],
+                                  gradient: const LinearGradient(
+                                      colors: [
+                                        Colors.white,
+                                        Colors.white
+                                        // Color(0xff0d47a1),
+                                        // Color(0xff2196f3),
+                                      ],
+                                      begin: FractionalOffset(1.0, 1.0),
+                                      stops: [0.0, 1.0],
+                                      tileMode: TileMode.clamp),
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                ),
+                              ),
                             ),
-                          );
-                        },
+                          ),
+                        ],
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          UtilFuntions.pageTransition(
-                              context, const Videolist(), const HomeScreen());
-
-                          // UtilFuntions.pageTransition(context,
-                          //         const Videolist(), const HomeScreen());
-                        },
-                        child: Container(
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 20.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.red,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: const Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Icon(
-                                            Icons.play_circle_outline,
-                                            color: Colors.white,
-                                            size: 30,
-                                          ),
-                                        ),
-                                      ),
+                      padding: const EdgeInsets.only(
+                          top: 25.0, left: 12, right: 12, bottom: 25),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: HexColor("#F59300"),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(20))),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 8.0, top: 15),
+                                    child: Text(
+                                      "Refer and earn",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 12),
                                     ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 10),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        children: [
-                                          const Text(
-                                            "Videos",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 17),
-                                          ),
-                                          Consumer<UserProvider>(
-                                            builder: (context, value, child) {
-                                              return Text(
-                                                "${value.getvideocount}+ Videos",
-                                                style: const TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 95, 95, 95),
-                                                    fontSize: 12),
-                                              );
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      const Icon(
-                                        MaterialCommunityIcons
-                                            .arrow_right_circle,
-                                        size: 30,
-                                        color: Colors.blue,
-                                      ),
-                                    ],
                                   ),
-                                ),
-                              ]),
-                          width: size.width / 2.2,
-                          height: 140,
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.08),
-                                blurRadius: 15,
-                                spreadRadius: 1,
-                              ),
-                            ],
-                            gradient: const LinearGradient(
-                                colors: [
-                                  Colors.white,
-                                  Colors.white
-                                  // Color(0xff0d47a1),
-                                  // Color(0xff2196f3),
+                                  const Padding(
+                                    padding: EdgeInsets.only(left: 8.0, top: 8),
+                                    child: Text(
+                                      "Refer your friend",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18),
+                                    ),
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                      "and win cryptocoins",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18),
+                                    ),
+                                  ),
+                                  Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 8.0, top: 20),
+                                      child: RaisedButton(
+                                        color: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const refer()));
+                                        },
+                                        child: Text(
+                                          "Refer Now",
+                                          style: TextStyle(
+                                              color: Colors.amber[700]),
+                                        ),
+                                      ))
                                 ],
-                                begin: FractionalOffset(1.0, 1.0),
-                                stops: [0.0, 1.0],
-                                tileMode: TileMode.clamp),
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(20),
+                              ),
                             ),
-                          ),
+                            const SizedBox(width: 85),
+                            Expanded(
+                                child: Image.asset('assets/referal.png',
+                                    width: 60, height: 60))
+                          ],
                         ),
+                        width: double.infinity,
+                        height: 180,
                       ),
                     ),
                   ],
                 ),
               ),
+            ),
 
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: 25.0, left: 12, right: 12, bottom: 25),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: HexColor("#F59300"),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(20))),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.only(left: 8.0, top: 15),
-                              child: Text(
-                                "Refer and earn",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 12),
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(left: 8.0, top: 8),
-                              child: Text(
-                                "Refer your friend",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                "and win cryptocoins",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                            ),
-                            Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 8.0, top: 20),
-                                child: RaisedButton(
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const refer()));
-                                  },
-                                  child: Text(
-                                    "Refer Now",
-                                    style: TextStyle(color: Colors.amber[700]),
-                                  ),
-                                ))
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 85),
-                      Expanded(
-                          child: Image.asset('assets/referal.png',
-                              width: 60, height: 60))
-                    ],
-                  ),
-                  width: double.infinity,
-                  height: 180,
-                ),
-              ),
-              ///////////////////////////////////////////////////
-              ///
-            } else ...{
-              Search()
-            }
+            ///////////////////////////////////////////////////
+            ///
           ],
         )));
     // );
