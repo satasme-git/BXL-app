@@ -231,7 +231,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                                   child: Text(
                                     docReference['CourseName'],
                                     style: GoogleFonts.poppins(
-                                        fontSize: 25,
+                                        fontSize: 22,
                                         fontWeight: FontWeight.normal),
                                   ),
                                 ),
@@ -242,13 +242,15 @@ class _CourseDetailsState extends State<CourseDetails> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Expanded(
-                                    child: Text(docReference['Description'],
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 13,
-                                        ),
-                                        textAlign: TextAlign.justify,
-                                        maxLines: 6,
-                                        overflow: TextOverflow.ellipsis),
+                                    child: Text(
+                                      docReference['Description'],
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                      ),
+                                      textAlign: TextAlign.justify,
+                                      // maxLines: 6,
+                                      // overflow: TextOverflow.ellipsis,
+                                    ),
                                   )
                                 ]),
                           ],

@@ -193,8 +193,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: Colors.blue.withOpacity(.3),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: const Center(
-                                  child: CustomLoader(),
+                                child: Center(
+                                  child: CustomLoader(loadertype: false),
                                 ),
                               )
                             : ElevatedButton(

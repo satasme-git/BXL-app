@@ -239,8 +239,8 @@ class _slipPayState extends State<slipPay> {
                                   color: Colors.blue.withOpacity(.3),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
-                                child: const Center(
-                                  child: CustomLoader(),
+                                child: Center(
+                                  child: CustomLoader(loadertype: false),
                                 ),
                               )
                             : ElevatedButton(

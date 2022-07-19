@@ -143,15 +143,15 @@ class CustomDrawer extends StatelessWidget {
                         },
                       ),
 
-                      const Divider(), //
-                      CustomListTile(
-                        text: "Careers",
-                        iconleading: MaterialCommunityIcons.routes,
-                        onTap: () {
-                          UtilFuntions.pageTransition(context,
-                              const NotificationTest(), const CustomDrawer());
-                        },
-                      ),
+                      // const Divider(), //
+                      // CustomListTile(
+                      //   text: "Careers",
+                      //   iconleading: MaterialCommunityIcons.routes,
+                      //   onTap: () {
+                      //     UtilFuntions.pageTransition(context,
+                      //         const NotificationTest(), const CustomDrawer());
+                      //   },
+                      // ),
                       const Divider(), //
                       CustomListTile(
                         text: "Payment",
@@ -200,19 +200,19 @@ class CustomDrawer extends StatelessWidget {
                               context, const refer(), const HomeScreen());
                         },
                       ),
-                      const Divider(), //
-                      CustomListTile(
-                        text: "Testing pupose",
-                        iconleading:
-                            MaterialCommunityIcons.account_arrow_right_outline,
-                        onTap: () async {
-                          Navigator.of(context).pop();
-                          await Future.delayed(const Duration(
-                              milliseconds: 200)); // wait some time
-                          UtilFuntions.pageTransition(context,
-                              const ProfileScreenNew(), const CustomDrawer());
-                        },
-                      ),
+                      // const Divider(), //
+                      // CustomListTile(
+                      //   text: "Testing pupose",
+                      //   iconleading:
+                      //       MaterialCommunityIcons.account_arrow_right_outline,
+                      //   onTap: () async {
+                      //     Navigator.of(context).pop();
+                      //     await Future.delayed(const Duration(
+                      //         milliseconds: 200)); // wait some time
+                      //     UtilFuntions.pageTransition(context,
+                      //         const ProfileScreenNew(), const CustomDrawer());
+                      //   },
+                      // ),
 
                       const Divider(), //here is a divider
                       const SizedBox(

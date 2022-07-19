@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:binary_app/screens/Payment/slip_pay_video.dart';
+import 'package:binary_app/screens/Video/Videolist.dart';
 import '../model/objects.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -83,6 +85,45 @@ class SlipProvider extends ChangeNotifier {
           () {
             UtilFuntions.pageTransition(
                 context, const ViewAllSlips(), const slipPay());
+          },
+        );
+      } else {
+        setLoading();
+        DialogBox().dialogBox(context, DialogType.ERROR, 'Error.',
+            'Please select an image', () {});
+      }
+    } catch (e) {
+      setLoading();
+      DialogBox().dialogBox(context, DialogType.ERROR, 'Somthing went wrong!',
+          'Please try again', () {});
+    }
+  }
+
+  Future<void> startAddSlipDataforVideo(
+      BuildContext context, UserModel userModel, VideoModel videoModel) async {
+    try {
+      if (inputValidation()) {
+        setLoading(true);
+
+        await _slipController
+            .saveSlipDataforVideo(_image, videoModel, userModel)
+            .then((value) {
+          _image = File("");
+
+          _image.delete();
+
+          notifyListeners();
+        });
+
+        setLoading();
+        DialogBox().dialogBox(
+          context,
+          DialogType.SUCCES,
+          'Success.',
+          'Successfully uploaded the slip.\n We will get back to you soon',
+          () {
+            UtilFuntions.pageTransition(
+                context, const Videolist(), const SlipPayVideo());
           },
         );
       } else {

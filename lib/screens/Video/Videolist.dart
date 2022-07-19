@@ -11,6 +11,7 @@ import 'package:skeletons/skeletons.dart';
 
 import '../../provider/corse_provider.dart';
 import '../../provider/user_provider.dart';
+import '../../provider/video_provider.dart';
 import '../../utils/util_functions.dart';
 import '../components/custom_loader.dart';
 
@@ -85,7 +86,9 @@ class _VideolistState extends State<Videolist> {
                     const SizedBox(
                       height: 10,
                     ),
-                    value.isLoading ? const CustomLoader() : const SizedBox(),
+                    value.isLoading
+                        ? CustomLoader(loadertype: true)
+                        : const SizedBox(),
                     Vlist(),
                   ],
                 ),
@@ -143,11 +146,13 @@ class _VideolistState extends State<Videolist> {
                         columnCount: columnCount,
                         child: SlideAnimation(
                           child: SlideAnimation(
-                            child: Consumer2<CourseProvider, UserProvider>(
-                              builder: (context, value, value2, child) {
+                            child: Consumer3<CourseProvider, UserProvider,
+                                VideoProvider>(
+                              builder: (context, value, value2, value3, child) {
                                 return GestureDetector(
                                   onTap: () {
-                                    
+                                    value3.fetchSingleVideo(
+                                        context, docReference.id);
                                     isPaied(
                                         docReference.id,
                                         docReference['vid'],
@@ -231,7 +236,7 @@ class _VideolistState extends State<Videolist> {
                                                   fontSize: 12,
                                                 ),
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 height: 2,
                                               ),
                                               Text(
@@ -274,17 +279,16 @@ class _VideolistState extends State<Videolist> {
                                                       ),
                                                     )
                                                   : Container(
-                                                      margin: EdgeInsets.only(
-                                                          top: 5),
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 8),
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              top: 5),
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 8),
                                                       decoration: BoxDecoration(
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              250,
-                                                              233,
-                                                              182),
+                                                          color: const Color
+                                                                  .fromARGB(255,
+                                                              250, 233, 182),
                                                           // border: Border.all(
                                                           //     color: Color.fromARGB(
                                                           //         255, 250, 233, 182)),

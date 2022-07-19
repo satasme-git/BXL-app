@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:uuid/uuid.dart';
 
+import '../model/objects.dart';
 import '../model/user_model.dart';
 
 // import '../model/objects.dart';
@@ -14,13 +15,15 @@ import '../model/user_model.dart';
 class SlipController {
   final uuid = Uuid();
   String? cp_id;
-    Coursemodel? coursemodel;
-   CollectionReference course = FirebaseFirestore.instance.collection('course');
+  Coursemodel? coursemodel;
+  CollectionReference course = FirebaseFirestore.instance.collection('course');
 
   CollectionReference res =
       FirebaseFirestore.instance.collection('coursepay_details');
   CollectionReference course_pay =
       FirebaseFirestore.instance.collection('course_pay');
+  CollectionReference video_pay =
+      FirebaseFirestore.instance.collection('video_pay');
   // FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
@@ -36,44 +39,37 @@ class SlipController {
     //get the unique document id auto generated
     String docId = res.doc().id;
 
+    QuerySnapshot snapshot_course =
+        await course.where('CourseName', isEqualTo: coursename).get();
 
- QuerySnapshot snapshot_course = await course.where('CourseName', isEqualTo: coursename).get();
+    //querying all the docs in this snapshot
+    for (var item in snapshot_course.docs) {
+      // mapping to a single model
+      coursemodel = Coursemodel.fromJson(item.data() as Map<String, dynamic>);
+      //ading to the model
 
-      //querying all the docs in this snapshot
-      for (var item in snapshot_course.docs) {
-       
-        // mapping to a single model
-         coursemodel = Coursemodel.fromJson(item.data() as Map<String, dynamic>);
-        //ading to the model
-   
-      }
-
-
-
+    }
 
     // var collectionReference = FirebaseFirestore.instance
     //     .collection('corse_pay')
     //     .where('uid', isEqualTo: userModel.uid)
     //     .where('courseName', isEqualTo: coursename);
 
-        //  QuerySnapshot corse_paysnapshot = await course_pay
-        // .where('uid', isEqualTo: userModel.uid)
-        //  .where('CourseName', isEqualTo: coursename)
-        //  .get();
+    //  QuerySnapshot corse_paysnapshot = await course_pay
+    // .where('uid', isEqualTo: userModel.uid)
+    //  .where('CourseName', isEqualTo: coursename)
+    //  .get();
 
     // QuerySnapshot corse_paysnapshot = await collectionReference.get();
     cp_id = userModel.uid + "" + coursename;
 
     final cpdocId = uuid.v5(Uuid.NAMESPACE_URL, cp_id);
 
-
-     DocumentSnapshot snapshot1 = await course_pay.doc(cpdocId).get();
+    DocumentSnapshot snapshot1 = await course_pay.doc(cpdocId).get();
 
     //  Logger().d(">>>>>>>>>>>>>>>>>>>>>>>>>>>  mo data: "+snapshot1.exists.toString());
 
     if (snapshot1.exists == false) {
-     
-    
       await course_pay.doc(cpdocId).set({
         'cpid': cpdocId,
         'courseName': coursename,
@@ -81,7 +77,7 @@ class SlipController {
         'uid': userModel.uid,
         'userName': userModel.fname + "" + userModel.lname,
         'email': userModel.email,
-        'pay_amount':0,
+        'pay_amount': 0,
         'create_at': day,
         'updated_at': day,
         'user': userModel.toJson(),
@@ -116,7 +112,6 @@ class SlipController {
     }
 
     Logger().i(downloadurl);
-  
   }
 
 //upload image to th firebase
@@ -130,5 +125,43 @@ class SlipController {
       Logger().e(e);
       return null;
     }
+  }
+
+  Future<void> saveSlipDataforVideo(
+      File img, VideoModel videoModel, UserModel userModel) async {
+    UploadTask? task = uploadFile(img);
+    final snapshot = await task!.whenComplete(() {});
+    final downloadurl = await snapshot.ref.getDownloadURL();
+    DateTime now = DateTime.now();
+    String day = DateFormat('yyyy-MM-dd').format(now);
+    //get the unique document id auto generated
+    String docId = res.doc().id;
+
+    cp_id = userModel.uid + "" + videoModel.vid;
+    final vpdocId = uuid.v5(Uuid.NAMESPACE_URL, cp_id);
+    DocumentSnapshot snapshot1 = await video_pay.doc(vpdocId).get();
+    if (snapshot1.exists == false) {
+      await video_pay.doc(vpdocId).set({
+        'vpid': vpdocId,
+        'videoName': videoModel.VideoName,
+        'vid': videoModel.vid,
+        'videFee': videoModel.Fee,
+        'uid': userModel.uid,
+        'userName': userModel.fname + "" + userModel.lname,
+        'email': userModel.email,
+        'pay_amount': 0,
+        'create_at': day,
+        'updated_at': day,
+        'user': userModel.toJson(),
+        'video': videoModel.toJson(),
+        'img': downloadurl,
+        'status': 0,
+      }).then((value) async {});
+    } else {
+      await video_pay.doc(vpdocId).update({
+        'updated_at': day,
+      }).then((value) async {});
+    }
+    Logger().i(downloadurl);
   }
 }

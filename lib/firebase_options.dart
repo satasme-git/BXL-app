@@ -70,8 +70,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '281033233479',
     projectId: 'brew-crew-ec601',
     storageBucket: 'brew-crew-ec601.appspot.com',
-    androidClientId: '281033233479-jnn7brphu03e0gvrpqjl027luprsv7fe.apps.googleusercontent.com',
-    iosClientId: '281033233479-7onhte57c3lt2ji41if7p5i2p3rdf42e.apps.googleusercontent.com',
-    iosBundleId: 'com.example.binaryApp',
+    androidClientId:
+        '281033233479-jnn7brphu03e0gvrpqjl027luprsv7fe.apps.googleusercontent.com',
+    iosClientId:
+        '281033233479-7onhte57c3lt2ji41if7p5i2p3rdf42e.apps.googleusercontent.com',
+    iosBundleId: 'com.satasme.binaryApp',
   );
 }

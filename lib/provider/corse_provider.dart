@@ -34,7 +34,10 @@ class CourseProvider extends ChangeNotifier {
   String get getPaid => _paid;
 
   String _paid_for_course = "0";
+  String _paid_for_video = "0";
+
   String get getPaidFoCourse => _paid_for_course;
+  String get getPaidForVideo => _paid_for_video;
 
   final List<CoursePaymodel> _list = [];
 
@@ -167,11 +170,27 @@ class CourseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> seachPayedVideo(String videoid, UserModel? userModel) async {
+    var paidForVideo = await FirebaseFirestore.instance
+        .collection("video_pay")
+        .where('uid', isEqualTo: userModel!.uid)
+        .where("vid", isEqualTo: videoid)
+        .where("status", isEqualTo: 1)
+        .get();
+
+    _paid_for_video = paidForVideo.docs.length.toString();
+
+    Logger().wtf("^^^^^^^^^^^^^^^^^^^^^ : " + _paid_for_video);
+
+    notifyListeners();
+  }
+
   Future<void> getcoursebyid(String courseId, String vid, UserModel? usermodel,
       BuildContext context) async {
     setLoading(true);
     _courseModel = await _coursecontroller.getCourseById(courseId);
     await seachPayedCourse(_courseModel!.CourseName, usermodel);
+    await seachPayedVideo(vid, usermodel);
 
     if (_paid_for_course == "1") {
       setLoading();
@@ -182,8 +201,18 @@ class CourseProvider extends ChangeNotifier {
         ),
       );
     } else {
-      setLoading();
-      UtilFuntions.paymetvideoDialog(usermodel!.fname, context);
+      if (_paid_for_video == "1") {
+        setLoading();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => videoplay(Linkid: vid),
+          ),
+        );
+      } else {
+        setLoading();
+        UtilFuntions.paymetvideoDialog(usermodel!.fname, context);
+      }
     }
     notifyListeners();
   }

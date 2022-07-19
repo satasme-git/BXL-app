@@ -76,53 +76,52 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                                     ? ClipRRect(
                                         borderRadius: BorderRadius.circular(55),
                                         child: Image.asset(
-                                          
                                           "assets/avatar.jpg",
                                           height: 30,
                                         ),
                                         //  Image.asset(value.getImageFile!.path),
                                       )
-                                    : 
-                                     CircleAvatar(
-                                          minRadius: 10,
-                                          maxRadius: 18,
-                                          backgroundColor: Colors.white,
-                                          child: CircleAvatar(
-                                            backgroundImage: NetworkImage(
-                                              value.getuserModel!.image,
-                                            ),
-                                            radius: 24,
+                                    : CircleAvatar(
+                                        minRadius: 10,
+                                        maxRadius: 18,
+                                        backgroundColor: Colors.white,
+                                        child: CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                            value.getuserModel!.image,
                                           ),
+                                          radius: 24,
                                         ),
-                                    
+                                      ),
                                 const SizedBox(
                                   width: 12,
                                 ),
-                                Text(value.getuserModel!.email,style: GoogleFonts.poppins(fontSize: 12),),
+                                Text(
+                                  value.getuserModel!.email,
+                                  style: GoogleFonts.poppins(fontSize: 12),
+                                ),
                               ],
                             ),
                           ),
                           background: value.getImageFile == null
                               ? (value.getuserModel!.image != "null"
                                   ? Hero(
-                                     tag: "profile",
-                                    child: Image.network(
+                                      tag: "profile",
+                                      child: Image.network(
                                         value.getuserModel!.image,
                                         fit: BoxFit.cover,
                                       ),
-                                  )
+                                    )
                                   : Image.asset("assets/avatar.jpg"))
-                              :
-                               Hero(
-                                tag: "profile",
-                                child: Image.file(
+                              : Hero(
+                                  tag: "profile",
+                                  child: Image.file(
                                     File(value.getImageFile!.path),
                                     fit: BoxFit.cover,
                                     // scale: 6,
                                     width: double.infinity,
                                     // height: double.infinity,
                                   ),
-                              ),
+                                ),
                         );
                       },
                     );
@@ -236,8 +235,8 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                                       color: Colors.blue.withOpacity(.3),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
-                                    child: const Center(
-                                      child: CustomLoader(),
+                                    child: Center(
+                                      child: CustomLoader(loadertype: false),
                                     ),
                                   )
                                 : ElevatedButton(
@@ -377,7 +376,8 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                 contentPadding: const EdgeInsets.all(10),
                 hintText: hintText,
                 labelText: hintText,
-                hintStyle: const TextStyle(fontSize: 14, color: Constants.textColor1),
+                hintStyle:
+                    const TextStyle(fontSize: 14, color: Constants.textColor1),
               ),
               validator: validator),
         ],

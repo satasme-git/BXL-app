@@ -1,5 +1,6 @@
 import 'package:binary_app/provider/slip_provider.dart';
 import 'package:binary_app/provider/user_provider.dart';
+import 'package:binary_app/provider/video_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -43,8 +44,8 @@ class _SlipPayVideoState extends State<SlipPayVideo> {
           width: size.width,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Consumer2<SlipProvider, UserProvider>(
-              builder: (context, value1, value2, child) {
+            child: Consumer3<SlipProvider, UserProvider, VideoProvider>(
+              builder: (context, value1, value2, value3, child) {
                 return AnimationLimiter(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,10 +100,21 @@ class _SlipPayVideoState extends State<SlipPayVideo> {
                         const SizedBox(
                           height: 40,
                         ),
-                        // const Text(
-                        //   "Select course",
-                        //   style: TextStyle(color: Colors.grey),
-                        // ),
+                        const Text(
+                          "Video name",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Consumer<VideoProvider>(
+                          builder: (context, value, child) {
+                            return Text(
+                              value.getvideoModel!.VideoName,
+                              style: TextStyle(color: Colors.black),
+                            );
+                          },
+                        ),
                         // const SizedBox(
                         //   height: 10,
                         // ),
@@ -239,8 +251,8 @@ class _SlipPayVideoState extends State<SlipPayVideo> {
                                   color: Colors.blue.withOpacity(.3),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
-                                child: const Center(
-                                  child: CustomLoader(),
+                                child: Center(
+                                  child: CustomLoader(loadertype: false),
                                 ),
                               )
                             : ElevatedButton(
@@ -252,8 +264,10 @@ class _SlipPayVideoState extends State<SlipPayVideo> {
                                   ),
                                 ),
                                 onPressed: () {
-                                  value1.startAddSlipData(
-                                      context, value2.getuserModel!);
+                                  value1.startAddSlipDataforVideo(
+                                      context,
+                                      value2.getuserModel!,
+                                      value3.getvideoModel!);
                                 },
                                 child: Ink(
                                   width: double.infinity,

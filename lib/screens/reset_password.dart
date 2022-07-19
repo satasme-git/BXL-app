@@ -21,18 +21,17 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   final _auth = FirebaseAuth.instance;
   String? errorMessage;
 
-@override
+  @override
   void dispose() {
-    
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
@@ -85,7 +84,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             color: Colors.grey[800],
                           ),
                         ),
-                         Text(
+                        Text(
                           "( if not recieved please check spam)",
                           style: TextStyle(
                             letterSpacing: 1,
@@ -122,8 +121,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                               const SizedBox(
                                 height: 15,
                               ),
-                              
-                            
                               customTextField(
                                   MaterialCommunityIcons.email_outline,
                                   "Email Address",
@@ -141,7 +138,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                 }
                                 // return null;
                               }, false, false),
-                             
                               const SizedBox(
                                 height: 30,
                               ),
@@ -161,8 +157,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                               borderRadius:
                                                   BorderRadius.circular(15),
                                             ),
-                                            child: const Center(
-                                              child: CustomLoader(),
+                                            child: Center(
+                                              child: CustomLoader(
+                                                  loadertype: false),
                                             ),
                                           )
                                         : MaterialButton(
@@ -187,7 +184,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   },
                                 ),
                               ),
-                              
                               SizedBox(
                                 height: 30,
                               ),

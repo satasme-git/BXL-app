@@ -37,7 +37,7 @@ class _videoplayState extends State<videoplay> {
         backgroundColor: Colors.black,
       ),
       body: Scaffold(
-        backgroundColor: Colors.black87,
+        backgroundColor: Colors.black,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

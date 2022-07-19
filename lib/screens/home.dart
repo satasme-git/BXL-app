@@ -15,6 +15,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
@@ -240,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     SizedBox(
-                      height: 245,
+                      height: 275,
                       child: course(),
                     ),
                     Row(
@@ -725,7 +726,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   //             )));
                                 },
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15),
+                                  ),
                                   child: Image.network(
                                     docReference['image'],
                                     width: 260,
@@ -748,7 +752,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Align(
                                 alignment: Alignment.topRight,
                                 child: Container(
-                                  width: 79,
+                                  width: 59,
                                   height: 28,
                                   decoration: const BoxDecoration(
                                     color: Colors.lightGreen,
@@ -760,7 +764,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Align(
                                     alignment: Alignment.center,
                                     child: Text(
-                                      docReference['duration'],
+                                      "New",
                                       style:
                                           const TextStyle(color: Colors.white),
                                     ),
@@ -770,7 +774,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Positioned(
                                 bottom: 0,
                                 child: Container(
-                                  height: 115,
+                                  height: 140,
                                   width: 260,
                                   decoration: BoxDecoration(
                                     color: Colors.white.withOpacity(0.9),
@@ -835,6 +839,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                               onRatingUpdate: (rating) {
                                                 print(rating);
                                               },
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.only(top: 10),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 7, vertical: 3),
+                                              decoration: BoxDecoration(
+                                                  color: Color.fromARGB(
+                                                      255, 250, 233, 182),
+                                                  // border: Border.all(
+                                                  //     color: Color.fromARGB(
+                                                  //         255, 250, 233, 182)),
+                                                  borderRadius:
+                                                      BorderRadius.circular(3)),
+                                              child: Text(
+                                                docReference['duration'],
+                                                style: GoogleFonts.poppins(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 10,
+                                                ),
+                                              ),
                                             ),
                                             Text(
                                               "LKR  " +

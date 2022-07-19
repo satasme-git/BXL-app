@@ -135,7 +135,7 @@ class UtilFuntions {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "You have to pay for this course",
+              "You have to pay for this video",
               style: GoogleFonts.poppins(
                 fontSize: 12,
               ),

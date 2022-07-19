@@ -12,11 +12,11 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'provider/corse_provider.dart';
 import 'provider/user_provider.dart';
+import 'provider/video_provider.dart';
 import 'screens/splash_screen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
@@ -53,7 +53,7 @@ Future<void> main() async {
       print('Message also contained a notification: ${message.notification}');
     }
   });
- FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(
     MultiProvider(
       providers: [
@@ -74,6 +74,9 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => ChatProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => VideoProvider(),
         ),
       ],
       child: MyApp(email: email),
