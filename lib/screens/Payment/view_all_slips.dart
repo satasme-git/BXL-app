@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:binary_app/provider/corse_provider.dart';
 import 'package:binary_app/provider/slip_provider.dart';
 import 'package:binary_app/provider/user_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -107,12 +108,13 @@ class _ViewAllSlipsState extends State<ViewAllSlips> {
     var size = MediaQuery.of(context).size;
     // final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
     // final double itemWidth = size.width / 2;
-    return Consumer2<SlipProvider, UserProvider>(
+    return Consumer2<CourseProvider, UserProvider>(
       builder: (context, value, value2, child) {
         return StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection("course_pay")
-                .where('courseName', isEqualTo: value.geSelectedCourse)
+                .where('courseName',
+                    isEqualTo: value.getCourseModel!.CourseName)
                 .where('uid', isEqualTo: value2.getuserModel!.uid)
                 .snapshots(),
             builder:
@@ -279,12 +281,13 @@ class _ViewAllSlipsState extends State<ViewAllSlips> {
     var size = MediaQuery.of(context).size;
 
     // final double itemWidth = size.width / 2;
-    return Consumer2<SlipProvider, UserProvider>(
+    return Consumer2<CourseProvider, UserProvider>(
       builder: (context, value, value2, child) {
         return StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection("coursepay_details")
-                .where('courseName', isEqualTo: value.geSelectedCourse)
+                .where('courseName',
+                    isEqualTo: value.getCourseModel!.CourseName)
                 .where('uid', isEqualTo: value2.getuserModel!.uid)
                 .snapshots(),
             builder:
@@ -359,63 +362,47 @@ class _ViewAllSlipsState extends State<ViewAllSlips> {
                                       ),
                                     ),
                                   ),
-                                  // Row(
-                                  //   children: [
-                                  //     Container(
-                                  //       padding: EdgeInsets.all(3),
-                                  //       decoration: BoxDecoration(
-                                  //         color: Colors.grey,
-                                  //         borderRadius:
-                                  //             BorderRadius.circular(25),
-                                  //       ),
-                                  //       child: const Center(
-                                  //         child: Text(
-                                  //           "Rs",
-                                  //           style: TextStyle(
-                                  //               fontSize: 10,
-                                  //               fontWeight: FontWeight.bold,
-                                  //               color: Colors.white),
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //     SizedBox(
-                                  //       width: 5,
-                                  //     ),
-                                  //     Text("2500",style: TextStyle(fontSize: 13,),),
-                                  //   ],
-                                  // ),
-                                  SizedBox(height: 5,),
-                                  doc['status']==0?  Container(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 6, vertical: 3),
-                                      child: Text(
-                                        "Pending",
-                                        style: TextStyle(
-                                            fontSize: 8,
-                                            color: Colors.deepOrange),
-                                      ),
-                                    ),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.orange),
-                                      borderRadius: BorderRadius.circular(25),
-                                    ),
-                                  ): Container(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 6, vertical: 3),
-                                      child: Text(
-                                        "accepted",
-                                        style: TextStyle(
-                                            fontSize: 8,
-                                            color: Colors.black),
-                                      ),
-                                    ),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Color.fromARGB(255, 1, 160, 7)),
-                                      borderRadius: BorderRadius.circular(25),
-                                    ),
-                                  )
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  doc['status'] == 0
+                                      ? Container(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 6, vertical: 3),
+                                            child: Text(
+                                              "Pending",
+                                              style: TextStyle(
+                                                  fontSize: 8,
+                                                  color: Colors.deepOrange),
+                                            ),
+                                          ),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.orange),
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                          ),
+                                        )
+                                      : Container(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 6, vertical: 3),
+                                            child: Text(
+                                              "accepted",
+                                              style: TextStyle(
+                                                  fontSize: 8,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Color.fromARGB(
+                                                    255, 1, 160, 7)),
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                          ),
+                                        )
                                 ],
                               ),
                               SizedBox(

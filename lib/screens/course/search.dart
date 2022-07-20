@@ -1,23 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_beautiful_popup/main.dart';
-import 'package:flutter_beautiful_popup/templates/BlueRocket.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-
-import '../../controller/chat_controller.dart';
 import '../../provider/corse_provider.dart';
 import '../../provider/user_provider.dart';
 import '../../utils/util_functions.dart';
-import '../Payment/Slippay.dart';
-import '../Payment/payment_screen.dart';
 import 'course_details.dart';
-import '../courselist.dart';
 
 class SeachPage extends StatefulWidget {
   const SeachPage({Key? key}) : super(key: key);
@@ -43,7 +35,7 @@ class _SeachPageState extends State<SeachPage> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(
+            icon: const Icon(
               MaterialCommunityIcons.chevron_left,
               size: 30,
             ),
@@ -63,7 +55,7 @@ class _SeachPageState extends State<SeachPage> {
                 filled: true,
                 prefixIcon: Icon(Icons.search,
                     color: Theme.of(context).iconTheme.color),
-                border: OutlineInputBorder(
+                border: const OutlineInputBorder(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.all(Radius.circular(30))),
                 // fillColor: Theme.of(context).inputDecorationTheme.fillColor,
@@ -83,18 +75,18 @@ class _SeachPageState extends State<SeachPage> {
           stream: FirebaseFirestore.instance.collection('course').snapshots(),
           builder: (context, snapshots) {
             return (snapshots.connectionState == ConnectionState.waiting)
-                ? Center(
+                ? const Center(
                     child: CircularProgressIndicator(),
                   )
                 : Consumer2<CourseProvider, UserProvider>(
                     builder: (context, value, value2, child) {
-                      return ListView.separated(
-                          separatorBuilder: (context, index) {
-                            return Divider(
-                              color: Colors.grey[300],
-                              thickness: 5,
-                            );
-                          },
+                      return ListView.builder(
+                          // separatorBuilder: (context, index) {
+                          //   return Divider(
+                          //     color: Colors.grey[300],
+                          //     // thickness: 0,
+                          //   );
+                          // },
                           itemCount: snapshots.data!.docs.length,
                           itemBuilder: (context, index) {
                             var data = snapshots.data!.docs[index].data()
@@ -104,7 +96,6 @@ class _SeachPageState extends State<SeachPage> {
                             if (name.isEmpty) {
                               return GestureDetector(
                                 onTap: () {
-                               
                                   UtilFuntions.pageTransition(
                                     context,
                                     CourseDetails(
@@ -112,7 +103,8 @@ class _SeachPageState extends State<SeachPage> {
                                     ),
                                     const SeachPage(),
                                   );
-                                      FocusScope.of(context).requestFocus(FocusNode());
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
                                 },
                                 child: ListTile(
                                   title: Text(
@@ -181,63 +173,76 @@ class _SeachPageState extends State<SeachPage> {
                                 .toString()
                                 .toLowerCase()
                                 .contains(name.toLowerCase())) {
-                              return ListTile(
-                                title: Text(
-                                  data['CourseName'],
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.poppins(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      data['duration'],
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.poppins(
-                                          color: Colors.black54,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold),
+                              return GestureDetector(
+                                onTap: () {
+                                  UtilFuntions.pageTransition(
+                                    context,
+                                    CourseDetails(
+                                      docid: doc_id,
                                     ),
-                                    Text(
-                                      data['instructor'],
-                                      style: const TextStyle(
-                                        fontSize: 10,
+                                    const SeachPage(),
+                                  );
+                                },
+                                child: ListTile(
+                                  title: Text(
+                                    data['CourseName'],
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.poppins(
                                         color: Colors.black,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        data['duration'],
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.black54,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                    ),
-                                    RatingBar.builder(
-                                      initialRating: 3,
-                                      minRating: 1,
-                                      direction: Axis.horizontal,
-                                      allowHalfRating: true,
-                                      itemCount: 5,
-                                      itemSize: 15,
-                                      itemPadding: const EdgeInsets.symmetric(
-                                          horizontal: 0.0),
-                                      itemBuilder: (context, _) => const Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
+                                      Text(
+                                        data['instructor'],
+                                        style: const TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.black,
+                                        ),
                                       ),
-                                      onRatingUpdate: (rating) {
-                                        print(rating);
-                                      },
-                                    ),
-                                    Text(
-                                      data['CourseFee'] + " LKR",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
+                                      RatingBar.builder(
+                                        initialRating: 3,
+                                        minRating: 1,
+                                        direction: Axis.horizontal,
+                                        allowHalfRating: true,
+                                        itemCount: 5,
+                                        itemSize: 15,
+                                        itemPadding: const EdgeInsets.symmetric(
+                                            horizontal: 0.0),
+                                        itemBuilder: (context, _) => const Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                        ),
+                                        onRatingUpdate: (rating) {
+                                          print(rating);
+                                        },
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                leading: CircleAvatar(
-                                  backgroundImage: NetworkImage(data['image']),
+                                      Text(
+                                        data['CourseFee'] + " LKR",
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  leading: CircleAvatar(
+                                    backgroundImage:
+                                        NetworkImage(data['image']),
+                                  ),
                                 ),
                               );
                             }

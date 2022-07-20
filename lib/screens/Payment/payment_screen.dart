@@ -174,7 +174,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               FilteringTextInputFormatter.deny(RegExp(r'^94+')),
                             ],
                             keyboardtype: true),
-
                         const SizedBox(
                           height: 15,
                         ),

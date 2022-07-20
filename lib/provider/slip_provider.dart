@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:binary_app/model/course_model.dart';
 import 'package:binary_app/screens/Payment/slip_pay_video.dart';
 import 'package:binary_app/screens/Video/Videolist.dart';
 import '../model/objects.dart';
@@ -60,14 +61,14 @@ class SlipProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> startAddSlipData(
-      BuildContext context, UserModel userModel) async {
+  Future<void> startAddSlipData(BuildContext context, UserModel userModel,
+      Coursemodel coursemodel) async {
     try {
       if (inputValidation()) {
         setLoading(true);
 
         await _slipController
-            .saveSlipData(_image, _selectedCourse, userModel)
+            .saveSlipData(_image, coursemodel.CourseName, userModel)
             .then((value) {
           _image = File("");
 

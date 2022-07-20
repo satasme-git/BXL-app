@@ -39,6 +39,9 @@ class CourseProvider extends ChangeNotifier {
   String get getPaidFoCourse => _paid_for_course;
   String get getPaidForVideo => _paid_for_video;
 
+  //user controller object
+  Coursemodel? get getCourseModel => _courseModel;
+
   final List<CoursePaymodel> _list = [];
 
   List<CoursePaymodel> get payedCourseList => _list;
@@ -167,6 +170,8 @@ class CourseProvider extends ChangeNotifier {
 
     _paid_for_course = paidForCourse.docs.length.toString();
 
+    Logger().w("?????????????????????????? : " + _paid_for_course);
+
     notifyListeners();
   }
 
@@ -215,6 +220,13 @@ class CourseProvider extends ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  Future<void> fetchSingleCourse(BuildContext context, String id) async {
+    Logger().d(">>>>>>>>>>>>>>>>> : " + id);
+    _courseModel = await _coursecontroller.getCourseData(context, id);
+
+    // notifyListeners();
   }
 
   //change loading state

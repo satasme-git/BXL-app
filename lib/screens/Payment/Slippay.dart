@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 
+import '../../provider/corse_provider.dart';
 import '../../utils/util_functions.dart';
 import '../components/custom_loader.dart';
 
@@ -43,8 +44,8 @@ class _slipPayState extends State<slipPay> {
           width: size.width,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Consumer2<SlipProvider, UserProvider>(
-              builder: (context, value1, value2, child) {
+            child: Consumer3<SlipProvider, UserProvider, CourseProvider>(
+              builder: (context, value1, value2, value3, child) {
                 return AnimationLimiter(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,67 +101,73 @@ class _slipPayState extends State<slipPay> {
                           height: 40,
                         ),
                         const Text(
-                          "Select course",
+                          "Course name",
                           style: TextStyle(color: Colors.grey),
                         ),
                         const SizedBox(
                           height: 10,
                         ),
-                        Center(
-                          child: StreamBuilder<QuerySnapshot>(
-                            stream: FirebaseFirestore.instance
-                                .collection('course')
-                                .snapshots(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (!snapshot.hasData) return Container();
 
-                              if (setDefaultMake) {
-                                carMake =
-                                    snapshot.data!.docs[0].get('CourseName');
-                                // debugPrint('setDefault make: $carMake');
-                              }
-                              return DecoratedBox(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(
-                                        color: Colors.grey, width: 0.5),
-                                    boxShadow: const <BoxShadow>[
-                                      //blur radius of shadow
-                                    ]),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15),
-                                  child: DropdownButton(
-                                    isExpanded: true,
-                                    isDense: false,
-                                    value: carMake,
-                                    items: snapshot.data!.docs.map((value) {
-                                      String id = value.id;
-
-                                      return DropdownMenuItem(
-                                        value: value.get('CourseName'),
-                                        child: Text(
-                                          '${value.get('CourseName')}',
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (values) {
-                                      value1.setCurrentValue(values.toString());
-                                      setState(() {
-                                        carMake = values.toString();
-                                        setDefaultMake = false;
-                                      });
-
-                                      // debugPrint('selected onchange: $values');
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                        Text(
+                          value3.getCourseModel!.CourseName,
+                          style: TextStyle(color: Colors.black),
                         ),
+
+                        // Center(
+                        //   child: StreamBuilder<QuerySnapshot>(
+                        //     stream: FirebaseFirestore.instance
+                        //         .collection('course')
+                        //         .snapshots(),
+                        //     builder: (BuildContext context,
+                        //         AsyncSnapshot<QuerySnapshot> snapshot) {
+                        //       if (!snapshot.hasData) return Container();
+
+                        //       if (setDefaultMake) {
+                        //         carMake =
+                        //             snapshot.data!.docs[0].get('CourseName');
+                        //         // debugPrint('setDefault make: $carMake');
+                        //       }
+                        //       return DecoratedBox(
+                        //         decoration: BoxDecoration(
+                        //             borderRadius: BorderRadius.circular(5),
+                        //             border: Border.all(
+                        //                 color: Colors.grey, width: 0.5),
+                        //             boxShadow: const <BoxShadow>[
+                        //               //blur radius of shadow
+                        //             ]),
+                        //         child: Padding(
+                        //           padding: const EdgeInsets.symmetric(
+                        //               horizontal: 15),
+                        //           child: DropdownButton(
+                        //             isExpanded: true,
+                        //             isDense: false,
+                        //             value: carMake,
+                        //             items: snapshot.data!.docs.map((value) {
+                        //               String id = value.id;
+
+                        //               return DropdownMenuItem(
+                        //                 value: value.get('CourseName'),
+                        //                 child: Text(
+                        //                   '${value.get('CourseName')}',
+                        //                   overflow: TextOverflow.ellipsis,
+                        //                 ),
+                        //               );
+                        //             }).toList(),
+                        //             onChanged: (values) {
+                        //               value1.setCurrentValue(values.toString());
+                        //               setState(() {
+                        //                 carMake = values.toString();
+                        //                 setDefaultMake = false;
+                        //               });
+
+                        //               // debugPrint('selected onchange: $values');
+                        //             },
+                        //           ),
+                        //         ),
+                        //       );
+                        //     },
+                        //   ),
+                        // ),
                         const SizedBox(height: 20),
                         const Text(
                           "Select Image",
@@ -253,7 +260,9 @@ class _slipPayState extends State<slipPay> {
                                 ),
                                 onPressed: () {
                                   value1.startAddSlipData(
-                                      context, value2.getuserModel!);
+                                      context,
+                                      value2.getuserModel!,
+                                      value3.getCourseModel!);
                                 },
                                 child: Ink(
                                   width: double.infinity,

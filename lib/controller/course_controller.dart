@@ -1,5 +1,6 @@
 import 'package:binary_app/model/course_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class CourseController {
@@ -27,7 +28,20 @@ class CourseController {
   Future<Coursemodel> getCourseById(docid) async {
     DocumentSnapshot snapshot = await course.doc(docid).get();
 
-  Logger().d("(((((((((((((((>>>>>>>>>>>>>>>>>>>>>>>>>))))))))))))))) : " + docid);
+    Logger().d(
+        "(((((((((((((((>>>>>>>>>>>>>>>>>>>>>>>>>))))))))))))))) : " + docid);
     return Coursemodel.fromJson(snapshot.data() as Map<String, dynamic>);
+  }
+
+  CollectionReference courses = FirebaseFirestore.instance.collection('course');
+
+  Future<Coursemodel?> getCourseData(BuildContext context, String id) async {
+    DocumentSnapshot snapshot = await courses.doc(id).get();
+    Logger().i(snapshot.data());
+    Coursemodel coursemodel =
+        Coursemodel.fromJson(snapshot.data() as Map<String, dynamic>);
+    Logger().d("@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + snapshot.data().toString());
+
+    return coursemodel;
   }
 }

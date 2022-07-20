@@ -46,95 +46,133 @@ class _CourseDetailsState extends State<CourseDetails> {
 
   @override
   Widget build(BuildContext context) {
-    FocusScope.of(context).requestFocus(FocusNode());
+    // FocusScope.of(context).requestFocus(FocusNode());
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: _appBar(),
-      body: Column(
-        children: [
-          SizedBox(
-            height: size.height / 1.12,
-            width: size.width,
-            child: Stack(
-              children: [
-                list(),
-                Positioned(
-                    bottom: 0,
-                    child: Consumer2<CourseProvider, UserProvider>(
-                      builder: (context, value, value2, child) {
-                        return Container(
-                          height: 60,
-                          width: size.width,
-                          color: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: size.width / 3,
-                                  child: RichText(
-                                    text: TextSpan(children: [
-                                      const TextSpan(
-                                        text: "LKR ",
-                                        style: TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 87, 87, 87),
-                                          fontSize: 22,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: size.height / 1.12,
+              width: size.width,
+              child: Stack(
+                children: [
+                  list(),
+                  Positioned(
+                      bottom: 0,
+                      child: Consumer2<CourseProvider, UserProvider>(
+                        builder: (context, value, value2, child) {
+                          return Container(
+                            height: 60,
+                            width: size.width,
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    width: size.width / 3,
+                                    child: RichText(
+                                      text: TextSpan(children: [
+                                        const TextSpan(
+                                          text: "LKR ",
+                                          style: TextStyle(
+                                            color:
+                                                Color.fromARGB(255, 87, 87, 87),
+                                            fontSize: 22,
+                                          ),
                                         ),
-                                      ),
-                                      TextSpan(
-                                        text: value.getPrice,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.w800,
-                                        ),
-                                      )
-                                    ]),
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.all(0.0),
-                                    elevation: 3,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
+                                        TextSpan(
+                                          text: value.getPrice,
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        )
+                                      ]),
                                     ),
                                   ),
-                                  onPressed: () {
-                                    paymetDialog(
-                                        value2.getuserModel!.fname, context);
-                                    // UtilFuntions.navigateTo(
-                                    //     context, const PaymentScreen());
-                                    //      _controller.pause();
-                                  },
-                                  child: Ink(
-                                    width: size.width / 2,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: Colors.blue,
-                                      // gradient: const LinearGradient(
-                                      //     colors: [Colors.red, Colors.orange]),
-                                    ),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(18),
-                                      child: const Text('Enroll Now',
-                                          textAlign: TextAlign.center),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                  Consumer<CourseProvider>(
+                                    builder: (context, value, child) {
+                                      return value.getPaidFoCourse == "0"
+                                          ? ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                padding:
+                                                    const EdgeInsets.all(0.0),
+                                                elevation: 3,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                paymetDialog(
+                                                    value2.getuserModel!.fname,
+                                                    context);
+                                              },
+                                              child: Ink(
+                                                width: size.width / 2,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  color: Colors.blue,
+                                                ),
+                                                child: Container(
+                                                  padding:
+                                                      const EdgeInsets.all(18),
+                                                  child: const Text(
+                                                      'Enroll Now',
+                                                      textAlign:
+                                                          TextAlign.center),
+                                                ),
+                                              ),
+                                            )
+                                          : ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                padding:
+                                                    const EdgeInsets.all(0.0),
+                                                elevation: 3,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                ),
+                                              ),
+                                              onPressed: () {},
+                                              child: Ink(
+                                                width: size.width / 2,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  color: Colors.grey[400],
+                                                ),
+                                                child: Container(
+                                                  padding:
+                                                      const EdgeInsets.all(18),
+                                                  child: const Text(
+                                                    'Enrolled',
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                    },
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    )),
-              ],
+                          );
+                        },
+                      )),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -197,7 +235,9 @@ class _CourseDetailsState extends State<CourseDetails> {
                 _controller = YoutubePlayerController(
                   // initialVideoId: _ids.first,
 
-                  initialVideoId: docReference['IntroVideo'],
+                  // initialVideoId: docReference['IntroVideo'],
+                  initialVideoId:
+                      YoutubePlayer.convertUrlToId(docReference['IntroVideo'])!,
                   flags: const YoutubePlayerFlags(
                     mute: false,
                     autoPlay: false,

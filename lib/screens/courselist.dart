@@ -1,4 +1,5 @@
 import 'package:binary_app/provider/user_provider.dart';
+import 'package:binary_app/screens/course/test_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -174,13 +175,6 @@ class _courseListState extends State<courseList> {
                         crossAxisSpacing: 4,
                         shrinkWrap: true,
                         physics: const BouncingScrollPhysics(),
-                        // gridDelegate:
-                        //     const SliverGridDelegateWithFixedCrossAxisCount(
-                        //   crossAxisCount: 2,
-                        //   crossAxisSpacing: 4,
-                        //   mainAxisSpacing: 4,
-                        //   childAspectRatio: (1 / 1.22),
-                        // ),
                         children: snapshot.data!.docs.map((docReference) {
                           i++;
                           var coursePrice = NumberFormat("###.00#", "en_US");
@@ -196,6 +190,8 @@ class _courseListState extends State<courseList> {
                               child: SlideAnimation(
                                 child: GestureDetector(
                                   onTap: () async {
+                                    value.fetchSingleCourse(
+                                        context, docReference.id);
                                     isPaied(
                                         docReference.id,
                                         docReference['CourseFee'],
@@ -357,6 +353,7 @@ class _courseListState extends State<courseList> {
 
     UtilFuntions.pageTransition(
         context,
+        // TestScreen(),
         CourseDetails(
           docid: id,
         ),
