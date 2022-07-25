@@ -35,6 +35,7 @@ class CourseProvider extends ChangeNotifier {
 
   String _paid_for_course = "0";
   String _paid_for_video = "0";
+  String _free_video = "0";
 
   String get getPaidFoCourse => _paid_for_course;
   String get getPaidForVideo => _paid_for_video;
@@ -176,6 +177,12 @@ class CourseProvider extends ChangeNotifier {
   }
 
   Future<void> seachPayedVideo(String videoid, UserModel? userModel) async {
+    var freeVideo = await FirebaseFirestore.instance
+        .collection("videoLecture")
+        .where("vid", isEqualTo: videoid)
+        .where("Fee", isEqualTo: "0")
+        .get();
+
     var paidForVideo = await FirebaseFirestore.instance
         .collection("video_pay")
         .where('uid', isEqualTo: userModel!.uid)
@@ -183,6 +190,7 @@ class CourseProvider extends ChangeNotifier {
         .where("status", isEqualTo: 1)
         .get();
 
+    _free_video = freeVideo.docs.length.toString();
     _paid_for_video = paidForVideo.docs.length.toString();
 
     Logger().wtf("^^^^^^^^^^^^^^^^^^^^^ : " + _paid_for_video);
@@ -192,12 +200,17 @@ class CourseProvider extends ChangeNotifier {
 
   Future<void> getcoursebyid(String courseId, String vid, UserModel? usermodel,
       BuildContext context) async {
+    Logger().w("___________________________ **&&&&& _))))))))))))))) 0sss: ");
     setLoading(true);
-    _courseModel = await _coursecontroller.getCourseById(courseId);
-    await seachPayedCourse(_courseModel!.CourseName, usermodel);
+    if (courseId != "") {
+      _courseModel = await _coursecontroller.getCourseById(courseId);
+      await seachPayedCourse(_courseModel!.CourseName, usermodel);
+    }
+
     await seachPayedVideo(vid, usermodel);
 
     if (_paid_for_course == "1") {
+      Logger().w("___________________________ **&&&&& _))))))))))))))) 0: ");
       setLoading();
       Navigator.push(
         context,
@@ -207,6 +220,17 @@ class CourseProvider extends ChangeNotifier {
       );
     } else {
       if (_paid_for_video == "1") {
+        Logger().w("___________________________ **&&&&& _)))))))))))))))  1: ");
+        setLoading();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => videoplay(Linkid: vid),
+          ),
+        );
+      } else if (_free_video == "1") {
+        Logger()
+            .w("___________________________ **&&&&& _)))))))))))))))  21: ");
         setLoading();
         Navigator.push(
           context,
@@ -215,6 +239,7 @@ class CourseProvider extends ChangeNotifier {
           ),
         );
       } else {
+        Logger().w("___________________________  **&&&&& _))))))))))))))) 3: ");
         setLoading();
         UtilFuntions.paymetvideoDialog(usermodel!.fname, context);
       }

@@ -2,6 +2,7 @@ part of 'objects.dart';
 
 @JsonSerializable(explicitToJson: true)
 class VideoModel {
+  final String Duration;
   final String Fee;
   final String VideoName;
   @JsonKey(name: "corse_id")
@@ -12,6 +13,7 @@ class VideoModel {
   final String vid;
 
   VideoModel({
+    required this.Duration,
     required this.Fee,
     required this.VideoName,
     required this.corseid,

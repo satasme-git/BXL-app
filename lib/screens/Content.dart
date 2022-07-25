@@ -1,4 +1,3 @@
-
 import 'package:binary_app/provider/corse_provider.dart';
 import 'package:binary_app/screens/LectureDet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,7 +28,6 @@ class courseDetails extends StatefulWidget {
 }
 
 class _courseDetailsState extends State<courseDetails> {
-
   Map<String, dynamic> userSearchItems = {};
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   final List<String> _ids = [
@@ -110,7 +108,8 @@ class _courseDetailsState extends State<courseDetails> {
                 children: snapshot.data!.docs.map((docReference) {
               YoutubePlayerController _controller = YoutubePlayerController(
                 // initialVideoId: _ids.first,
-                initialVideoId: docReference['IntroVideo'],
+                initialVideoId:
+                    YoutubePlayer.convertUrlToId(docReference['IntroVideo'])!,
                 flags: const YoutubePlayerFlags(
                   mute: false,
                   autoPlay: true,
@@ -632,22 +631,19 @@ class _courseDetailsState extends State<courseDetails> {
                       ),
 
                       Consumer<CourseProvider>(
-                        
                         builder: (context, values, child) {
-                          
                           return Column(children: <Widget>[
-                             
-                            for (item in values.getSection.values)
-                             Text("LL"),
-                              for (var item2 in values.getItems.values)
-                              
-                             if (item == item2['section_id'])
-                              Consumer<CourseProvider>(builder: (context, value, child) {
-                                return Text(">>>>"+ item);
-                              },)
-                                // if (item == item2['section_id'])
-                                //   Text(
-                                //       "Asasa" + item2['section_id'].toString()),
+                            for (item in values.getSection.values) Text("LL"),
+                            for (var item2 in values.getItems.values)
+                              if (item == item2['section_id'])
+                                Consumer<CourseProvider>(
+                                  builder: (context, value, child) {
+                                    return Text(">>>>" + item);
+                                  },
+                                )
+                            // if (item == item2['section_id'])
+                            //   Text(
+                            //       "Asasa" + item2['section_id'].toString()),
                           ]);
 
                           //   InkWell(

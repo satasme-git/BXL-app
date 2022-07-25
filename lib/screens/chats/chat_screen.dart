@@ -6,6 +6,7 @@ import 'package:binary_app/provider/user_provider.dart';
 import 'package:binary_app/screens/Chat/chatScreen.dart';
 import 'package:binary_app/screens/chats/chat_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/bubble_type.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
@@ -37,6 +38,24 @@ class Chat extends StatefulWidget {
 class _ChatState extends State<Chat> {
   List<MessageModel> list = [];
   final ChatProvider _controller = ChatProvider();
+  // final TextEditingController _controller1 = TextEditingController();
+
+  // bool emojiShowing = false;
+
+  // _onEmojiSelected(Emoji emoji) {
+  //   _controller1
+  //     ..text += emoji.emoji
+  //     ..selection = TextSelection.fromPosition(
+  //         TextPosition(offset: _controller1.text.length));
+  // }
+
+  // _onBackspacePressed() {
+  //   _controller
+  //     ..text = _controller.text.characters.skipLast(1).toString()
+  //     ..selection = TextSelection.fromPosition(
+  //         TextPosition(offset: _controller.text.length));
+  // }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;

@@ -136,11 +136,14 @@ class SlipController {
     String day = DateFormat('yyyy-MM-dd').format(now);
     //get the unique document id auto generated
     String docId = res.doc().id;
+    Logger().w("))))))))))))))))))))))))))))))))) : " + videoModel.VideoName);
 
     cp_id = userModel.uid + "" + videoModel.vid;
     final vpdocId = uuid.v5(Uuid.NAMESPACE_URL, cp_id);
     DocumentSnapshot snapshot1 = await video_pay.doc(vpdocId).get();
+    Logger().w("*********************** outer : " + videoModel.VideoName);
     if (snapshot1.exists == false) {
+      Logger().w("*********************** inner : " + videoModel.VideoName);
       await video_pay.doc(vpdocId).set({
         'vpid': vpdocId,
         'videoName': videoModel.VideoName,
@@ -157,6 +160,8 @@ class SlipController {
         'img': downloadurl,
         'status': 0,
       }).then((value) async {});
+
+      Logger().w("))))))))))))))))))))))))))))))))) : " + videoModel.VideoName);
     } else {
       await video_pay.doc(vpdocId).update({
         'updated_at': day,

@@ -20,7 +20,7 @@ class _videoplayState extends State<videoplay> {
     YoutubePlayerController _controller = YoutubePlayerController(
       // initialVideoId: _ids.first,
 
-      initialVideoId: widget.Linkid,
+      initialVideoId: YoutubePlayer.convertUrlToId(widget.Linkid)!,
       flags: const YoutubePlayerFlags(
         mute: false,
         autoPlay: true,

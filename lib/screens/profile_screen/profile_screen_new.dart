@@ -263,7 +263,7 @@ class _ProfileScreenNewState extends State<ProfileScreenNew> {
                                       ),
                                       child: Container(
                                         padding: const EdgeInsets.all(18),
-                                        child: const Text('update Now',
+                                        child: const Text('Update Now',
                                             textAlign: TextAlign.center),
                                       ),
                                     ),
