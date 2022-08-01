@@ -1,12 +1,16 @@
 import 'dart:async';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:binary_app/provider/slider_provider.dart';
 import 'package:binary_app/screens/Content.dart';
 import 'package:binary_app/screens/Refer/refer.dart';
 import 'package:binary_app/screens/Video/Videolist.dart';
 import 'package:binary_app/screens/courselist.dart';
+import 'package:carousel_slider/carousel_controller.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +26,7 @@ import 'package:skeletons/skeletons.dart';
 
 import '../provider/corse_provider.dart';
 import '../provider/user_provider.dart';
+import '../utils/constatnt.dart';
 import '../utils/util_functions.dart';
 import 'components/custom_drawer.dart';
 import 'course/course_details.dart';
@@ -37,6 +42,47 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  CarouselController carouselController = CarouselController();
+  List<Widget> list = [
+    const SliderItem(
+      img: 'card.jpg',
+      // text1: 'Choose A Tasty Dish',
+      // text2: 'Order anything you want from your\n Favorite restaurant.',
+    ),
+    const SliderItem(
+      img: 'downloadh.png',
+
+      // text1: 'Easy Payment',
+      // text2:
+      //     'Payment made easy through debit\n card, credit card  & more ways to pay\n for your food',
+    ),
+    const SliderItem(
+      img: 'restaurant.png',
+      // text1: 'Enjoy the Taste!',
+      // text2:
+      //     'Healthy eating means eating a variety\n of foods that give you the nutrients you\n need to maintain your health.',
+    ),
+  ];
+  int _current = 0;
+
+  List<String> _carousalImages = [];
+  var _dotPosition = 0;
+  fetchCarousalImages() async {
+    var _fireStore = FirebaseFirestore.instance;
+    QuerySnapshot qn = await _fireStore.collection('sliders').get();
+
+    setState(() {
+      for (int i = 0; i < qn.docs.length; i++) {
+        _carousalImages.add(
+          qn.docs[i]['image'],
+        );
+        Logger().w(">>>>>>>>>>>>>> (((((( " + qn.docs[i]['image']);
+      }
+    });
+
+    return qn.docs;
+  }
+
   final ConnectivityResult _connectionStatus = ConnectivityResult.none;
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
@@ -91,6 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }*/
   @override
   initState() {
+    fetchCarousalImages();
     super.initState();
 
     _connectivitySubscription = Connectivity()
@@ -139,52 +186,115 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              child: Column(
+            SizedBox(
+              height: size.height / 2.8,
+              child: Stack(
                 children: [
-                  if (FirebaseAuth.instance.currentUser != null) Name(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: SizedBox(
-                      height: 42,
-                      child: TextField(
-                        readOnly: true,
-                        cursorColor: Colors.black,
-                        maxLines: 1,
-                        style: const TextStyle(fontSize: 17),
-                        textAlignVertical: TextAlignVertical.center,
-                        decoration: InputDecoration(
-                          filled: true,
-                          prefixIcon: Icon(Icons.search,
-                              color: Theme.of(context).iconTheme.color),
-                          border: const OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          // fillColor: Theme.of(context).inputDecorationTheme.fillColor,
-                          fillColor: Colors.white,
-                          contentPadding: EdgeInsets.zero,
-                          hintText: 'Search....',
-                        ),
-                        onTap: () {
-                          UtilFuntions.pageTransition(
-                              context, const SeachPage(), const HomeScreen());
-                        },
+                  Positioned(
+                    top: 80,
+                    left: 0.0,
+                    right: 0.0,
+                    // bottom: 0,
+                    child: Container(
+                      // color: Colors.pink,
+                      height: size.height / 3.2,
+                      child: CarouselSlider(
+                        items: _carousalImages
+                            .map((item) => Container(
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: NetworkImage(item),
+                                          fit: BoxFit.fitWidth)),
+                                ))
+                            .toList(),
+                        options: CarouselOptions(
+                            aspectRatio: 16 / 9,
+                            viewportFraction: 0.8,
+                            // initialPage: 0,
+                            enableInfiniteScroll: true,
+                            // reverse: false,
+                            autoPlay: true,
+                            autoPlayInterval: Duration(seconds: 3),
+                            autoPlayAnimationDuration:
+                                Duration(milliseconds: 800),
+                            autoPlayCurve: Curves.fastOutSlowIn,
+                            enlargeCenterPage: true,
+                            scrollDirection: Axis.horizontal,
+                            onPageChanged: (val, CarouselPageChangedReason) {
+                              setState(() {
+                                _dotPosition = val;
+                              });
+                            }),
                       ),
                     ),
                   ),
+
+                  Container(
+                    child: Column(
+                      children: [
+                        if (FirebaseAuth.instance.currentUser != null) Name(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: SizedBox(
+                            height: 42,
+                            child: TextField(
+                              readOnly: true,
+                              cursorColor: Colors.black,
+                              maxLines: 1,
+                              style: const TextStyle(fontSize: 17),
+                              textAlignVertical: TextAlignVertical.center,
+                              decoration: InputDecoration(
+                                filled: true,
+                                prefixIcon: Icon(Icons.search,
+                                    color: Theme.of(context).iconTheme.color),
+                                border: const OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(30))),
+                                // fillColor: Theme.of(context).inputDecorationTheme.fillColor,
+                                fillColor: Colors.white,
+                                contentPadding: EdgeInsets.zero,
+                                hintText: 'Search....',
+                              ),
+                              onTap: () {
+                                UtilFuntions.pageTransition(context,
+                                    const SeachPage(), const HomeScreen());
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // height: MediaQuery.of(context).size.height * 0.175,
+                    height: 140,
+                    decoration: BoxDecoration(
+                      color: HexColor("#283890"),
+                      borderRadius: const BorderRadius.only(
+                        bottomRight: Radius.circular(40),
+                        bottomLeft: Radius.circular(40),
+                      ),
+                    ),
+                    alignment: Alignment.center,
+                  ),
+                  // Positioned(
+                  //   child:
+                  // )
                 ],
               ),
-              // height: MediaQuery.of(context).size.height * 0.175,
-              height: 140,
-              decoration: BoxDecoration(
-                color: HexColor("#283890"),
-                borderRadius: const BorderRadius.only(
-                  bottomRight: Radius.circular(40),
-                  bottomLeft: Radius.circular(40),
-                ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            DotsIndicator(
+              dotsCount:
+                  _carousalImages.length == 0 ? 1 : _carousalImages.length,
+              position: _dotPosition.toDouble(),
+              decorator: DotsDecorator(
+                size: const Size.square(9.0),
+                activeSize: const Size(18.0, 9.0),
+                activeShape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
               ),
-              alignment: Alignment.center,
             ),
 
             AnimationLimiter(
@@ -198,34 +308,35 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   children: [
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      physics: const BouncingScrollPhysics(),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          CardTitle(
-                            title: "Course",
-                            onTap: () {
-                              UtilFuntions.pageTransition(context,
-                                  const courseList(), const HomeScreen());
-                            },
-                          ),
-                          CardTitle(
-                            title: "Videos",
-                            onTap: () {
-                              UtilFuntions.pageTransition(context,
-                                  const Videolist(), const HomeScreen());
-                            },
-                          ),
-                          CardTitle(
-                            title: "Marketing",
-                            onTap: () {},
-                          ),
-                        ],
-                      ),
-                    ),
+                    // SingleChildScrollView(
+                    //   scrollDirection: Axis.horizontal,
+                    //   physics: const BouncingScrollPhysics(),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.center,
+                    //     crossAxisAlignment: CrossAxisAlignment.center,
+                    //     children: [
+                    //       CardTitle(
+                    //         title: "Course",
+                    //         onTap: () {
+                    //           UtilFuntions.pageTransition(context,
+                    //               const courseList(), const HomeScreen());
+                    //         },
+                    //       ),
+                    //       CardTitle(
+                    //         title: "Videos",
+                    //         onTap: () {
+                    //           UtilFuntions.pageTransition(context,
+                    //               const Videolist(), const HomeScreen());
+                    //         },
+                    //       ),
+                    //       CardTitle(
+                    //         title: "Marketing",
+                    //         onTap: () {},
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1143,6 +1254,46 @@ class CardTitle extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class SliderItem extends StatelessWidget {
+  const SliderItem({
+    Key? key,
+    required this.img,
+    // required this.text1,
+    // required this.text2,
+  }) : super(key: key);
+
+  final String img;
+  // final String text1;
+  // final String text2;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Image.asset(
+          Constants.imageAsset(img),
+          // fit: BoxFit.cover,
+        ),
+        // Text(
+        //   text1,
+        //   style: const TextStyle(
+        //     fontSize: 22,
+        //   ),
+        // ),
+        // const SizedBox(height: 5),
+        // Text(
+        //   text2,
+        //   textAlign: TextAlign.center,
+        //   style: const TextStyle(
+        //     fontSize: 14,
+        //     color: Colors.grey,
+        //   ),
+        // )
+      ],
     );
   }
 }

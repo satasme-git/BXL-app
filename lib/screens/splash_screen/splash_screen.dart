@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
+import '../../provider/slider_provider.dart';
 import '../../provider/user_provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,6 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 5), () {
+      Provider.of<SliderProvider>(context, listen: false).fetchSliders();
       Provider.of<UserProvider>(context, listen: false).initializeUser(context);
       // UtilFunctions.navigateTo(context, const GettingStarted());
     });

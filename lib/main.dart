@@ -1,6 +1,7 @@
 import 'package:binary_app/provider/chat_provider.dart';
 import 'package:binary_app/provider/payment_provider.dart';
 import 'package:binary_app/provider/registraion_provider.dart';
+import 'package:binary_app/provider/slider_provider.dart';
 import 'package:binary_app/provider/slip_provider.dart';
 import 'package:binary_app/screens/home.dart';
 import 'package:binary_app/screens/startPage/startpage.dart';
@@ -77,6 +78,9 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => VideoProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => SliderProvider(),
         ),
       ],
       child: MyApp(email: email),

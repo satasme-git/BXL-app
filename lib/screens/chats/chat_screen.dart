@@ -6,7 +6,7 @@ import 'package:binary_app/provider/user_provider.dart';
 import 'package:binary_app/screens/Chat/chatScreen.dart';
 import 'package:binary_app/screens/chats/chat_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/bubble_type.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
