@@ -9,7 +9,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 
 import '../controller/slip_controller.dart';
-import '../model/user_model.dart';
 import '../screens/Payment/Slippay.dart';
 import '../screens/Payment/view_all_slips.dart';
 import '../screens/components/custom_dialog.dart';
@@ -21,6 +20,7 @@ class SlipProvider extends ChangeNotifier {
   final ImagePicker _picker = ImagePicker();
   File _image = File("");
   File get getImg => _image;
+
   bool _isLoading = false;
   //get loading state
   bool get isLoading => _isLoading;

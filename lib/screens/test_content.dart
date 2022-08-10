@@ -93,7 +93,7 @@ class _DataPopUpState extends State<DataPopUp> {
                 root.title,
                 style: const TextStyle(height: 0.5),
                 overflow: TextOverflow.ellipsis,
-                 maxLines: 1,
+                maxLines: 1,
               ),
               const SizedBox(
                 height: 4,
@@ -129,7 +129,7 @@ class _DataPopUpState extends State<DataPopUp> {
                         ),
                       )
                     : UtilFuntions.paymetDialog(
-                        value.getuserModel!.fname, context);
+                        value.getuserModel.fname, context);
 
                 // UtilFuntions().paymetDialog(value,context);
               },

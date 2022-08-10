@@ -77,7 +77,7 @@ class _SlipPayVideoState extends State<SlipPayVideo> {
                                       children: [
                                         TextSpan(
                                           text:
-                                              " ${value2.getuserModel!.fname},",
+                                              " ${value2.getuserModel.fname},",
                                           style: TextStyle(
                                             fontSize: 25,
                                             fontWeight: FontWeight.bold,
@@ -266,7 +266,7 @@ class _SlipPayVideoState extends State<SlipPayVideo> {
                                 onPressed: () {
                                   value1.startAddSlipDataforVideo(
                                       context,
-                                      value2.getuserModel!,
+                                      value2.getuserModel,
                                       value3.getvideoModel!);
                                 },
                                 child: Ink(

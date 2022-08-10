@@ -7,9 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
-import '../model/user_model.dart';
 import '../screens/Payment/load_payment.dart';
-
 
 class PaymentProvider extends ChangeNotifier {
   PaymentModel paymentModel = new PaymentModel("", "", "", "", "", "");
@@ -44,7 +42,7 @@ class PaymentProvider extends ChangeNotifier {
     UserModel? _usermodel =
         Provider.of<UserProvider>(context, listen: false).getuserModel;
 
-    paymentModel.uid = _usermodel!.uid;
+    paymentModel.uid = _usermodel.uid;
     paymentModel.firstname = _firstName.text;
     paymentModel.lastname = _lastName.text;
     paymentModel.email = _usermodel.email;

@@ -1,7 +1,9 @@
 import 'package:binary_app/provider/chat_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../utils/util_functions.dart';
 
@@ -44,7 +46,7 @@ class _ConversationSettingsState extends State<ConversationSettings> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+                    icon: Icon(Icons.arrow_back_ios, color: Colors.black),
                     color: Colors.black,
                   ),
                   duration: Duration(milliseconds: 300),
@@ -95,35 +97,45 @@ class _ConversationSettingsState extends State<ConversationSettings> {
                 ),
               ),
               SliverToBoxAdapter(child: Consumer<ChatProvider>(
-              
                 builder: (context, value, child) {
                   return SizedBox(
                     height: size.height,
                     child: Column(
-                     
                       children: [
-                        Container(
-                          padding: EdgeInsets.all(15),
-                          width: size.width,
-                          height: size.height/7,
-                          color: Colors.white,
-                          child: Column(
-                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("info"),
-                              SizedBox(height: 10,),
-                             value.conv.description!="" ?Text(value.conv.description):Text(""),
-                            ],
+                        Card(
+                          child: SingleChildScrollView(
+                            child: Container(
+                              padding: EdgeInsets.all(15),
+                              width: size.width,
+                              height: size.height / 6,
+                              color: Colors.white,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("info"),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  value.conv.description != ""
+                                      ? Text(value.conv.description)
+                                      : Text(""),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                        SizedBox(height: 10,),
-                        ListView.builder(
-                          padding: EdgeInsets.all(0),
-                          primary: false,
-                          shrinkWrap: true,
-                          itemCount: value.conv.userArray.length,
-                          itemBuilder: (BuildContext context, index) => Card(
-                            child: ListTile(
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Card(
+                          // color: Colors.red,
+                          child: ListView.builder(
+                            padding: EdgeInsets.all(0),
+                            primary: false,
+                            shrinkWrap: true,
+                            itemCount: value.conv.userArray.length,
+                            itemBuilder: (BuildContext context, index) =>
+                                ListTile(
                               leading: value.conv.userArray[index].image ==
                                       "null"
                                   ? ClipRRect(
@@ -150,10 +162,52 @@ class _ConversationSettingsState extends State<ConversationSettings> {
                                   value.conv.userArray[index].lname.toString()),
                               subtitle: Text(
                                   value.conv.userArray[index].email.toString()),
-                              trailing: Icon(
-                                Icons.edit,
-                                color: Colors.red,
+                              trailing: Wrap(
+                                spacing: 12, // space between two icons
+                                children: value.conv.userArray[index].roleid ==
+                                        "2"
+                                    ? <Widget>[
+                                        GestureDetector(
+                                          onTap: () {
+                                            launch(
+                                                "tel://${value.conv.userArray[index].phone}");
+                                          },
+                                          child: Icon(
+                                            Icons.call,
+                                            color: Color.fromARGB(
+                                                255, 12, 156, 17),
+                                          ),
+                                        ), // icon-1
+
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            border:
+                                                Border.all(color: Colors.green),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 5, vertical: 2),
+                                            child: Text(
+                                              'Admin',
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 10,
+                                                color: Colors.green[900],
+                                              ),
+                                            ),
+                                          ),
+                                        ), // icon-2
+                                      ]
+                                    : <Widget>[],
                               ),
+                              // value.conv.userArray[index].roleid ==
+                              //         "2"
+                              //     ? Icon(
+                              //         Icons.phone,
+                              //         color: Color.fromARGB(255, 44, 202, 126),
+                              //       )
+                              //     : Text(">"),
                             ),
                           ),
                         ),

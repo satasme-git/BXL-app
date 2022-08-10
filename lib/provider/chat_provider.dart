@@ -12,7 +12,7 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 // import '../model/objects.dart';
-import '../model/user_model.dart';
+
 import '../utils/util_functions.dart';
 
 class ChatProvider extends ChangeNotifier {
@@ -59,7 +59,7 @@ class ChatProvider extends ChangeNotifier {
       UserModel? userModel =
           Provider.of<UserProvider>(context, listen: false).getuserModel;
       _conversationModel =
-          await _chatController.createConversation(userModel!, peermodel);
+          await _chatController.createConversation(userModel, peermodel);
 
       notifyListeners();
 
@@ -71,7 +71,19 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> sendMessage(BuildContext context) async {
-    List<String> words = ["boru","hora","borukaraya","palhora","bitch","keriya","keri","fuck","Huththa","Pakaya","payya"];
+    List<String> words = [
+      "boru",
+      "hora",
+      "borukaraya",
+      "palhora",
+      "bitch",
+      "keriya",
+      "keri",
+      "fuck",
+      "Huththa",
+      "Pakaya",
+      "payya"
+    ];
     var string = _message.text;
 
     bool existed = false;
@@ -88,7 +100,7 @@ class ChatProvider extends ChangeNotifier {
           Fluttertoast.showToast(msg: "Can't chatting this type of words");
         } else {
           UserModel userModel =
-              Provider.of<UserProvider>(context, listen: false).getuserModel!;
+              Provider.of<UserProvider>(context, listen: false).getuserModel;
           await _chatController.sendMessage(
             _conversationModel.id,
             userModel.fname,
@@ -127,7 +139,7 @@ class ChatProvider extends ChangeNotifier {
 
   Future<void> captionWithImage(BuildContext context) async {
     UserModel userModel =
-        Provider.of<UserProvider>(context, listen: false).getuserModel!;
+        Provider.of<UserProvider>(context, listen: false).getuserModel;
     // await _chatController.sendMessage(
     //   _conversationModel.id,
     //   userModel.fname ,

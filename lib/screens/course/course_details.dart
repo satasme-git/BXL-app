@@ -112,7 +112,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                                               ),
                                               onPressed: () {
                                                 paymetDialog(
-                                                    value2.getuserModel!.fname,
+                                                    value2.getuserModel.fname,
                                                     context);
                                               },
                                               child: Ink(

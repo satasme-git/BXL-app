@@ -6,9 +6,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart';
 
-import '../model/user_model.dart';
-
-
 class ChatController {
   CollectionReference chats_groups =
       FirebaseFirestore.instance.collection('chats_groups');
@@ -98,15 +95,16 @@ class ChatController {
     }
   }
 
-  Future<void> captionWithImage(String conid,File img, String caption,UserModel userModel) async {
+  Future<void> captionWithImage(
+      String conid, File img, String caption, UserModel userModel) async {
     try {
       //save message data in db
-    var  orderRef = await messageCollection.add({
+      var orderRef = await messageCollection.add({
         "id": conid,
         "sendarName": userModel.fname,
         "senderid": userModel.uid,
         "message": caption,
-        "image":userModel.image,
+        "image": userModel.image,
         "messageUrl": "null",
         "messageType": "image",
         "messageTime": DateTime.now().toString(),
@@ -120,19 +118,15 @@ class ChatController {
         'lastMessageTime': DateTime.now().toString(),
         'created_at': DateTime.now(),
       });
- 
 
-    UploadTask? task = uploadFile(img);
-    final snapshot = await task!.whenComplete(() {});
-    final downloadUrl = await snapshot.ref.getDownloadURL();
-
+      UploadTask? task = uploadFile(img);
+      final snapshot = await task!.whenComplete(() {});
+      final downloadUrl = await snapshot.ref.getDownloadURL();
 
 // Logger().d(">>>>>>>>>>>>>>> 000---8888 :"+orderRef.id.toString());
-     await messageCollection.doc(orderRef.id).update({
-      
+      await messageCollection.doc(orderRef.id).update({
         "messageUrl": downloadUrl,
-       
       });
-       } catch (e) {}
+    } catch (e) {}
   }
 }

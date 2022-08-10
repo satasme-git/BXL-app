@@ -1,5 +1,7 @@
 import 'package:binary_app/provider/user_provider.dart';
 import 'package:binary_app/screens/home.dart';
+import 'package:binary_app/screens/profile_screen/signature_screen.dart';
+import 'package:binary_app/screens/shops/shops_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
@@ -10,10 +12,14 @@ import '../../utils/util_functions.dart';
 import '../Payment/Slippay.dart';
 import '../Refer/refer.dart';
 import '../aboutus/aboutus.dart';
+import '../aboutus/privacy_policy_screen.dart';
 import '../chats/conersation_list.dart';
 import '../chats/notification_test.dart';
+
 import '../login.dart';
+import '../notification/notifications.dart';
 import '../profile_screen/profile_screen_new.dart';
+import '../success/success_stories.dart';
 import 'custom_tile.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -81,7 +87,7 @@ class CustomDrawer extends StatelessWidget {
                               },
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(55),
-                                child: value.getuserModel!.image == "null"
+                                child: value.getuserModel.image == "null"
                                     ? ClipRRect(
                                         borderRadius: BorderRadius.circular(55),
                                         child: Image.asset(
@@ -89,17 +95,14 @@ class CustomDrawer extends StatelessWidget {
                                         ),
                                         //  Image.asset(value.getImageFile!.path),
                                       )
-                                    : Hero(
-                                        tag: "profile",
+                                    : CircleAvatar(
+                                        radius: 25.0,
+                                        backgroundColor: Colors.white,
                                         child: CircleAvatar(
-                                          radius: 25.0,
-                                          backgroundColor: Colors.white,
-                                          child: CircleAvatar(
-                                            backgroundImage: NetworkImage(
-                                              value.getuserModel!.image,
-                                            ),
-                                            radius: 24,
+                                          backgroundImage: NetworkImage(
+                                            value.getuserModel.image,
                                           ),
+                                          radius: 24,
                                         ),
                                       ),
                               ),
@@ -111,19 +114,19 @@ class CustomDrawer extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  value.getuserModel!.fname +
+                                  value.getuserModel.fname +
                                       " " +
-                                      value.getuserModel!.lname,
+                                      value.getuserModel.lname,
                                   style: GoogleFonts.poppins(
-                                    fontSize: 13,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
                                 ),
                                 Text(
-                                  value.getuserModel!.email,
+                                  value.getuserModel.email,
                                   style: GoogleFonts.poppins(
-                                    fontSize: 8,
+                                    fontSize: 10,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -143,23 +146,32 @@ class CustomDrawer extends StatelessWidget {
                         },
                       ),
 
-                      // const Divider(), //
-                      // CustomListTile(
-                      //   text: "Careers",
-                      //   iconleading: MaterialCommunityIcons.routes,
-                      //   onTap: () {
-                      //     UtilFuntions.pageTransition(context,
-                      //         const NotificationTest(), const CustomDrawer());
-                      //   },
-                      // ),
                       const Divider(), //
                       CustomListTile(
-                        text: "Payment",
-                        iconleading: MaterialCommunityIcons.wallet_outline,
+                        text: "Notifications",
+                        iconleading: MaterialCommunityIcons.bell_alert_outline,
+                        onTap: () {
+                          UtilFuntions.pageTransition(context,
+                              NotificationScreen(), const CustomDrawer());
+                        },
+                      ),
+                      const Divider(), //
+                      CustomListTile(
+                        text: "Success Stories",
+                        iconleading: Icons.ads_click_sharp,
+                        onTap: () {
+                          UtilFuntions.pageTransition(
+                              context, SuccessStories(), const CustomDrawer());
+                        },
+                      ),
+                      const Divider(), //
+                      CustomListTile(
+                        text: "Shops",
+                        iconleading: MaterialCommunityIcons.cart_outline,
                         onTap: () async {
                           // UtilFuntions.navigateTo(context, const slipPay());
                           UtilFuntions.pageTransition(
-                              context, const slipPay(), const CustomDrawer());
+                              context, ShopScreen(), const CustomDrawer());
                         },
                       ),
                       const Divider(), //
@@ -200,6 +212,18 @@ class CustomDrawer extends StatelessWidget {
                               context, const refer(), const HomeScreen());
                         },
                       ),
+                      const Divider(), //
+                      CustomListTile(
+                        text: "Privacy Policy",
+                        iconleading: MaterialCommunityIcons.lock_outline,
+                        onTap: () {
+                          UtilFuntions.pageTransition(
+                              context,
+                              const PrivacyPolicyScreen(),
+                              const CustomDrawer());
+                        },
+                      ),
+
                       // const Divider(), //
                       // CustomListTile(
                       //   text: "Testing pupose",

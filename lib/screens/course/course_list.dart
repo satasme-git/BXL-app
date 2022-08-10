@@ -134,8 +134,8 @@ class _CourseListState extends State<CourseList> {
                             value.seachPayed(docReference['CourseName']);
 
                             // if (value.getPaid == "Yes") {
-                              isPaied(docReference.id,
-                                  docReference['CourseFee'], value);
+                            isPaied(docReference.id, docReference['CourseFee'],
+                                value);
                             // } else {
                             //   paymetDialog(value2, context);
                             // }
@@ -283,8 +283,6 @@ class _CourseListState extends State<CourseList> {
           docid: id,
         ),
         const courseList());
-
-
   }
 
   Future<dynamic> paymetDialog(UserProvider value2, BuildContext context) {
@@ -293,7 +291,7 @@ class _CourseListState extends State<CourseList> {
       template: TemplateBlueRocket,
     );
     return popup.show(
-      title: 'Hello ' + value2.getuserModel!.fname + " !",
+      title: 'Hello ' + value2.getuserModel.fname + " !",
       content: SizedBox(
         height: 300,
         child: Column(
@@ -348,7 +346,6 @@ class _CourseListState extends State<CourseList> {
               },
               child: const Text('Bank pay'),
             ),
-
           ],
         ),
       ),
@@ -358,7 +355,6 @@ class _CourseListState extends State<CourseList> {
           onPressed: Navigator.of(context).pop,
         ),
       ],
-
     );
   }
 }

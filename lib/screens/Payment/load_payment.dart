@@ -38,7 +38,7 @@ class LoadPaymnet extends StatelessWidget {
               headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             ),
             onReceivedClientCertRequest: (controller, challenge) async {
-             Logger().d(">asda asdas asd asd>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+              //  Logger().d(">asda asdas asd asd>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
               // Future<void> abc() async {
               //   Logger().d(">asda asdas asd asd>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
               // }
@@ -47,9 +47,9 @@ class LoadPaymnet extends StatelessWidget {
             onConsoleMessage: (controller, message) {
               Map<dynamic, dynamic> res = message.toJson();
               Map<dynamic, dynamic> ress;
-            
+
               if (message.message == "goback") {
-                 print('################# : ');
+                print('################# : ');
                 UtilFuntions.pageTransition(
                     context, const courseList(), LoadPaymnet());
               }

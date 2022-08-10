@@ -120,7 +120,7 @@ class _ChatState extends State<Chat> {
                                       return Column(
                                         children: [
                                           list[index].senderid ==
-                                                  value.getuserModel!.uid
+                                                  value.getuserModel.uid
                                               ? Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.end,

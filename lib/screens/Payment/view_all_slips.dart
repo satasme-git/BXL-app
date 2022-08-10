@@ -115,7 +115,7 @@ class _ViewAllSlipsState extends State<ViewAllSlips> {
                 .collection("course_pay")
                 .where('courseName',
                     isEqualTo: value.getCourseModel!.CourseName)
-                .where('uid', isEqualTo: value2.getuserModel!.uid)
+                .where('uid', isEqualTo: value2.getuserModel.uid)
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -288,7 +288,7 @@ class _ViewAllSlipsState extends State<ViewAllSlips> {
                 .collection("coursepay_details")
                 .where('courseName',
                     isEqualTo: value.getCourseModel!.CourseName)
-                .where('uid', isEqualTo: value2.getuserModel!.uid)
+                .where('uid', isEqualTo: value2.getuserModel.uid)
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

@@ -1,9 +1,27 @@
+import 'dart:typed_data';
+import 'dart:io';
+
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:binary_app/controller/user_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:logger/logger.dart';
+
+import '../screens/components/custom_dialog.dart';
+import '../utils/util_functions.dart';
 
 class RegistrationProvider extends ChangeNotifier {
+  final ImagePicker _picker = ImagePicker();
+
+  Uint8List? exportedImage;
+  Image? _signatureImage;
+
+  File? _signatureFile;
+  File? get getsignatureFile => _signatureFile;
+  Uint8List? get getExportedImage => exportedImage;
+
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
   final UserController _usercontroller = UserController();
@@ -116,9 +134,39 @@ class RegistrationProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> setSignature(BuildContext context, Uint8List? uint8list) async {
+    exportedImage = uint8list;
+
+    _signatureImage = Image.memory(uint8list!);
+
+    _signatureFile = File.fromRawPath(uint8list);
+
+    notifyListeners();
+  }
+
   //change loading state
   void setLoading([bool val = false]) {
     _isLoading = val;
     notifyListeners();
+  }
+
+  Future<void> startAddsignatureUpload(BuildContext context, String uid) async {
+    setLoading(true);
+    await _usercontroller.uploadSignatureFile(exportedImage, uid).then((value) {
+      // _image = File("");
+
+      notifyListeners();
+    });
+    setLoading();
+    DialogBox().dialogBox(
+      context,
+      DialogType.SUCCES,
+      'Success.',
+      'Successfully uploaded Signature',
+      () {
+        // UtilFuntions.pageTransition(
+        //     context, const Videolist(), const SlipPayVideo());
+      },
+    );
   }
 }

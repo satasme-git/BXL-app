@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:binary_app/model/slider_model.dart';
 import 'package:binary_app/provider/slider_provider.dart';
 import 'package:binary_app/screens/Content.dart';
 import 'package:binary_app/screens/Refer/refer.dart';
@@ -15,6 +17,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,49 +46,28 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   CarouselController carouselController = CarouselController();
-  List<Widget> list = [
-    const SliderItem(
-      img: 'card.jpg',
-      // text1: 'Choose A Tasty Dish',
-      // text2: 'Order anything you want from your\n Favorite restaurant.',
-    ),
-    const SliderItem(
-      img: 'downloadh.png',
-
-      // text1: 'Easy Payment',
-      // text2:
-      //     'Payment made easy through debit\n card, credit card  & more ways to pay\n for your food',
-    ),
-    const SliderItem(
-      img: 'restaurant.png',
-      // text1: 'Enjoy the Taste!',
-      // text2:
-      //     'Healthy eating means eating a variety\n of foods that give you the nutrients you\n need to maintain your health.',
-    ),
-  ];
-  int _current = 0;
 
   List<String> _carousalImages = [];
   var _dotPosition = 0;
-  fetchCarousalImages() async {
-    var _fireStore = FirebaseFirestore.instance;
-    QuerySnapshot qn = await _fireStore.collection('sliders').get();
+  // fetchCarousalImages() async {
+  //   var _fireStore = FirebaseFirestore.instance;
+  //   QuerySnapshot qn = await _fireStore.collection('sliders').get();
 
-    setState(() {
-      for (int i = 0; i < qn.docs.length; i++) {
-        _carousalImages.add(
-          qn.docs[i]['image'],
-        );
-        Logger().w(">>>>>>>>>>>>>> (((((( " + qn.docs[i]['image']);
-      }
-    });
+  //   setState(() {
+  //     for (int i = 0; i < qn.docs.length; i++) {
+  //       _carousalImages.add(
+  //         qn.docs[i]['image'],
+  //       );
+  //     }
+  //   });
 
-    return qn.docs;
-  }
+  //   return qn.docs;
+  // }
 
   final ConnectivityResult _connectionStatus = ConnectivityResult.none;
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  List<SliderModel> list = [];
 
   Future<bool> initBackButton() async {
     Logger().d('back button pressed');
@@ -137,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }*/
   @override
   initState() {
-    fetchCarousalImages();
+    // fetchCarousalImages();
     super.initState();
 
     _connectivitySubscription = Connectivity()
@@ -175,6 +157,44 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           backgroundColor: HexColor("#283890"),
           elevation: 0,
+          actions: <Widget>[
+            IconButton(
+              icon: Stack(
+                children: [
+                  Container(
+                    margin: EdgeInsets.fromLTRB(0, 5, 10, 8),
+                    child: Icon(
+                      MaterialCommunityIcons.bell_outline,
+                      color: Colors.white,
+                      size: 25,
+                    ),
+                  ),
+                  Positioned(
+                    left: 12,
+                    top: 1,
+                    child: Container(
+                      width: 18,
+                      height: 18,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      padding: const EdgeInsets.all(2.0),
+                      child: Center(
+                        child: Text(
+                          "5",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              onPressed: () {
+                // do something
+              },
+            )
+          ],
         ),
         key: _globalKey,
         drawer: const SafeArea(
@@ -198,34 +218,80 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Container(
                       // color: Colors.pink,
                       height: size.height / 3.2,
-                      child: CarouselSlider(
-                        items: _carousalImages
-                            .map((item) => Container(
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: NetworkImage(item),
-                                          fit: BoxFit.fitWidth)),
-                                ))
-                            .toList(),
-                        options: CarouselOptions(
-                            aspectRatio: 16 / 9,
-                            viewportFraction: 0.8,
-                            // initialPage: 0,
-                            enableInfiniteScroll: true,
-                            // reverse: false,
-                            autoPlay: true,
-                            autoPlayInterval: Duration(seconds: 3),
-                            autoPlayAnimationDuration:
-                                Duration(milliseconds: 800),
-                            autoPlayCurve: Curves.fastOutSlowIn,
-                            enlargeCenterPage: true,
-                            scrollDirection: Axis.horizontal,
-                            onPageChanged: (val, CarouselPageChangedReason) {
-                              setState(() {
-                                _dotPosition = val;
-                              });
-                            }),
-                      ),
+                      child: StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection("sliders")
+                              .where('status', isEqualTo: 0)
+                              .snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (!snapshot.hasData) {
+                              return Center(
+                                  child: SpinKitRing(
+                                color: Colors.blue,
+                                size: 28.0,
+                                lineWidth: 3,
+                              ));
+                            }
+                            _carousalImages.clear();
+
+                            for (var item in snapshot.data!.docs) {
+                              Map<String, dynamic> data =
+                                  item.data() as Map<String, dynamic>;
+
+                              var model = SliderModel.fromMap(data);
+                              list.add(model);
+                              _carousalImages.add(
+                                model.image,
+                              );
+                            }
+
+                            return CarouselSlider(
+                              items: snapshot.data!.docs.map((docReference) {
+                                //  _carousalImages
+                                // .map((item) =>
+                                return Image.network(
+                                  docReference['image'],
+
+                                  //   // height: height,
+                                  fit: BoxFit.fitWidth,
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    }
+
+                                    return const SkeletonAvatar(
+                                      style: SkeletonAvatarStyle(
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                      ),
+                                    );
+                                  },
+                                );
+                              }).toList(),
+                              // .toList(),
+                              options: CarouselOptions(
+                                  aspectRatio: 16 / 9,
+                                  viewportFraction: 0.8,
+                                  // initialPage: 0,
+                                  enableInfiniteScroll: true,
+                                  // reverse: false,
+                                  autoPlay: true,
+                                  autoPlayInterval: Duration(seconds: 3),
+                                  autoPlayAnimationDuration:
+                                      Duration(milliseconds: 800),
+                                  autoPlayCurve: Curves.fastOutSlowIn,
+                                  enlargeCenterPage: true,
+                                  scrollDirection: Axis.horizontal,
+                                  onPageChanged:
+                                      (val, CarouselPageChangedReason) {
+                                    setState(() {
+                                      _dotPosition = val;
+                                    });
+                                  }),
+                            );
+                          }),
                     ),
                   ),
 
@@ -285,13 +351,15 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 5,
             ),
+
             DotsIndicator(
               dotsCount:
                   _carousalImages.length == 0 ? 1 : _carousalImages.length,
               position: _dotPosition.toDouble(),
               decorator: DotsDecorator(
-                size: const Size.square(9.0),
-                activeSize: const Size(18.0, 9.0),
+                spacing: EdgeInsets.all(4),
+                size: const Size.square(6.0),
+                activeSize: const Size(17.0, 6.0),
                 activeShape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0)),
               ),
@@ -1080,7 +1148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Padding(
                               padding:
                                   const EdgeInsets.only(top: 5, right: 20.0),
-                              child: value.getuserModel!.image == "null"
+                              child: value.getuserModel.image == "null"
                                   ? CircleAvatar(
                                       radius: 22,
                                       child: ClipRRect(
@@ -1101,7 +1169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         tag: "profile",
                                         child: CircleAvatar(
                                           backgroundImage: NetworkImage(
-                                            value.getuserModel!.image,
+                                            value.getuserModel.image,
                                           ),
                                           radius: 21,
                                         ),

@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 
 import '../model/corse_pay_model.dart';
 import '../model/course_model.dart';
-import '../model/user_model.dart';
+import '../model/objects.dart';
 import '../screens/Video/video.dart';
 import '../screens/test_content.dart';
 import '../utils/util_functions.dart';
@@ -171,8 +171,6 @@ class CourseProvider extends ChangeNotifier {
 
     _paid_for_course = paidForCourse.docs.length.toString();
 
-    Logger().w("?????????????????????????? : " + _paid_for_course);
-
     notifyListeners();
   }
 
@@ -193,14 +191,11 @@ class CourseProvider extends ChangeNotifier {
     _free_video = freeVideo.docs.length.toString();
     _paid_for_video = paidForVideo.docs.length.toString();
 
-    Logger().wtf("^^^^^^^^^^^^^^^^^^^^^ : " + _paid_for_video);
-
     notifyListeners();
   }
 
   Future<void> getcoursebyid(String courseId, String vid, UserModel? usermodel,
       BuildContext context) async {
-    Logger().w("___________________________ **&&&&& _))))))))))))))) 0sss: ");
     setLoading(true);
     if (courseId != "") {
       _courseModel = await _coursecontroller.getCourseById(courseId);
@@ -210,7 +205,6 @@ class CourseProvider extends ChangeNotifier {
     await seachPayedVideo(vid, usermodel);
 
     if (_paid_for_course == "1") {
-      Logger().w("___________________________ **&&&&& _))))))))))))))) 0: ");
       setLoading();
       Navigator.push(
         context,
@@ -220,7 +214,6 @@ class CourseProvider extends ChangeNotifier {
       );
     } else {
       if (_paid_for_video == "1") {
-        Logger().w("___________________________ **&&&&& _)))))))))))))))  1: ");
         setLoading();
         Navigator.push(
           context,
@@ -229,8 +222,6 @@ class CourseProvider extends ChangeNotifier {
           ),
         );
       } else if (_free_video == "1") {
-        Logger()
-            .w("___________________________ **&&&&& _)))))))))))))))  21: ");
         setLoading();
         Navigator.push(
           context,
@@ -239,7 +230,6 @@ class CourseProvider extends ChangeNotifier {
           ),
         );
       } else {
-        Logger().w("___________________________  **&&&&& _))))))))))))))) 3: ");
         setLoading();
         UtilFuntions.paymetvideoDialog(usermodel!.fname, context);
       }
@@ -248,7 +238,6 @@ class CourseProvider extends ChangeNotifier {
   }
 
   Future<void> fetchSingleCourse(BuildContext context, String id) async {
-    Logger().d(">>>>>>>>>>>>>>>>> : " + id);
     _courseModel = await _coursecontroller.getCourseData(context, id);
 
     // notifyListeners();

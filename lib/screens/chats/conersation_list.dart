@@ -77,7 +77,7 @@ class _ConversationListState extends State<ConversationList> {
         child: Consumer<UserProvider>(
           builder: (context, value, child) {
             return StreamBuilder<QuerySnapshot>(
-              stream: ChatController().getConversation(value.getuserModel!.uid),
+              stream: ChatController().getConversation(value.getuserModel.uid),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return const Text("no converasation");

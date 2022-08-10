@@ -87,14 +87,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: 5,
                         ),
                         Text(
-                          value.getuserModel!.email,
+                          value.getuserModel.email,
                           style: GoogleFonts.poppins(
                             fontSize: 12,
                             color: Colors.black,
                           ),
                         ),
                         Text(
-                          value.getuserModel!.fname,
+                          value.getuserModel.fname,
                           style: GoogleFonts.poppins(
                             fontSize: 12,
                             color: Colors.grey,
@@ -208,7 +208,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
                                     value.UpdateUser(context, _formKey,
-                                        value.getuserModel!.uid);
+                                        value.getuserModel.uid);
                                   }
                                 },
                                 child: Ink(

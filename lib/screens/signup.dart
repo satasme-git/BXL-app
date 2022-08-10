@@ -19,6 +19,14 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    Provider.of<UserProvider>(context, listen: false).gelLastId(context);
+
+    super.initState();
+  }
+
   final _formKey = GlobalKey<FormState>();
 
   final _auth = FirebaseAuth.instance;

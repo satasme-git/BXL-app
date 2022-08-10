@@ -30,8 +30,8 @@ class CircleImageAvatar extends StatelessWidget {
                 // )
                 borderRadius: BorderRadius.circular(55),
                 child: value.getImageFile == null
-                    ? (value.getuserModel!.image != "null"
-                        ? Image.network(value.getuserModel!.image)
+                    ? (value.getuserModel.image != "null"
+                        ? Image.network(value.getuserModel.image)
                         : Image.asset("assets/avatar.jpg"))
                     : Image.file(
                         File(value.getImageFile!.path),

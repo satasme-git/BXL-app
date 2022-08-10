@@ -6,6 +6,42 @@ part of objects;
 // JsonSerializableGenerator
 // **************************************************************************
 
+UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
+      uid: json['uid'] as String,
+      stunumber: json['stunumber'] as String,
+      email: json['email'] as String,
+      fname: json['fname'] as String,
+      lname: json['lname'] as String,
+      phone: json['phone'] as String,
+      homenumber: json['homenumber'] as String,
+      image: json['image'] as String,
+      token: json['token'] as String,
+      signature: json['signature'] as String,
+      nicfront: json['nicfront'] as String,
+      nicback: json['nicback'] as String,
+      address: json['address'] as String,
+      roleid: json['roleid'] as String,
+      status: json['status'] as String,
+    );
+
+Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
+      'uid': instance.uid,
+      'stunumber': instance.stunumber,
+      'email': instance.email,
+      'fname': instance.fname,
+      'lname': instance.lname,
+      'phone': instance.phone,
+      'homenumber': instance.homenumber,
+      'image': instance.image,
+      'token': instance.token,
+      'signature': instance.signature,
+      'nicfront': instance.nicfront,
+      'nicback': instance.nicback,
+      'address': instance.address,
+      'roleid': instance.roleid,
+      'status': instance.status,
+    };
+
 ConversationModel _$ConversationModelFromJson(Map<String, dynamic> json) =>
     ConversationModel(
       id: json['id'] as String,
@@ -13,7 +49,7 @@ ConversationModel _$ConversationModelFromJson(Map<String, dynamic> json) =>
       image: json['image'] as String,
       users: json['users'] as List<dynamic>,
       userArray: (json['userArray'] as List<dynamic>)
-          .map((e) => UserModel.fromJson(e))
+          .map((e) => UserModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       lastMessageSender: json['lastMessageSender'] as String,
       lastMessage: json['lastMessage'] as String,

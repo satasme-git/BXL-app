@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
+
 import '../model/objects.dart';
 import 'package:binary_app/screens/home.dart';
 
@@ -15,7 +17,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../controller/user_controller.dart';
-import '../model/user_model.dart';
+
+import '../screens/components/custom_dialog.dart';
 import '../screens/login.dart';
 import '../utils/util_functions.dart';
 import 'dart:io';
@@ -29,9 +32,13 @@ class UserProvider extends ChangeNotifier {
   // final _formKey = GlobalKey<FormState>();
   String? errorMessage;
   final _auth = FirebaseAuth.instance;
-  UserModel? _userModel;
+
+  UserModel? _usermodel;
+  UserModel? get getusermodel => _usermodel;
+
+  late UserModel _userModel;
   //user controller object
-  UserModel? get getuserModel => _userModel;
+  UserModel get getuserModel => _userModel;
   final UserController _usercontroller = UserController();
   bool _isLoading = false;
   //get loading state
@@ -42,12 +49,21 @@ class UserProvider extends ChangeNotifier {
   //get obscure state
   bool get isObscure => _isObscure;
 
+  String? _maxId;
+  String? get getMaxId => _maxId;
+
   XFile? _imageFile;
   final ImagePicker _picker = ImagePicker();
 
   XFile? get getImageFile => _imageFile;
 
   File _image = File("");
+
+  File _nicFront = File("");
+  File get getNicFront => _nicFront;
+
+  File _nicBack = File("");
+  File get getNicBack => _nicBack;
 
   final fname = TextEditingController();
   TextEditingController get fnameController => fname;
@@ -57,6 +73,10 @@ class UserProvider extends ChangeNotifier {
   TextEditingController get emailController => email;
   final phone = TextEditingController();
   TextEditingController get phoneController => phone;
+  final homenumber = TextEditingController();
+  TextEditingController get homenumberController => homenumber;
+  final address = TextEditingController();
+  TextEditingController get addressController => address;
 
   void takePhoto(ImageSource source) async {
     final pickedFile =
@@ -125,13 +145,17 @@ class UserProvider extends ChangeNotifier {
     _coursecount = await _usercontroller.getCourseCount();
     _videocount = await _usercontroller.getVideoCount();
 
-
-Logger().d("___________________________________ : "+_videocount.toString()+" / "+_coursecount.toString());
+    Logger().d("___________________________________ : " +
+        _videocount.toString() +
+        " / " +
+        _coursecount.toString());
     _userModel = await _usercontroller.getUserData(context, id);
-    fname.text = _userModel!.fname;
-    lname.text = _userModel!.lname;
-    email.text = _userModel!.email;
-    phone.text = _userModel!.phone;
+    fname.text = _userModel.fname;
+    lname.text = _userModel.lname;
+    email.text = _userModel.email;
+    phone.text = _userModel.phone;
+    homenumber.text = _userModel.homenumber;
+    address.text = _userModel.address;
 
     await _usercontroller.addUserToConv(context, _userModel);
     notifyListeners();
@@ -187,14 +211,99 @@ Logger().d("___________________________________ : "+_videocount.toString()+" / "
 
   Future<void> UpdateUser(
       BuildContext context, GlobalKey<FormState> _formKey, String uid) async {
-    _userModel = await _usercontroller.updateUser(
-        context, fname.text, lname.text, email.text, phone.text, uid);
+    _userModel = await _usercontroller.updateUser(context, fname.text,
+        lname.text, email.text, phone.text, homenumber.text, address.text, uid);
     // await _auth.r
     notifyListeners();
   }
+
   Future<void> clearImagePicker() async {
     _image = File("");
 
+    notifyListeners();
+  }
+
+  Future<void> startAddNicUpload(BuildContext context, String uid) async {
+    setLoading(true);
+
+    _userModel =
+        await _usercontroller.uploadUserNicFile(_nicFront, _nicBack, uid);
+
+    clearNicFrontPicker();
+    clearNicBackePicker();
+
+    notifyListeners();
+
+    //     .then((value) {
+    //   // _image = File("");
+
+    //   clearNicFrontPicker();
+    //   clearNicBackePicker();
+
+    //   notifyListeners();
+    // });
+
+    // notifyListeners();
+    setLoading();
+    DialogBox().dialogBox(
+      context,
+      DialogType.SUCCES,
+      'Success.',
+      'Successfully uploaded NIC',
+      () {
+        // UtilFuntions.pageTransition(
+        //     context, const Videolist(), const SlipPayVideo());
+      },
+    );
+  }
+
+  Future<void> selectNicFront() async {
+    try {
+      // Pick an image
+      final XFile? pickFile =
+          await _picker.pickImage(source: ImageSource.gallery);
+      if (pickFile != null) {
+        _nicFront = File(pickFile.path);
+        notifyListeners();
+      } else {
+        Logger().e("no image selected");
+      }
+    } catch (e) {
+      Logger().e(e);
+    }
+  }
+
+  Future<void> selectNicBack() async {
+    try {
+      // Pick an image
+      final XFile? pickFile =
+          await _picker.pickImage(source: ImageSource.gallery);
+      if (pickFile != null) {
+        _nicBack = File(pickFile.path);
+        notifyListeners();
+      } else {
+        Logger().e("no image selected");
+      }
+    } catch (e) {
+      Logger().e(e);
+    }
+  }
+
+  Future<void> clearNicFrontPicker() async {
+    _nicFront = File("");
+    Logger().e("no image selected");
+    notifyListeners();
+  }
+
+  Future<void> clearNicBackePicker() async {
+    _nicBack = File("");
+    Logger().e("no image selected");
+    notifyListeners();
+  }
+
+  Future<void> gelLastId(BuildContext context) async {
+    String maxId = await _usercontroller.getMaxId(context);
+    _maxId = maxId;
     notifyListeners();
   }
 }

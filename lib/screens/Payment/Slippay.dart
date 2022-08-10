@@ -77,7 +77,7 @@ class _slipPayState extends State<slipPay> {
                                       children: [
                                         TextSpan(
                                           text:
-                                              " ${value2.getuserModel!.fname},",
+                                              " ${value2.getuserModel.fname},",
                                           style: TextStyle(
                                             fontSize: 25,
                                             fontWeight: FontWeight.bold,
@@ -261,7 +261,7 @@ class _slipPayState extends State<slipPay> {
                                 onPressed: () {
                                   value1.startAddSlipData(
                                       context,
-                                      value2.getuserModel!,
+                                      value2.getuserModel,
                                       value3.getCourseModel!);
                                 },
                                 child: Ink(
@@ -312,7 +312,7 @@ class _slipPayState extends State<slipPay> {
             stream: FirebaseFirestore.instance
                 .collection("coursepay_details")
                 .where('courseName', isEqualTo: value.geSelectedCourse)
-                .where('uid', isEqualTo: value2.getuserModel!.uid)
+                .where('uid', isEqualTo: value2.getuserModel.uid)
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
